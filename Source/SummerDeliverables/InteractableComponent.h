@@ -40,7 +40,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Getter")
 	virtual bool IsInUse(){return bInUse;}; //getter for bInUse
-private:
+protected:
 	// Private properties
 	bool bInUse = false;
 	
