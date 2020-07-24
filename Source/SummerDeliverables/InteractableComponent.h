@@ -25,9 +25,6 @@ protected:
 
 public:
 	//Public methods
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	virtual void BluePrintInit(){}; //need to ask johnathan about how to do this
 
 	UFUNCTION(BlueprintNativeEvent, Category="Event")
