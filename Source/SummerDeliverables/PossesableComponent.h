@@ -25,14 +25,14 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		virtual void TakeAction_Implementation(){};
 	
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
-		void MoveRightAxis(float Axis,float DeltaTime);
+		void MoveRightAxis(float Axis);
 	
-		virtual void MoveRightAxis_Implementation(float Axis,float DeltaTime){GetOwner()->AddActorLocalRotation(FQuat(0.0,0.0,DeltaTime*Axis,0.0));};//this function is a default implementation and should never be called. MoveRightAction should call it
+		virtual void MoveRightAxis_Implementation(float Axis){GetOwner()->AddActorLocalRotation(FQuat(0.0,0.0,Axis,0.0));};//this function is a default implementation and should never be called. MoveRightAction should call it
 	
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
-		void MoveForwardAxis(float Axis,float DeltaTime);
+		void MoveForwardAxis(float Axis);
 	
-		virtual void MoveForwardAxis_Implementation(float Axis,float DeltaTime){GetOwner()->AddActorLocalOffset(FVector(DeltaTime*Axis,0.0,0.0));};
+		virtual void MoveForwardAxis_Implementation(float Axis){GetOwner()->AddActorLocalOffset(FVector(Axis,0.0,0.0));};
 
 		virtual void TickComponent(float deltaTime);
 
