@@ -3,11 +3,11 @@
 
 #include "DynamicPossessableComponent.h"
 
-void UDynamicPossessableComponent::MoveRightAxis_Implementation(float Axis, float DeltaTime)
+void UDynamicPossessableComponent::MoveRightAxis_Implementation(float Axis)
 {
 }
 
-void UDynamicPossessableComponent::MoveForwardAxis_Implementation(float Axis, float DeltaTime)
+void UDynamicPossessableComponent::MoveForwardAxis_Implementation(float Axis)
 {
 }
 
