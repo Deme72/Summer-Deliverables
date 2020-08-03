@@ -35,6 +35,7 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		virtual void MoveForwardAxis_Implementation(float Axis,float DeltaTime){GetOwner()->AddActorLocalOffset(FVector(DeltaTime*Axis,0.0,0.0));};
 
 		virtual void TickComponent(float deltaTime);
+
 		//Other Virtual inputs as necessary
 	private:
 		AController* CurrentPlayer = nullptr;
