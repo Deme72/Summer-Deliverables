@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class SummerDeliverablesTarget : TargetRules
 {
-	public SummerDeliverablesTarget( TargetInfo Target) : base(Target)
+	public SummerDeliverablesTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.AddRange( new string[] { "SummerDeliverables" } );
+		ExtraModuleNames.Add("SummerDeliverables");
 	}
 }
