@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "InteractableComponent.h"
 #include "GameFramework/Pawn.h"
-#include "PossesableComponent.generated.h"
+#include "PossessableComponent.generated.h"
 
 
 /**

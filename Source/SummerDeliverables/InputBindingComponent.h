@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PossesableComponent.h"
+#include "PossessableComponent.h"
 #include "Components/InputComponent.h"
 #include "InputBindingComponent.generated.h"
 
@@ -14,7 +14,6 @@ UCLASS()
 class SUMMERDELIVERABLES_API UInputBindingComponent : public UInputComponent
 {
 	GENERATED_BODY()
-
 public:
 	UFUNCTION(BlueprintCallable, Category="Bindings")
 	void BindInput(UPossesableComponent * comp);

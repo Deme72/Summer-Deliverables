@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PossesableComponent.h"
+#include "PossessableComponent.h"
 
 void UPossesableComponent::OnInteract_Implementation()
 {

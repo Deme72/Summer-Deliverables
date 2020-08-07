@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PossesableComponent.h"
+#include "PossessableComponent.h"
 #include "DynamicPossessableComponent.generated.h"
 
 /**

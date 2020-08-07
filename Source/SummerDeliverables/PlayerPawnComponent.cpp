@@ -9,7 +9,7 @@ UPlayerPawnComponent::UPlayerPawnComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
+	InputBindingComponent = CreateDefaultSubobject<UInputBindingComponent>(TEXT("InputBindingComponent"));
 	
 }
 
@@ -27,5 +27,15 @@ void UPlayerPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
+}
+
+TArray<UInteractableComponent *> UPlayerPawnComponent::GetOverlappingInteractables()
+{
+	return OverlappingInteractables;
+}
+
+bool UPlayerPawnComponent::IsPossessing()
+{
+	return CurrentBindings != nullptr;
 }
 
