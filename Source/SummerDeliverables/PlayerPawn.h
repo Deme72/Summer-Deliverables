@@ -22,6 +22,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Movement)
     float BaseTurnRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
+	float Stamina = 1.0f;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Collision)
     UShapeComponent * InteractBounds;
 
@@ -30,9 +33,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	
-private: // PRIVATE ATTRIBUTES
-
-    float Stamina = 1.0f;
+private:
 	PossessableComponent * CurrentBindings = nullptr;
 	TArray<UInteractableComponent*> OverlappingInteractables;
 	
