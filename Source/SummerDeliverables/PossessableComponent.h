@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InteractableComponent.h"
+#include "PossessablePawn.h"
 #include "GameFramework/Pawn.h"
 #include "PossessableComponent.generated.h"
 
@@ -27,18 +28,17 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void MoveRightAxis(float Axis);
 	
-		virtual void MoveRightAxis_Implementation(float Axis){GetOwner()->AddActorLocalRotation(FQuat(0.0,0.0,Axis,0.0));};//this function is a default implementation and should never be called. MoveRightAction should call it
+		virtual void MoveRightAxis_Implementation(float Axis){}
 	
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void MoveForwardAxis(float Axis);
 	
-		virtual void MoveForwardAxis_Implementation(float Axis){GetOwner()->AddActorLocalOffset(FVector(Axis,0.0,0.0));};
+		virtual void MoveForwardAxis_Implementation(float Axis){}
 
 		virtual void TickComponent(float deltaTime);
 
 		//Other Virtual inputs as necessary
 	private:
-		AController* CurrentPlayer = nullptr;
 		float CurrentCooldown =0.0f;
 	public:
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
@@ -53,5 +53,7 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		float ParanoiaAmount;
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
 		float DamageAmount;
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+		UShapeComponent * DamageBounds;
 
 };

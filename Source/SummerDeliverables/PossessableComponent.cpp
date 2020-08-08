@@ -5,26 +5,24 @@
 
 void UPossesableComponent::OnInteract_Implementation()
 {
-   APawn* Owner=  Cast<APawn>(GetOwner());
-    if (Owner==nullptr)
-    {
-        //send error message here
-        return;
-    }
+   APossessablePawn * Owner=  Cast<APossessablePawn>(GetOwner());
+   check(Owner);
    bInUse=true;
-    CurrentPlayer=Owner->GetController();
 }
 
 void UPossesableComponent::EndInteract_Implementation()
 {
     bInUse=false;
-    CurrentPlayer=nullptr;
+    APossessablePawn * Owner=  Cast<APossessablePawn>(GetOwner());
+    check(Owner);
+    if(Owner->IsPawnControlled())
+        Owner->EndPossession();
 }
 
 void UPossesableComponent::TickComponent(float deltaTime)
 {
     if(CurrentCooldown>0)
-    {
         CurrentCooldown-=deltaTime;
-    }  
+    else
+        CurrentCooldown = 0;
 }
