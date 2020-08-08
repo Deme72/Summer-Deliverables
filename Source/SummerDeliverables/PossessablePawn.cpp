@@ -33,8 +33,12 @@ void APossessablePawn::Tick(float DeltaTime)
 
 	if (CurrentPlayer)
 	{
-		// TODO: check and drain stamina here
-		// if stamina <= 0: EndPossession()
+		CurrentPlayer->Stamina -= PossessableComponent->StamDrainRate*DeltaTime;
+		if(CurrentPlayer->Stamina <= 0)
+		{
+			EndPossession();
+			CurrentPlayer->Stamina = 0;
+		}
 	}
 }
 

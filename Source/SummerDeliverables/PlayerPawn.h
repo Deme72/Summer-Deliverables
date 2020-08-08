@@ -21,10 +21,11 @@ public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
     float BaseTurnRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
+	float Stamina = 1.0f;
 	
 private:
-	float Stamina = 1.0f;
-
 	PossessableComponent * CurrentBindings = nullptr;
 	TArray<UInteractableComponent> OverlappingInteractables;
 	
