@@ -19,22 +19,26 @@ public:
 	APlayerPawn();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Movement)
     float BaseTurnRate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
 	float Stamina = 1.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Collision)
+    UShapeComponent * InteractBounds;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 	
 private:
 	PossessableComponent * CurrentBindings = nullptr;
 	TArray<UInteractableComponent> OverlappingInteractables;
 	
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
+public: // PUBLIC FUNCTIONS
+	
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
