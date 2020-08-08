@@ -12,12 +12,10 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 public:
     // Constructor and destructor
 	APossessablePawn();
-	
-	~APossessablePawn();
-	
-private:
-    // Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+protected:
+	// Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 	
 protected:
     // Reference to currently possessing player, used for un-possessing.
@@ -26,8 +24,12 @@ protected:
 public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
-    
-    virtual void EndPossession();
+
+	// Called to bind functionality to input
+    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	// Relocates the current player pawn to exit point and possesses it.
+	virtual void EndPossession();
     
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
