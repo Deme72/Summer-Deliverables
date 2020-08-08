@@ -1,15 +1,39 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Controller.h"
+#include "PossessablePawn.generated.h"
 
-/**
- * 
- */
-class SUMMERDELIVERABLES_API PossessablePawn
+UCLASS()
+class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 {
+    GENERATED_BODY()
+    
 public:
-	PossessablePawn();
-	~PossessablePawn();
+    // Constructor and destructor
+	APossessablePawn();
+	
+	~APossessablePawn();
+	
+private:
+    // Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+protected:
+    // Reference to currently possessing player, used for un-possessing.
+    class APlayerPawn* CurrentPlayer;
+    
+public:
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
+    
+    virtual void EndPossession();
+    
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+    class USceneComponent* ExitPoint;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+    class UPossesableComponent* PossessableComponent;
+	
 };
