@@ -32,3 +32,11 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	// ...
 }
 
+void UParanoiaComponent::OnInteract_Implementation()
+{
+}
+
+void UParanoiaComponent::EndInteract_Implementation()
+{
+}
+
