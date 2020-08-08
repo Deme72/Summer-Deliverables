@@ -29,7 +29,8 @@ protected:
 	//>---- ? -----
 	int uses; 			 // effectiveness modified by uses
 	float timer; 		 // timer to reset uses after short while
-	// (1/uses)+1;
+	// (1/uses)+1;		 // formula for degradation
+	//TArray<AEnemies>   // Effected enemies
 	//<---- ? -----
 	
 public:	
@@ -40,5 +41,7 @@ public:
 	
 	virtual void EndInteract_Implementation() override;  //this function is a default implementation and should never be called EndInteract should call it
 
-		
+	//UFUNCTION()		// need to implement some form of overlaps.
+	//void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
 };
