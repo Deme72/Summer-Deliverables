@@ -34,7 +34,7 @@ private: // PRIVATE ATTRIBUTES
 
     float Stamina = 1.0f;
 	PossessableComponent * CurrentBindings = nullptr;
-	TArray<UInteractableComponent> OverlappingInteractables;
+	TArray<UInteractableComponent*> OverlappingInteractables;
 	
 public: // PUBLIC FUNCTIONS
 	
@@ -47,7 +47,7 @@ public: // PUBLIC FUNCTIONS
 	bool TakeAction();
 
 	UFUNCTION()
-	TArray<UInteractableComponent> GetOverlappingInteractables() const
+	TArray<UInteractableComponent*> GetOverlappingInteractables() const
 	{return OverlappingInteractables;}
 
 	UFUNCTION()

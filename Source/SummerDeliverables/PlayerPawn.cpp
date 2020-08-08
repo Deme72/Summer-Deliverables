@@ -29,16 +29,16 @@ void APlayerPawn::Tick(float DeltaTime)
 // Called to bind functionality to input
 void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	PlayerInputComponent->BindAxis("MoveForward", this, APlayerPawn::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, APlayerPawn::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerPawn::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerPawn::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	//TODO watch out for Turn here ^ as I'm not sure if it will work here but it should 
-	PlayerInputComponent->BindAxis("TurnRate", this, APlayerPawn::TurnAtRate);
+	PlayerInputComponent->BindAxis("TurnRate", this, &APlayerPawn::TurnAtRate);
 }
 
 bool APlayerPawn::TakeAction()
 {
-	
+	return true;
 }
 
 void APlayerPawn::MoveForward(float Value)
