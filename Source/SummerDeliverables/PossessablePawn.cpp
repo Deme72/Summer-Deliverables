@@ -22,9 +22,9 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("TakeAction", IE_Pressed, PossessableComponent, &UPossesableComponent::TakeAction);
-	PlayerInputComponent->BindAxis("MoveRightAxis", PossessableComponent, &UPossesableComponent::MoveRightAxis);
-	PlayerInputComponent->BindAxis("MoveForwardAxis", PossessableComponent, &UPossesableComponent::MoveRightAxis);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, PossessableComponent, &UPossesableComponent::TakeAction);
+	PlayerInputComponent->BindAxis("MoveRight", PossessableComponent, &UPossesableComponent::MoveRightAxis);
+	PlayerInputComponent->BindAxis("MoveForward", PossessableComponent, &UPossesableComponent::MoveRightAxis);
 }
 
 void APossessablePawn::Tick(float DeltaTime)

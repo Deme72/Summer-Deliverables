@@ -45,7 +45,7 @@ public: // PUBLIC FUNCTIONS
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION()
-	bool TakeAction();
+	void Interact();
 
 	UFUNCTION()
 	TArray<UInteractableComponent*> GetOverlappingInteractables() const

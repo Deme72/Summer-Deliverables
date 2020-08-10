@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PlayerPawn.h"
 #include "Components/ShapeComponent.h"
+#include "PossessablePawn.h"
 #include "PossessableComponent.h"
+#include "PlayerPawn.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -52,11 +53,31 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	//TODO watch out for Turn here ^ as I'm not sure if it will work here but it should 
 	PlayerInputComponent->BindAxis("TurnRate", this, &APlayerPawn::TurnAtRate);
+	PlayerInputComponent->BindAction("Interact", IE_Released, this, &APlayerPawn::Interact);
 }
 
-bool APlayerPawn::TakeAction()
+void APlayerPawn::Interact()
 {
-	return true;
+	UInteractableComponent * target = nullptr;
+	for(auto i = OverlappingInteractables.begin(); i!= OverlappingInteractables.end(); ++i)
+	{
+		if(!target ||
+			FVector::Dist((*i)->GetOwner()->GetActorLocation(), GetActorLocation())
+			< FVector::Dist((*i)->GetOwner()->GetActorLocation(),target->GetOwner()->GetActorLocation()))
+				target = *i;
+	}
+	target->OnInteract();
+	UPossesableComponent * comp = Cast<UPossesableComponent>(target);
+	if(comp)
+	{
+		APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
+		check(possess);
+		GetController()->Possess(possess);
+	}
+	else
+	{
+		target->EndInteract();
+	}
 }
 
 void APlayerPawn::MoveForward(float Value)
