@@ -2,6 +2,7 @@
 
 
 #include "PlayerPawn.h"
+#include "Components/ShapeComponent.h"
 #include "PossessableComponent.h"
 
 // Sets default values
@@ -23,7 +24,17 @@ void APlayerPawn::BeginPlay()
 void APlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	OverlappingInteractables.Empty();
+	TArray<AActor *> collisions = {};
+	InteractBounds->GetOverlappingActors(collisions, UInteractableComponent::StaticClass());
+	for(auto i = collisions.begin(); i != collisions.end(); ++i)
+	{
+		UInteractableComponent * add = Cast<UInteractableComponent>(*i);
+		if(add)
+		{
+			OverlappingInteractables.Add(add);
+		}
+	}
 }
 
 // Called to bind functionality to input
