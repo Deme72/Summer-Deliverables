@@ -42,7 +42,7 @@ public:
 	virtual bool IsInUse(){return bInUse;}; //getter for bInUse
 protected:
 	// Private properties
-	bool bInUse = false;
+	bool bInUse;
 	
 public:
 	// Public properties

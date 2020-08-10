@@ -17,9 +17,12 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 {
 	GENERATED_BODY()
 	public:
-		
+		// Default constructor.
+		UPossesableComponent();
+	
 		virtual void OnInteract_Implementation() override;
 		virtual void EndInteract_Implementation() override;
+
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void TakeAction();
 	
@@ -39,20 +42,27 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		//Other Virtual inputs as necessary
 	private:
-		float CurrentCooldown =0.0f;
+		float CurrentCooldown;
+	
 	public:
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
 		USceneComponent * ExitPoint;
+	
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
 		float StamDrainRate;
+	
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
 		float StamFrontCost;
+	
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
 		float MaxCooldown;
+	
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
 		float ParanoiaAmount;
+	
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
 		float DamageAmount;
+	
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
 		UShapeComponent * DamageBounds;
 

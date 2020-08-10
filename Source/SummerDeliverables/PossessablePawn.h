@@ -4,6 +4,8 @@
 #include "GameFramework/Controller.h"
 #include "PossessablePawn.generated.h"
 
+/// Anything that can be possessed is a Possessable Pawn.
+
 UCLASS()
 class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 {

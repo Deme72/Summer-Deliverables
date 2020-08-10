@@ -11,6 +11,13 @@ APlayerPawn::APlayerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Set default values for properties...
+	BaseTurnRate = 1.f;
+	Stamina = 1.f;
+
+	// ... and components
+	CurrentBindings = nullptr;
+	// OverlappingInteractables = ?
 }
 
 // Called when the game starts or when spawned

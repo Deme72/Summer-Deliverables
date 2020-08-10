@@ -44,9 +44,6 @@ void APossessablePawn::Tick(float DeltaTime)
 
 void APossessablePawn::EndPossession()
 {
-	// repossesses the og player
-	// calls OnUnpossess
-
 	if (CurrentPlayer)
 	{
 		// move player pawn to the exit point and repossess

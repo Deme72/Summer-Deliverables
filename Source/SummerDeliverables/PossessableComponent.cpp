@@ -3,6 +3,11 @@
 
 #include "PossessableComponent.h"
 
+UPossesableComponent::UPossesableComponent()
+{
+    CurrentCooldown = 0.0f;
+}
+
 void UPossesableComponent::OnInteract_Implementation()
 {
    APossessablePawn * Owner=  Cast<APossessablePawn>(GetOwner());
