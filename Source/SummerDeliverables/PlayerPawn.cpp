@@ -43,6 +43,7 @@ void APlayerPawn::Tick(float DeltaTime)
 			OverlappingInteractables.Add(add);
 		}
 	}
+	AddActorLocalOffset(ConsumeMovementInputVector());
 }
 
 // Called to bind functionality to input
@@ -66,17 +67,20 @@ void APlayerPawn::Interact()
 			< FVector::Dist((*i)->GetOwner()->GetActorLocation(),target->GetOwner()->GetActorLocation()))
 				target = *i;
 	}
-	target->OnInteract();
-	UPossesableComponent * comp = Cast<UPossesableComponent>(target);
-	if(comp)
+	if(target)
 	{
-		APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
-		check(possess);
-		GetController()->Possess(possess);
-	}
-	else
-	{
-		target->EndInteract();
+		target->OnInteract();
+		UPossesableComponent * comp = Cast<UPossesableComponent>(target);
+		if(comp)
+		{
+			APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
+			check(possess);
+			GetController()->Possess(possess);
+		}
+		else
+		{
+			target->EndInteract();
+		}
 	}
 }
 
