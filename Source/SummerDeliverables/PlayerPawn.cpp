@@ -34,10 +34,10 @@ void APlayerPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	OverlappingInteractables.Empty();
 	TArray<AActor *> collisions = {};
-	InteractBounds->GetOverlappingActors(collisions, UInteractableComponent::StaticClass());
+	InteractBounds->GetOverlappingActors(collisions);
 	for(auto i = collisions.begin(); i != collisions.end(); ++i)
 	{
-		UInteractableComponent * add = Cast<UInteractableComponent>(*i);
+		UInteractableComponent * add = Cast<UInteractableComponent>((*i)->FindComponentByClass(UInteractableComponent::StaticClass()));
 		if(add)
 		{
 			OverlappingInteractables.Add(add);
