@@ -27,6 +27,26 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		void TakeAction();
 	
 		virtual void TakeAction_Implementation(){};
+
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void ButtonRight();
+		
+		virtual void ButtonRight_Implementation(){};
+
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+		void ButtonTop();
+		
+		virtual void ButtonTop_Implementation(){};
+	
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void RightTrigger();
+			
+		virtual void RightTrigger_Implementation(){};
+
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+		void LeftTrigger();
+			
+		virtual void LeftTrigger_Implementation(){};
 	
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void MoveRightAxis(float Axis);
