@@ -43,7 +43,8 @@ void APlayerPawn::Tick(float DeltaTime)
 			OverlappingInteractables.Add(add);
 		}
 	}
-	AddActorLocalOffset(ConsumeMovementInputVector());
+	AddActorWorldOffset(ConsumeMovementInputVector());
+	SetActorRotation(GetControlRotation());
 }
 
 // Called to bind functionality to input
@@ -75,7 +76,7 @@ void APlayerPawn::Interact()
 		{
 			APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
 			check(possess);
-			if(!possess->GetController())
+			if(!possess->IsControlled())
 			{
 				GetController()->Possess(possess);
 				possess->setPlayer(this);
