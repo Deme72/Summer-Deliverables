@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "PlayerPawn.h"
 #include "Components/ShapeComponent.h"
 #include "PossessablePawn.h"
 #include "PossessableComponent.h"
-#include "PlayerPawn.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -37,10 +37,14 @@ void APlayerPawn::Tick(float DeltaTime)
 	InteractBounds->GetOverlappingActors(collisions);
 	for(auto i = collisions.begin(); i != collisions.end(); ++i)
 	{
-		UInteractableComponent * add = Cast<UInteractableComponent>((*i)->FindComponentByClass(UInteractableComponent::StaticClass()));
-		if(add)
+		UActorComponent * comp  = (*i)->FindComponentByClass(UInteractableComponent::StaticClass());
+		if(comp)
 		{
-			OverlappingInteractables.Add(add);
+		UInteractableComponent * add = Cast<UInteractableComponent>(comp);
+			if(add)
+			{
+				OverlappingInteractables.Add(add);
+			}
 		}
 	}
 	AddActorWorldOffset(ConsumeMovementInputVector());
