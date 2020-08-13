@@ -10,18 +10,12 @@ UPossesableComponent::UPossesableComponent()
 
 void UPossesableComponent::OnInteract_Implementation()
 {
-   APossessablePawn * Owner=  Cast<APossessablePawn>(GetOwner());
-   check(Owner);
-   bInUse=true;
+   bInUse=true; //TODO: BAD GETS OVERWRITTEN IN BLUEPRINTS
 }
 
 void UPossesableComponent::EndInteract_Implementation()
 {
-    bInUse=false;
-    APossessablePawn * Owner=  Cast<APossessablePawn>(GetOwner());
-    check(Owner);
-    if(Owner->IsPawnControlled())
-        Owner->EndPossession();
+    bInUse=false;//TODO: BAD GETS OVERWRITTEN IN BLUEPRINTS
 }
 
 void UPossesableComponent::TickComponent(float deltaTime)

@@ -24,6 +24,8 @@ protected:
     class APlayerPawn* CurrentPlayer;
     
 public:
+
+	void setPlayer(APlayerPawn * p){CurrentPlayer = p;}
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 

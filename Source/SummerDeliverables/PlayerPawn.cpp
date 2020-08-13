@@ -76,6 +76,8 @@ void APlayerPawn::Interact()
 			APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
 			check(possess);
 			GetController()->Possess(possess);
+			possess->setPlayer(this);
+			
 		}
 		else
 		{
