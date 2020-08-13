@@ -77,7 +77,6 @@ void APlayerPawn::Interact()
 			check(possess);
 			GetController()->Possess(possess);
 			possess->setPlayer(this);
-			
 		}
 		else
 		{
@@ -85,6 +84,7 @@ void APlayerPawn::Interact()
 		}
 	}
 }
+
 
 void APlayerPawn::MoveForward(float Value)
 {
