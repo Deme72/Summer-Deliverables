@@ -128,8 +128,14 @@ void APlayerPawn::EndAction()
 	lookingForParaProps = false;
 	for(auto& prop: SelectedProps)
 	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Prop Went Off"));
+		}
+		
 		prop->EndInteract();
 	}
+	SelectedProps.Empty();
 #pragma endregion
 	
 }
