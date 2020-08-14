@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InteractableComponent.h"
+#include "ParanoiaComponent.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerPawn.generated.h"
 
@@ -36,7 +37,7 @@ protected:
 private:
 	PossessableComponent* CurrentBindings;
 	TArray<UInteractableComponent*> OverlappingInteractables;
-	
+	TArray<UParanoiaComponent*> SelectedProps;
 public: // PUBLIC FUNCTIONS
 	
 	virtual void Tick(float DeltaTime) override;
@@ -46,6 +47,13 @@ public: // PUBLIC FUNCTIONS
 
 	UFUNCTION()
 	void Interact();
+
+	UFUNCTION()
+    void TakeAction();
+
+	UFUNCTION()
+    void EndAction();
+	
 
 	UFUNCTION()
 	TArray<UInteractableComponent*> GetOverlappingInteractables() const

@@ -5,6 +5,8 @@
 #include "Components/ShapeComponent.h"
 #include "PossessablePawn.h"
 #include "PossessableComponent.h"
+#include "ParanoiaComponent.h"
+
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -21,12 +23,14 @@ APlayerPawn::APlayerPawn()
 	// OverlappingInteractables = ?
 }
 
+
 // Called when the game starts or when spawned
 void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
+
 
 // Called every frame
 void APlayerPawn::Tick(float DeltaTime)
@@ -51,16 +55,19 @@ void APlayerPawn::Tick(float DeltaTime)
 	SetActorRotation(GetControlRotation());
 }
 
+
 // Called to bind functionality to input
 void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerPawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerPawn::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	//TODO watch out for Turn here ^ as I'm not sure if it will work here but it should 
 	PlayerInputComponent->BindAxis("TurnRate", this, &APlayerPawn::TurnAtRate);
 	PlayerInputComponent->BindAction("Interact", IE_Released, this, &APlayerPawn::Interact);
+	PlayerInputComponent->BindAction("FaceButtonBottom", IE_Pressed, this, &APlayerPawn::TakeAction);
+	PlayerInputComponent->BindAction("FaceButtonBottom", IE_Released, this, &APlayerPawn::EndAction);
 }
+
 
 void APlayerPawn::Interact()
 {
@@ -94,6 +101,36 @@ void APlayerPawn::Interact()
 }
 
 
+void APlayerPawn::TakeAction()
+{
+#pragma region ParanoiaProps
+	for(auto i = OverlappingInteractables.begin(); i!= OverlappingInteractables.end(); ++i)
+	{
+		UParanoiaComponent* paraProp = Cast<UParanoiaComponent>(*i);
+		if(paraProp)
+		{
+			SelectedProps.Add(paraProp);
+			paraProp->OnInteract();
+		}
+	}
+#pragma endregion
+	
+}
+
+
+void APlayerPawn::EndAction()
+{
+#pragma region ParanoiaProps
+	for(auto& prop: SelectedProps)
+	{
+		prop->EndInteract();
+	}
+#pragma endregion
+	
+}
+
+
+#pragma region Movement
 void APlayerPawn::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
@@ -128,4 +165,4 @@ void APlayerPawn::TurnAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
-
+#pragma endregion 
