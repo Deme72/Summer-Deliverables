@@ -17,6 +17,7 @@ APlayerPawn::APlayerPawn()
 	// Set default values for properties...
 	BaseTurnRate = 1.f;
 	Stamina = 1.f;
+	MovementSpeed = 1.f;
 
 	// ... and components
 	CurrentBindings = nullptr;
@@ -153,7 +154,7 @@ void APlayerPawn::MoveForward(float Value)
 
 		// get forward vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
+		AddMovementInput(Direction, Value * MovementSpeed);
 	}
 }
 
@@ -168,7 +169,7 @@ void APlayerPawn::MoveRight(float Value)
 		// get right vector 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
-		AddMovementInput(Direction, Value);
+		AddMovementInput(Direction, Value * MovementSpeed);
 	}
 }
 

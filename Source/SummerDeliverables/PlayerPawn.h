@@ -23,6 +23,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Movement)
     float BaseTurnRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+	float MovementSpeed;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
 	float Stamina;
 
