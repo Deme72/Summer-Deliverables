@@ -92,6 +92,7 @@ void APlayerPawn::Interact()
 		if(!target ||
 			FVector::Dist((*i)->GetOwner()->GetActorLocation(), GetActorLocation())
 			< FVector::Dist((*i)->GetOwner()->GetActorLocation(),target->GetOwner()->GetActorLocation()))
+			if(!Cast<UParanoiaComponent>(*i))
 				target = *i;
 	}
 	if(target)
