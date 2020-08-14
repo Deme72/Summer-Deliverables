@@ -7,6 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "ParanoiaComponent.generated.h"
 
+// TODO: set up uses cooldown
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
 {
@@ -17,21 +19,32 @@ public:
 	UParanoiaComponent();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collision")
-	UShapeComponent * paranoiaBounds = nullptr;
+	UShapeComponent * ParanoiaBounds;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
 	float paranoiaAmount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+	float timer = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+    float useCooldown = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Debug")
+	bool active;
+
+
 	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-	//>---- ? -----
-	int uses; 			 // effectiveness modified by uses
-	float timer; 		 // timer to reset uses after short while
-	// (1/uses)+1;		 // formula for degradation
-	//TArray<AEnemies>   // Effected enemies
-	//<---- ? -----
+	int uses=0; 			 // effectiveness modified by uses
+	float currentTime = 0;
+	float usesCooldownTime = 0;
+	// TODO: TArray<AEnemies>
+	// TODO: Effected enemies
+
 	
 public:	
 	// Called every frame
@@ -40,8 +53,4 @@ public:
 	virtual void OnInteract_Implementation() override; //this function is a default implementation and should never be called EndInteract should call it
 	
 	virtual void EndInteract_Implementation() override;  //this function is a default implementation and should never be called EndInteract should call it
-
-	//UFUNCTION()		// need to implement some form of overlaps.
-	//void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
 };

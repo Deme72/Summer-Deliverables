@@ -44,12 +44,27 @@ void APlayerPawn::Tick(float DeltaTime)
 		UActorComponent * comp  = (*i)->FindComponentByClass(UInteractableComponent::StaticClass());
 		if(comp)
 		{
-		UInteractableComponent * add = Cast<UInteractableComponent>(comp);
-			if(add)
+			UInteractableComponent * add = Cast<UInteractableComponent>(comp);
+			check(add);
+			OverlappingInteractables.Add(add);
+		}
+		
+		// PARANOIA
+		if(lookingForParaProps)
+		{
+			UActorComponent* paraProp = (*i)->FindComponentByClass(UParanoiaComponent::StaticClass());
+			if(paraProp)
 			{
-				OverlappingInteractables.Add(add);
+				UParanoiaComponent* add = Cast<UParanoiaComponent>(paraProp);
+				check(add);
+				if(!SelectedProps.Contains(add))
+				{
+					SelectedProps.Add(add);
+					add->OnInteract();
+				}
 			}
 		}
+		//TODO: Add stamina drain for selecting multiple paranoia props
 	}
 	AddActorWorldOffset(ConsumeMovementInputVector());
 	SetActorRotation(GetControlRotation());
@@ -103,24 +118,14 @@ void APlayerPawn::Interact()
 
 void APlayerPawn::TakeAction()
 {
-#pragma region ParanoiaProps
-	for(auto i = OverlappingInteractables.begin(); i!= OverlappingInteractables.end(); ++i)
-	{
-		UParanoiaComponent* paraProp = Cast<UParanoiaComponent>(*i);
-		if(paraProp)
-		{
-			SelectedProps.Add(paraProp);
-			paraProp->OnInteract();
-		}
-	}
-#pragma endregion
-	
+	lookingForParaProps = true;
 }
 
 
 void APlayerPawn::EndAction()
 {
 #pragma region ParanoiaProps
+	lookingForParaProps = false;
 	for(auto& prop: SelectedProps)
 	{
 		prop->EndInteract();

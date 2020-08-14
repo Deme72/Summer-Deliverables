@@ -38,6 +38,8 @@ private:
 	PossessableComponent* CurrentBindings;
 	TArray<UInteractableComponent*> OverlappingInteractables;
 	TArray<UParanoiaComponent*> SelectedProps;
+	bool lookingForParaProps = false;
+	
 public: // PUBLIC FUNCTIONS
 	
 	virtual void Tick(float DeltaTime) override;
