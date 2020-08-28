@@ -11,7 +11,9 @@ UParanoiaComponent::UParanoiaComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	uses=0; 			 // effectiveness modified by uses
+	currentTime = 0;
+	usesCooldownTime = 0;
 }
 
 
@@ -19,9 +21,6 @@ UParanoiaComponent::UParanoiaComponent()
 void UParanoiaComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
 
@@ -43,16 +42,6 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	
 	if(active) // dealing damage  (UNFINISHED)
 	{
-		/*timer+=DeltaTime;
-		if(currentTime >= timer) // if we are done doing damage
-		{//reset
-			active = false;
-			currentTime = 0;
-		}
-		else
-		{
-			
-		}*/
 		TArray<AActor *> collisions = {};
 		ParanoiaBounds->GetOverlappingActors(collisions);
 		for(auto i = collisions.begin(); i != collisions.end(); ++i)
@@ -66,15 +55,17 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 }
 
-void UParanoiaComponent::OnInteract_Implementation() // When Selected
+void UParanoiaComponent::OnInteractInternal() // When Selected
 {
+	Super::OnInteractInternal();
 	//TODO: make pretty highlight/animations <3
 
 }
 
-void UParanoiaComponent::EndInteract_Implementation() // Activate ParaProp
+void UParanoiaComponent::EndInteractInternal() // Activate ParaProp
 {
 	active = true;
 	uses += 1;
+	Super::EndInteractInternal();
 }
 
