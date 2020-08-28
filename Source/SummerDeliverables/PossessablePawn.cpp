@@ -54,7 +54,7 @@ void APossessablePawn::EndPossession()
 		// move player pawn to the exit point and repossess
 		CurrentPlayer->SetActorLocation(ExitPoint->GetComponentLocation());
 		GetController()->Possess(CurrentPlayer);
-		PossessableComponent->EndInteract();
+		PossessableComponent->EndInteractInternal();
 		CurrentPlayer = nullptr;
 	}
 }

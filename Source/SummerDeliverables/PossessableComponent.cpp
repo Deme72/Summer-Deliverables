@@ -10,12 +10,12 @@ UPossesableComponent::UPossesableComponent()
 
 void UPossesableComponent::OnInteract_Implementation()
 {
-   bInUse=true; //TODO: BAD GETS OVERWRITTEN IN BLUEPRINTS
+   
 }
 
 void UPossesableComponent::EndInteract_Implementation()
 {
-    bInUse=false;//TODO: BAD GETS OVERWRITTEN IN BLUEPRINTS
+    
 }
 
 void UPossesableComponent::TickComponent(float deltaTime)

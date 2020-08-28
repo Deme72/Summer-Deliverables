@@ -53,15 +53,15 @@ void APlayerPawn::Tick(float DeltaTime)
 		// PARANOIA
 		if(lookingForParaProps)
 		{
-			UActorComponent* paraProp = (*i)->FindComponentByClass(UParanoiaComponent::StaticClass());
-			if(paraProp)
+			UParanoiaComponent* paraProp = Cast<UParanoiaComponent>((*i)->FindComponentByClass(UParanoiaComponent::StaticClass()));
+			if(paraProp && !paraProp->IsInUse())
 			{
 				UParanoiaComponent* add = Cast<UParanoiaComponent>(paraProp);
 				check(add);
 				if(!SelectedProps.Contains(add))
 				{
 					SelectedProps.Add(add);
-					add->OnInteract();
+					add->OnInteractInternal();
 				}
 			}
 		}
@@ -96,9 +96,9 @@ void APlayerPawn::Interact()
 			if(!Cast<UParanoiaComponent>(*i))
 				target = *i;
 	}
-	if(target)
+	if(target && !target->IsInUse())
 	{
-		target->OnInteract();
+		target->OnInteractInternal();
 		UPossesableComponent * comp = Cast<UPossesableComponent>(target);
 		if(comp)
 		{
@@ -112,7 +112,7 @@ void APlayerPawn::Interact()
 		}
 		else
 		{
-			target->EndInteract();
+			target->EndInteractInternal();
 		}
 	}
 }
@@ -135,7 +135,7 @@ void APlayerPawn::EndAction()
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Prop Went Off"));
 		}
 		
-		prop->EndInteract();
+		prop->EndInteractInternal();
 	}
 	SelectedProps.Empty();
 #pragma endregion
