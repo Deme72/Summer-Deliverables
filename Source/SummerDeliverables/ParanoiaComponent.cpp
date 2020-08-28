@@ -12,8 +12,9 @@ UParanoiaComponent::UParanoiaComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	uses=0; 			 // effectiveness modified by uses
-	currentTime = 0;
 	usesCooldownTime = 0;
+	useCooldown = 0;
+	active = false;
 }
 
 

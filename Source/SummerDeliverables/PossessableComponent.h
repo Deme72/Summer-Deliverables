@@ -19,9 +19,6 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 	public:
 		// Default constructor.
 		UPossesableComponent();
-	
-		virtual void OnInteract_Implementation() override;
-		virtual void EndInteract_Implementation() override;
 
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void TakeAction();

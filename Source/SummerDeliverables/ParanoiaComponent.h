@@ -24,7 +24,7 @@ public:
 	float paranoiaAmount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
-    float useCooldown = 0;
+    float useCooldown;
 
 	UPROPERTY(VisibleAnywhere, Category="Debug")
 	bool active;
@@ -36,7 +36,6 @@ protected:
 	virtual void BeginPlay() override;
 	
 	int uses; 			 // effectiveness modified by uses
-	float currentTime;
 	float usesCooldownTime;
 	// TODO: TArray<AEnemies>
 	// TODO: Effected enemies

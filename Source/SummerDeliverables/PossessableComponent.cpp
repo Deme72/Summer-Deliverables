@@ -8,15 +8,6 @@ UPossesableComponent::UPossesableComponent()
     CurrentCooldown = 0.0f;
 }
 
-void UPossesableComponent::OnInteract_Implementation()
-{
-   
-}
-
-void UPossesableComponent::EndInteract_Implementation()
-{
-    
-}
 
 void UPossesableComponent::TickComponent(float deltaTime)
 {
