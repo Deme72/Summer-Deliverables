@@ -17,6 +17,8 @@ public:
 protected:
 	
 	virtual void OnConstruction(const FTransform & Transform) override;
+
+	virtual void PostInitializeComponents();
 	
 protected:
     // Reference to currently possessing player, used for un-possessing.
