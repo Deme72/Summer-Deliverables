@@ -48,7 +48,8 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 		ParanoiaBounds->GetOverlappingActors(collisions);
 		for(auto i = collisions.begin(); i != collisions.end(); ++i)
 		{
-			//TODO: get an enemy component to check against and make sure our target is an enemy
+			// TODO: get an enemy component to check against and make sure our target is an enemy
+			// TODO: Find the cause of ParanoiaComponent::uses falling below zero (parallel security issue(?))
 			if (uses > 0)
 				paranoiaAmount = 1/uses+1;
 			else
@@ -63,7 +64,7 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 void UParanoiaComponent::OnInteractInternal() // When Selected
 {
 	Super::OnInteractInternal();
-	//TODO: make pretty highlight/animations <3
+	// TODO: make pretty highlight/animations <3
 
 }
 
