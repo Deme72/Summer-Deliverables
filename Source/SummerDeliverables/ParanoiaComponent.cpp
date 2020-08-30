@@ -3,6 +3,7 @@
 
 #include "ParanoiaComponent.h"
 #include "Components/ShapeComponent.h"
+#include "DefinedDebugHelpers.h"
 
 // Sets default values for this component's properties
 UParanoiaComponent::UParanoiaComponent()
@@ -48,7 +49,10 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 		for(auto i = collisions.begin(); i != collisions.end(); ++i)
 		{
 			//TODO: get an enemy component to check against and make sure our target is an enemy
-			paranoiaAmount = 1/uses+1;
+			if (uses > 0)
+				paranoiaAmount = 1/uses+1;
+			else
+				V_LOG(TEXT("USES IS FALLING BELOW ZERO"));
 			//target->TakeDamage(paranoiaAmount);
 		}
 		
