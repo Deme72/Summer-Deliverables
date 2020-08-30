@@ -72,9 +72,6 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		float CurrentCooldown;
 	
 	public:
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
-		USceneComponent * ExitPoint;
-	
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
 		float StamDrainRate;
 	
