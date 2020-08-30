@@ -34,7 +34,7 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	if(uses > 0) // use cooldown  
 	{
 		usesCooldownTime += DeltaTime;
-		if(usesCooldownTime > useCooldown)
+		if(usesCooldownTime > useCooldown && uses > 0)
 		{
 			uses -= 1;
 			usesCooldownTime = 0;
@@ -52,8 +52,8 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 			// TODO: Find the cause of ParanoiaComponent::uses falling below zero (parallel security issue(?))
 			if (uses > 0)
 				paranoiaAmount = 1/uses+1;
-			else
-				V_LOG(TEXT("USES IS FALLING BELOW ZERO"));
+			//else
+				//V_LOG(TEXT("USES IS FALLING BELOW ZERO"));
 			//target->TakeDamage(paranoiaAmount);
 		}
 		

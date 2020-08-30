@@ -6,6 +6,7 @@
 #include "DefinedDebugHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/SceneComponent.h"
 #include "PossessableComponent.h"
 
 APossessablePawn::APossessablePawn()
@@ -13,20 +14,27 @@ APossessablePawn::APossessablePawn()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(MakeUniqueObjectName(this, UStaticMeshComponent::StaticClass()));
+	RootComponent = StaticMeshComponent;
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(MakeUniqueObjectName(this, USkeletalMeshComponent::StaticClass()));
-	SkeletalMeshComponent->AttachTo(StaticMeshComponent);
+	SkeletalMeshComponent->SetupAttachment(StaticMeshComponent);
 	ExitPoint = CreateDefaultSubobject<USceneComponent>(MakeUniqueObjectName(this, USceneComponent::StaticClass()));
-	ExitPoint->AttachTo(SkeletalMeshComponent);
+	ExitPoint->SetupAttachment(SkeletalMeshComponent);
 }
 
 void APossessablePawn::OnConstruction(const FTransform & Transform)
 {
-	
+	/*RootComponent = StaticMeshComponent;
+	SkeletalMeshComponent->AttachTo(StaticMeshComponent);
+	ExitPoint->AttachTo(SkeletalMeshComponent);*/
 	CurrentPlayer = nullptr;
 	if(PossessableComponentType && !PossessableComponent)
 	{
 		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
 		PossessableComponent->RegisterComponent();
+		TArray<UShapeComponent*> tmp = {};
+		GetComponents<UShapeComponent>(tmp);
+		PossessableComponent->InteractBounds = tmp.Pop();
+		V_LOG(("NUM OF COMPONENTS" + (tmp.Num())));
 	}
 }
 

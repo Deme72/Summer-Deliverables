@@ -68,7 +68,7 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		// TODO: Add new virtual inputs as necessary
 	
-		virtual void TickComponent(float deltaTime);
+		virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
 	private:
 		/// The time, in seconds, since this component has been used
