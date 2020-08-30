@@ -10,14 +10,13 @@ UCLASS()
 class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 {
     GENERATED_BODY()
-    
 public:
     // Constructor and destructor
 	APossessablePawn();
 
 protected:
-	// Called when the game starts or when spawned
-    virtual void BeginPlay() override;
+	
+	virtual void OnConstruction(const FTransform & Transform) override;
 	
 protected:
     // Reference to currently possessing player, used for un-possessing.
@@ -39,7 +38,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
     class USceneComponent* ExitPoint;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-    class UPossesableComponent* PossessableComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	class UPossesableComponent * PossessableComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	class TSubclassOf<UPossesableComponent> PossessableComponentType;
 	
 };

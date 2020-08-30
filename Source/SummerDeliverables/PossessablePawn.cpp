@@ -3,19 +3,25 @@
 #include "PossessablePawn.h"
 #include "GameFramework/Actor.h"
 #include "PlayerPawn.h"
+#include "DefinedDebugHelpers.h"
 #include "PossessableComponent.h"
 
 APossessablePawn::APossessablePawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	CurrentPlayer = nullptr;
 }
 
-void APossessablePawn::BeginPlay()
+void APossessablePawn::OnConstruction(const FTransform & Transform)
 {
-	Super::BeginPlay();
+	
+	CurrentPlayer = nullptr;
+	if(PossessableComponentType && !PossessableComponent)
+	{
+		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
+		PossessableComponent->RegisterComponent();
+		PossessableComponent->ExitPoint = ExitPoint;
+	}
 }
 
 void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
