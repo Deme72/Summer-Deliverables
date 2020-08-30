@@ -77,8 +77,8 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerPawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerPawn::MoveRight);
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &APlayerPawn::TurnAtRate);
+	PlayerInputComponent->BindAxis("LookRight", this, &APlayerPawn::LookRight); 
+	PlayerInputComponent->BindAxis("LookUp", this, &APlayerPawn::LookUp); 
 	PlayerInputComponent->BindAction("Interact", IE_Released, this, &APlayerPawn::Interact);
 	PlayerInputComponent->BindAction("FaceButtonBottom", IE_Pressed, this, &APlayerPawn::TakeAction);
 	PlayerInputComponent->BindAction("FaceButtonBottom", IE_Released, this, &APlayerPawn::EndAction);
@@ -173,9 +173,26 @@ void APlayerPawn::MoveRight(float Value)
 	}
 }
 
-void APlayerPawn::TurnAtRate(float Rate)
+
+void APlayerPawn::LookRight(float Value)
 {
-	// calculate delta for this frame from the rate information
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+	}
 }
+
+void APlayerPawn::LookUp(float Value)
+{
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
+	}
+}
+
+//void APlayerPawn::TurnAtRate(float Rate)
+//{
+//	// calculate delta for this frame from the rate information
+//	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+//}
 #pragma endregion 

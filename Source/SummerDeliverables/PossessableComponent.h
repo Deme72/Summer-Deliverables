@@ -49,11 +49,21 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		void MoveRightAxis(float Axis);
 	
 		virtual void MoveRightAxis_Implementation(float Axis){}
-	
+		
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void MoveForwardAxis(float Axis);
-	
+		
 		virtual void MoveForwardAxis_Implementation(float Axis){}
+
+		UFUNCTION(BlueprintNativeEvent, Category = "InputEvent")
+	    void LookUpAxis(float Axis);
+
+		virtual void LookUpAxis_Implementation(float Axis){};
+
+		UFUNCTION(BlueprintNativeEvent, Category = "InputEvent")
+	    void LookRightAxis(float Axis);
+
+		virtual void LookRightAxis_Implementation(float Axis){};
 
 		virtual void TickComponent(float deltaTime);
 
