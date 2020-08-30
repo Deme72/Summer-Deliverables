@@ -4,12 +4,19 @@
 #include "GameFramework/Actor.h"
 #include "PlayerPawn.h"
 #include "DefinedDebugHelpers.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "PossessableComponent.h"
 
 APossessablePawn::APossessablePawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(MakeUniqueObjectName(this, UStaticMeshComponent::StaticClass()));
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(MakeUniqueObjectName(this, USkeletalMeshComponent::StaticClass()));
+	SkeletalMeshComponent->AttachTo(StaticMeshComponent);
+	ExitPoint = CreateDefaultSubobject<USceneComponent>(MakeUniqueObjectName(this, USceneComponent::StaticClass()));
+	ExitPoint->AttachTo(SkeletalMeshComponent);
 }
 
 void APossessablePawn::OnConstruction(const FTransform & Transform)
@@ -20,7 +27,6 @@ void APossessablePawn::OnConstruction(const FTransform & Transform)
 	{
 		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
 		PossessableComponent->RegisterComponent();
-		PossessableComponent->ExitPoint = ExitPoint;
 	}
 }
 

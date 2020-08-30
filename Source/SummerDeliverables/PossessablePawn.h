@@ -38,10 +38,15 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
     class USceneComponent* ExitPoint;
     
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UPossesableComponent * PossessableComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class TSubclassOf<UPossesableComponent> PossessableComponentType;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	class USkeletalMeshComponent * SkeletalMeshComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	class UStaticMeshComponent * StaticMeshComponent;
 };
