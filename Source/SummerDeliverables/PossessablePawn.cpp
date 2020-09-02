@@ -7,34 +7,38 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/ShapeComponent.h"
 #include "PossessableComponent.h"
 
-APossessablePawn::APossessablePawn()
+APossessablePawn::APossessablePawn():APawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(MakeUniqueObjectName(this, UStaticMeshComponent::StaticClass()));
-	RootComponent = StaticMeshComponent;
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(MakeUniqueObjectName(this, USkeletalMeshComponent::StaticClass()));
-	SkeletalMeshComponent->SetupAttachment(StaticMeshComponent);
 	ExitPoint = CreateDefaultSubobject<USceneComponent>(MakeUniqueObjectName(this, USceneComponent::StaticClass()));
+	
+	RootComponent = StaticMeshComponent;
+	SkeletalMeshComponent->SetupAttachment(StaticMeshComponent);
 	ExitPoint->SetupAttachment(SkeletalMeshComponent);
+	
+	
 }
-
+/*
 void APossessablePawn::OnConstruction(const FTransform & Transform)
 {
-	/*RootComponent = StaticMeshComponent;
-	SkeletalMeshComponent->AttachTo(StaticMeshComponent);
-	ExitPoint->AttachTo(SkeletalMeshComponent);*/
+	Super::OnConstruction(Transform);
 	CurrentPlayer = nullptr;
-	if(PossessableComponentType && !PossessableComponent)
+	if(PossessableComponentType && !IsValid(PossessableComponent))
 	{
 		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
 		PossessableComponent->RegisterComponent();
+		//TODO: BAD WAY OF GETTING SHAPE COMPONENTS, DOESN'T WORK WITH MORE THAN ONE, FIX LATER
 		TArray<UShapeComponent*> tmp = {};
 		GetComponents<UShapeComponent>(tmp);
-		PossessableComponent->InteractBounds = tmp.Pop();
-		V_LOG(("NUM OF COMPONENTS" + (tmp.Num())));
+		if(tmp.Num())
+			PossessableComponent->InteractBounds = tmp.Pop();
 	}
 }
 
@@ -77,4 +81,9 @@ void APossessablePawn::EndPossession()
 		PossessableComponent->EndInteractInternal();
 		CurrentPlayer = nullptr;
 	}
+}*/
+
+void APossessablePawn::EndPossession()
+{
+	
 }
