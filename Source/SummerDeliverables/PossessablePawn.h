@@ -33,6 +33,9 @@ public:
 
 	// Relocates the current player pawn to exit point and possesses it.
 	virtual void EndPossession();
+
+	UFUNCTION(BlueprintCallable, Category="Outline")
+	void Set_Outline(bool OutLine_ON,int depthInt); //depthInt Basically a number which will tell the outline material when we set the depth on the mesh which color to use.
     
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
@@ -49,4 +52,7 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	class UStaticMeshComponent * StaticMeshComponent;
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly,Category= "OutLine")
+	bool OutLine_ON = false;*/
 };

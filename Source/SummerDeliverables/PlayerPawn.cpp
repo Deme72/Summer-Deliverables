@@ -24,7 +24,6 @@ APlayerPawn::APlayerPawn()
 	// OverlappingInteractables = ?
 }
 
-
 // Called when the game starts or when spawned
 void APlayerPawn::BeginPlay()
 {
@@ -46,8 +45,19 @@ void APlayerPawn::Tick(float DeltaTime)
 		if(comp)
 		{
 			UInteractableComponent * add = Cast<UInteractableComponent>(comp);
-			check(add);
 			OverlappingInteractables.Add(add);
+			/*APossessablePawn * possess = Cast<APossessablePawn>(Cast<UPossesableComponent>(comp)->GetOwner());
+			if (possess)
+			{
+				if ((*i)->ActorHasTag(TEXT("DynamicProp")))
+				{
+					possess->Set_Outline(true,1);
+				}
+				else 
+				{
+					possess->Set_Outline(true,3);
+				}
+			}*/
 		}
 		
 		// PARANOIA
