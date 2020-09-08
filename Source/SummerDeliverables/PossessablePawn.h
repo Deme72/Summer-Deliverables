@@ -16,7 +16,7 @@ public:
 
 protected:
 	
-	//virtual void OnConstruction(const FTransform & Transform) override;
+	virtual void OnConstruction(const FTransform & Transform) override;
 	
 protected:
     // Reference to currently possessing player, used for un-possessing.
@@ -26,10 +26,10 @@ public:
 
 	void setPlayer(APlayerPawn * p){CurrentPlayer = p;}
     // Called every frame
-    //virtual void Tick(float DeltaTime) override;
+    virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-    //virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Relocates the current player pawn to exit point and possesses it.
 	virtual void EndPossession();

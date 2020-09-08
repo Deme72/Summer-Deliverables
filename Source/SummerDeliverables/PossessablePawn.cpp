@@ -25,7 +25,7 @@ APossessablePawn::APossessablePawn():APawn()
 	
 	
 }
-/*
+
 void APossessablePawn::OnConstruction(const FTransform & Transform)
 {
 	Super::OnConstruction(Transform);
@@ -81,9 +81,4 @@ void APossessablePawn::EndPossession()
 		PossessableComponent->EndInteractInternal();
 		CurrentPlayer = nullptr;
 	}
-}*/
-
-void APossessablePawn::EndPossession()
-{
-	
 }
