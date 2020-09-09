@@ -19,19 +19,16 @@ public:
 	// Sets default values for this pawn's properties
 	APlayerPawn();
 
-	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate.*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Movement)
     float BaseTurnRate;
 
-	/// The speed, in Unreal units, that the player pawn moves right and forward at
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 	float MovementSpeed;
 
-	/// The current stamina that the Player has
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
 	float Stamina;
 
-	/// The bounding shape in which the Player can interact with other possessables whose bounding shape collides with this
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)
     UShapeComponent * InteractBounds;
 
@@ -41,61 +38,45 @@ protected:
 
 	
 private:
-	/// The current bindings (the active input axis/actions and their code) of this player component
-	/// bindings change from possession to possession
 	PossessableComponent* CurrentBindings;
-
-	/// An array of all interactable props within the bounding area of InteractBounds 
 	TArray<UInteractableComponent*> OverlappingInteractables;
-
-	/// An array of all props currently being selected from
 	TArray<UParanoiaComponent*> SelectedProps;
-
-	/// A boolean value; true if the player is currently checking for collisions with paranoia props
 	bool lookingForParaProps = false;
 	
 public: // PUBLIC FUNCTIONS
-	/// Called every frame, put collision related code in here
+	
 	virtual void Tick(float DeltaTime) override;
 
-	/// Called to bind functionality to the InputComponents
+	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	/// Handles interacting with interactable component derived objects
 	UFUNCTION()
 	void Interact();
 
-	/// Handles calling the action mapping for a currently possessed object
 	UFUNCTION()
     void TakeAction();
 
-	/// Handles cleaning up an interaction with a prop
 	UFUNCTION()
     void EndAction();
 	
-	/// Returns a TArray of all interactable components currently within the player's InteractBounds
+
 	UFUNCTION()
 	TArray<UInteractableComponent*> GetOverlappingInteractables() const
 	{return OverlappingInteractables;}
 
-	/// Returns a boolean value; whether or not the Player is currently possessing a prop
 	UFUNCTION()
 	bool IsPossessing() const
 	{return CurrentBindings != nullptr;}
 
-	/// Handles moving the player along their Z axis
-	/// positive #s move forward, negative backwards
+	/** Called for forwards/backward input */
 	void MoveForward(float Value);
 
-	/// Handles moving the player along their X axis
-	/// positive #s move right, negative left
+	/** Called for side to side input */
 	void MoveRight(float Value);
 
-	/// Handles turning the player's view around their Y axis
-	/// positive #s turning right, negative left
-	void LookRight(float Value);
-
-	/// Handles turning the player's view around their X axis
-	/// positive #s turning up, negative down
-	void LookUp(float Value);
+	/** 
+	* Called via input to turn at a given rate. 
+	* @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+	*/
+	void TurnAtRate(float Rate);
 };

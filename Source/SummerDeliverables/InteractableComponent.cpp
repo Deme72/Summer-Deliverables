@@ -9,15 +9,3 @@ UInteractableComponent::UInteractableComponent()
     bInUse = false;
 }
 
-void UInteractableComponent::OnInteractInternal()
-{
-    bInUse = true;
-    OnInteract();
-}
-
-void UInteractableComponent::EndInteractInternal()
-{
-    bInUse = false;
-    EndInteract();
-}
-

@@ -27,19 +27,12 @@ public:
 	//Public methods
 	virtual void BluePrintInit(){}; //need to ask johnathan about how to do this
 
-	///The playerPawn should call this c++ function which then calls the overwritten Blueprint OnInteract function
-	virtual void OnInteractInternal();
-
-	///This function should not be called from other c++ files
 	UFUNCTION(BlueprintNativeEvent, Category="Event")
 	void OnInteract();
 	
-	virtual void OnInteract_Implementation(){}; //this function is a default implementation and should never be called OnInteract should call it
+	virtual void OnInteract_Implementation(){}; //this function is a default implementation and should never be called EndInteract should call it
 
-	///The playerPawn should call this c++ function which then calls the overwritten Blueprint EndInteract function
-	virtual void EndInteractInternal();
-
-	///This function should not be called from other c++ files
+	
 	UFUNCTION(BlueprintNativeEvent, Category="Event")
     void EndInteract();
 	
@@ -49,7 +42,6 @@ public:
 	virtual bool IsInUse(){return bInUse;}; //getter for bInUse
 protected:
 	// Private properties
-	UPROPERTY(VisibleAnywhere)
 	bool bInUse;
 	
 public:

@@ -53,15 +53,15 @@ void APlayerPawn::Tick(float DeltaTime)
 		// PARANOIA
 		if(lookingForParaProps)
 		{
-			UParanoiaComponent* paraProp = Cast<UParanoiaComponent>((*i)->FindComponentByClass(UParanoiaComponent::StaticClass()));
-			if(paraProp && !paraProp->IsInUse())
+			UActorComponent* paraProp = (*i)->FindComponentByClass(UParanoiaComponent::StaticClass());
+			if(paraProp)
 			{
 				UParanoiaComponent* add = Cast<UParanoiaComponent>(paraProp);
 				check(add);
 				if(!SelectedProps.Contains(add))
 				{
 					SelectedProps.Add(add);
-					add->OnInteractInternal();
+					add->OnInteract();
 				}
 			}
 		}
@@ -77,8 +77,8 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerPawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerPawn::MoveRight);
-	PlayerInputComponent->BindAxis("LookRight", this, &APlayerPawn::LookRight); 
-	PlayerInputComponent->BindAxis("LookUp", this, &APlayerPawn::LookUp); 
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("TurnRate", this, &APlayerPawn::TurnAtRate);
 	PlayerInputComponent->BindAction("Interact", IE_Released, this, &APlayerPawn::Interact);
 	PlayerInputComponent->BindAction("FaceButtonBottom", IE_Pressed, this, &APlayerPawn::TakeAction);
 	PlayerInputComponent->BindAction("FaceButtonBottom", IE_Released, this, &APlayerPawn::EndAction);
@@ -96,20 +96,23 @@ void APlayerPawn::Interact()
 			if(!Cast<UParanoiaComponent>(*i))
 				target = *i;
 	}
-	if(target && !target->IsInUse())
+	if(target)
 	{
-		target->OnInteractInternal();
+		target->OnInteract();
 		UPossesableComponent * comp = Cast<UPossesableComponent>(target);
 		if(comp)
 		{
 			APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
 			check(possess);
-			GetController()->Possess(possess);
-			possess->setPlayer(this);
+			if(!possess->IsControlled())
+			{
+				GetController()->Possess(possess);
+				possess->setPlayer(this);
+			}
 		}
 		else
 		{
-			target->EndInteractInternal();
+			target->EndInteract();
 		}
 	}
 }
@@ -132,7 +135,7 @@ void APlayerPawn::EndAction()
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Prop Went Off"));
 		}
 		
-		prop->EndInteractInternal();
+		prop->EndInteract();
 	}
 	SelectedProps.Empty();
 #pragma endregion
@@ -170,26 +173,9 @@ void APlayerPawn::MoveRight(float Value)
 	}
 }
 
-
-void APlayerPawn::LookRight(float Value)
+void APlayerPawn::TurnAtRate(float Rate)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
-	{
-		AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-	}
+	// calculate delta for this frame from the rate information
+	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
-
-void APlayerPawn::LookUp(float Value)
-{
-	if ((Controller != NULL) && (Value != 0.0f))
-	{
-		AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
-	}
-}
-
-//void APlayerPawn::TurnAtRate(float Rate)
-//{
-//	// calculate delta for this frame from the rate information
-//	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-//}
 #pragma endregion 
