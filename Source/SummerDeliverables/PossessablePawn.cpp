@@ -3,19 +3,43 @@
 #include "PossessablePawn.h"
 #include "GameFramework/Actor.h"
 #include "PlayerPawn.h"
+#include "DefinedDebugHelpers.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/SceneComponent.h"
+#include "Components/ShapeComponent.h"
 #include "PossessableComponent.h"
 
-APossessablePawn::APossessablePawn()
+APossessablePawn::APossessablePawn():APawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	CurrentPlayer = nullptr;
+	
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(MakeUniqueObjectName(this, UStaticMeshComponent::StaticClass()));
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(MakeUniqueObjectName(this, USkeletalMeshComponent::StaticClass()));
+	ExitPoint = CreateDefaultSubobject<USceneComponent>(MakeUniqueObjectName(this, USceneComponent::StaticClass()));
+	
+	RootComponent = StaticMeshComponent;
+	SkeletalMeshComponent->SetupAttachment(StaticMeshComponent);
+	ExitPoint->SetupAttachment(SkeletalMeshComponent);
+	
+	
 }
 
-void APossessablePawn::BeginPlay()
+void APossessablePawn::OnConstruction(const FTransform & Transform)
 {
-	Super::BeginPlay();
+	Super::OnConstruction(Transform);
+	CurrentPlayer = nullptr;
+	if(PossessableComponentType && !IsValid(PossessableComponent))
+	{
+		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
+		PossessableComponent->RegisterComponent();
+		//TODO: BAD WAY OF GETTING SHAPE COMPONENTS, DOESN'T WORK WITH MORE THAN ONE, FIX LATER
+		TArray<UShapeComponent*> tmp = {};
+		GetComponents<UShapeComponent>(tmp);
+		if(tmp.Num())
+			PossessableComponent->InteractBounds = tmp.Pop();
+	}
 }
 
 void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -54,7 +78,7 @@ void APossessablePawn::EndPossession()
 		// move player pawn to the exit point and repossess
 		CurrentPlayer->SetActorLocation(ExitPoint->GetComponentLocation());
 		GetController()->Possess(CurrentPlayer);
-		PossessableComponent->EndInteract();
+		PossessableComponent->EndInteractInternal();
 		CurrentPlayer = nullptr;
 	}
 }

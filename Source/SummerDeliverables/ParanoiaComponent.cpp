@@ -3,6 +3,7 @@
 
 #include "ParanoiaComponent.h"
 #include "Components/ShapeComponent.h"
+#include "DefinedDebugHelpers.h"
 
 // Sets default values for this component's properties
 UParanoiaComponent::UParanoiaComponent()
@@ -11,7 +12,10 @@ UParanoiaComponent::UParanoiaComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	uses=0; 			 // effectiveness modified by uses
+	usesCooldownTime = 0;
+	useCooldown = 0;
+	active = false;
 }
 
 
@@ -19,9 +23,6 @@ UParanoiaComponent::UParanoiaComponent()
 void UParanoiaComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
 
@@ -33,7 +34,7 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	if(uses > 0) // use cooldown  
 	{
 		usesCooldownTime += DeltaTime;
-		if(usesCooldownTime > useCooldown)
+		if(usesCooldownTime > useCooldown && uses > 0)
 		{
 			uses -= 1;
 			usesCooldownTime = 0;
@@ -43,22 +44,16 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	
 	if(active) // dealing damage  (UNFINISHED)
 	{
-		/*timer+=DeltaTime;
-		if(currentTime >= timer) // if we are done doing damage
-		{//reset
-			active = false;
-			currentTime = 0;
-		}
-		else
-		{
-			
-		}*/
 		TArray<AActor *> collisions = {};
 		ParanoiaBounds->GetOverlappingActors(collisions);
 		for(auto i = collisions.begin(); i != collisions.end(); ++i)
 		{
-			//TODO: get an enemy component to check against and make sure our target is an enemy
-			paranoiaAmount = 1/uses+1;
+			// TODO: get an enemy component to check against and make sure our target is an enemy
+			// TODO: Find the cause of ParanoiaComponent::uses falling below zero (parallel security issue(?))
+			if (uses > 0)
+				paranoiaAmount = 1/uses+1;
+			//else
+				//V_LOG(TEXT("USES IS FALLING BELOW ZERO"));
 			//target->TakeDamage(paranoiaAmount);
 		}
 		
@@ -66,15 +61,17 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 }
 
-void UParanoiaComponent::OnInteract_Implementation() // When Selected
+void UParanoiaComponent::OnInteractInternal() // When Selected
 {
-	//TODO: make pretty highlight/animations <3
+	Super::OnInteractInternal();
+	// TODO: make pretty highlight/animations <3
 
 }
 
-void UParanoiaComponent::EndInteract_Implementation() // Activate ParaProp
+void UParanoiaComponent::EndInteractInternal() // Activate ParaProp
 {
 	active = true;
 	uses += 1;
+	Super::EndInteractInternal();
 }
 

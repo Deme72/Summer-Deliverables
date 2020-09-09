@@ -8,20 +8,11 @@ UPossesableComponent::UPossesableComponent()
     CurrentCooldown = 0.0f;
 }
 
-void UPossesableComponent::OnInteract_Implementation()
-{
-   bInUse=true; //TODO: BAD GETS OVERWRITTEN IN BLUEPRINTS
-}
 
-void UPossesableComponent::EndInteract_Implementation()
-{
-    bInUse=false;//TODO: BAD GETS OVERWRITTEN IN BLUEPRINTS
-}
-
-void UPossesableComponent::TickComponent(float deltaTime)
+void UPossesableComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
     if(CurrentCooldown>0)
-        CurrentCooldown-=deltaTime;
+        CurrentCooldown-=DeltaTime;
     else
         CurrentCooldown = 0;
 }
