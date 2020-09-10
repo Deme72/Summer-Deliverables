@@ -15,15 +15,13 @@ APossessablePawn::APossessablePawn():APawn()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(MakeUniqueObjectName(this, UStaticMeshComponent::StaticClass()));
-	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(MakeUniqueObjectName(this, USkeletalMeshComponent::StaticClass()));
-	ExitPoint = CreateDefaultSubobject<USceneComponent>(MakeUniqueObjectName(this, USceneComponent::StaticClass()));
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PossessableBaseMesh"));
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalBaseMesh"));
+	ExitPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Exit Point"));
 	
 	RootComponent = StaticMeshComponent;
 	SkeletalMeshComponent->SetupAttachment(StaticMeshComponent);
 	ExitPoint->SetupAttachment(SkeletalMeshComponent);
-	
-	
 }
 
 void APossessablePawn::OnConstruction(const FTransform & Transform)
