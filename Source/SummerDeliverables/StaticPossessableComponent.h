@@ -14,5 +14,5 @@ class SUMMERDELIVERABLES_API UStaticPossessableComponent : public UPossesableCom
 {
 	GENERATED_BODY()
 	public:
-	virtual void TakeAction_Implementation()override;
+	virtual void ScareButton_Implementation() override;
 };

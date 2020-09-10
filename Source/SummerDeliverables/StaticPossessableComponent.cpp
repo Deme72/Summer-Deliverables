@@ -3,7 +3,7 @@
 
 #include "StaticPossessableComponent.h"
 
-void UStaticPossessableComponent::TakeAction_Implementation()
+void UStaticPossessableComponent::ScareButton_Implementation()
 {
     
 }

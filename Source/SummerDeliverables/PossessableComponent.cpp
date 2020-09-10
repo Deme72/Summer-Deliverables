@@ -9,6 +9,12 @@ UPossesableComponent::UPossesableComponent()
 }
 
 
+void UPossesableComponent::Eject()
+{
+    APossessablePawn * tmp = Cast<APossessablePawn>(GetOwner());
+    tmp->EndPossession();
+}
+
 void UPossesableComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
     if(CurrentCooldown>0)

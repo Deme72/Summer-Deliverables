@@ -44,9 +44,9 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("Interact", IE_Released, this, &APossessablePawn::EndPossession);
-	PlayerInputComponent->BindAction("FaceButtonBottom", IE_Pressed, PossessableComponent, &UPossesableComponent::TakeAction);
-	PlayerInputComponent->BindAction("FaceButtonRight", IE_Pressed, PossessableComponent, &UPossesableComponent::ButtonRight);
+	PlayerInputComponent->BindAction("InteractButton", IE_Released, this, &APossessablePawn::EndPossession);
+	PlayerInputComponent->BindAction("MoveButton", IE_Pressed, PossessableComponent, &UPossesableComponent::MoveButton);
+	PlayerInputComponent->BindAction("ScareButton", IE_Pressed, PossessableComponent, &UPossesableComponent::ScareButton);
 	PlayerInputComponent->BindAction("FaceButtonTop", IE_Pressed, PossessableComponent, &UPossesableComponent::ButtonTop);
 	PlayerInputComponent->BindAction("RightTrigger", IE_Pressed, PossessableComponent, &UPossesableComponent::RightTrigger);
 	PlayerInputComponent->BindAction("LeftTrigger", IE_Pressed, PossessableComponent, &UPossesableComponent::LeftTrigger);

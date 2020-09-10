@@ -22,14 +22,14 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// An Event that should define using a prop's ability
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
-		void TakeAction();
+		void ScareButton();
 		
-		virtual void TakeAction_Implementation(){};
+		virtual void ScareButton_Implementation(){};
 
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
-	    void ButtonRight();
+	    void MoveButton();
 
-		virtual void ButtonRight_Implementation(){};
+		virtual void MoveButton_Implementation(){};
 
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void ButtonTop();
@@ -65,6 +65,9 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 	    void LookRightAxis(float Axis);
 
 		virtual void LookRightAxis_Implementation(float Axis){};
+
+		UFUNCTION(BlueprintCallable, Category="Possessing")
+		void Eject();
 
 		// TODO: Add new virtual inputs as necessary
 	

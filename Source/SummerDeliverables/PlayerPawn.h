@@ -67,11 +67,11 @@ public: // PUBLIC FUNCTIONS
 
 	/// Handles calling the action mapping for a currently possessed object
 	UFUNCTION()
-    void TakeAction();
+    void ScareButtonStart();
 
 	/// Handles cleaning up an interaction with a prop
 	UFUNCTION()
-    void EndAction();
+    void ScareButtonEnd();
 	
 	/// Returns a TArray of all interactable components currently within the player's InteractBounds
 	UFUNCTION()

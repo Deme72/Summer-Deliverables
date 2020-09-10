@@ -14,6 +14,6 @@ void UDynamicPossessableComponent::MoveForwardAxis_Implementation(float Axis)
 };
 
 
-void UDynamicPossessableComponent::TakeAction_Implementation()
+void UDynamicPossessableComponent::ScareButton_Implementation()
 {
 }

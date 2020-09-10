@@ -21,7 +21,7 @@ APlayerPawn::APlayerPawn()
 
 	// ... and components
 	CurrentBindings = nullptr;
-	// OverlappingInteractables = ?
+	OverlappingInteractables = {};
 }
 
 
@@ -79,9 +79,9 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerPawn::MoveRight);
 	PlayerInputComponent->BindAxis("LookRight", this, &APlayerPawn::LookRight); 
 	PlayerInputComponent->BindAxis("LookUp", this, &APlayerPawn::LookUp); 
-	PlayerInputComponent->BindAction("Interact", IE_Released, this, &APlayerPawn::Interact);
-	PlayerInputComponent->BindAction("FaceButtonBottom", IE_Pressed, this, &APlayerPawn::TakeAction);
-	PlayerInputComponent->BindAction("FaceButtonBottom", IE_Released, this, &APlayerPawn::EndAction);
+	PlayerInputComponent->BindAction("InteractButton", IE_Released, this, &APlayerPawn::Interact);
+	PlayerInputComponent->BindAction("ScareButton", IE_Pressed, this, &APlayerPawn::ScareButtonStart);
+	PlayerInputComponent->BindAction("ScareButton", IE_Released, this, &APlayerPawn::ScareButtonEnd);
 }
 
 
@@ -115,13 +115,13 @@ void APlayerPawn::Interact()
 }
 
 
-void APlayerPawn::TakeAction()
+void APlayerPawn::ScareButtonStart()
 {
 	lookingForParaProps = true;
 }
 
 
-void APlayerPawn::EndAction()
+void APlayerPawn::ScareButtonEnd()
 {
 #pragma region ParanoiaProps
 	lookingForParaProps = false;
