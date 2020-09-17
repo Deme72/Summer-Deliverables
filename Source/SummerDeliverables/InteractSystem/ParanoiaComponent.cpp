@@ -3,7 +3,7 @@
 
 #include "ParanoiaComponent.h"
 #include "Components/ShapeComponent.h"
-#include "DefinedDebugHelpers.h"
+#include "SummerDeliverables/DefinedDebugHelpers.h"
 
 // Sets default values for this component's properties
 UParanoiaComponent::UParanoiaComponent()

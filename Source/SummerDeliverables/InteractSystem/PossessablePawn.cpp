@@ -2,8 +2,8 @@
 
 #include "PossessablePawn.h"
 #include "GameFramework/Actor.h"
-#include "PlayerPawn.h"
-#include "DefinedDebugHelpers.h"
+#include "SummerDeliverables/PlayerPawn.h"
+#include "SummerDeliverables/DefinedDebugHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"

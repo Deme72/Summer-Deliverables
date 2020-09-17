@@ -3,9 +3,9 @@
 
 #include "PlayerPawn.h"
 #include "Components/ShapeComponent.h"
-#include "PossessablePawn.h"
-#include "PossessableComponent.h"
-#include "ParanoiaComponent.h"
+#include "InteractSystem/PossessablePawn.h"
+#include "InteractSystem/PossessableComponent.h"
+#include "InteractSystem/ParanoiaComponent.h"
 
 
 // Sets default values

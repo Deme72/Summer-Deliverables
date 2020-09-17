@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractableComponent.h"
-#include "ParanoiaComponent.h"
+#include "InteractSystem/InteractableComponent.h"
+#include "InteractSystem/ParanoiaComponent.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerPawn.generated.h"
 
