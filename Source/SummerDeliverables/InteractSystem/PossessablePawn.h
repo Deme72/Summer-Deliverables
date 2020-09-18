@@ -4,8 +4,10 @@
 #include "GameFramework/Controller.h"
 #include "PossessablePawn.generated.h"
 
-/// Anything that can be possessed is a Possessable Pawn.
-
+/**
+ * Contains all of the functionality specific to pawns for possession
+ * Blueprint extensions change the visuals of the prop to match its functionality
+**/
 UCLASS()
 class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 {

@@ -8,6 +8,8 @@
 
 // TODO: set up uses cooldown
 
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
 {
@@ -29,16 +31,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
     float useCooldown;
 
-	/// Is this Paranoia Prop Activated by a Player
+	/// Triggers the damage dealing call in Tick
 	UPROPERTY(VisibleAnywhere, Category="Debug")
 	bool active;
 
 
 	
 protected:
-	// Called when the game starts, put functionality related to this timing here
-	virtual void BeginPlay() override;
-
 	/// How many times this paranoia component has been activated.
 	/// Affects the amount of paranoia damage caused by this prop's use (negative paranoia damage to uses correlation)
 	int uses;
