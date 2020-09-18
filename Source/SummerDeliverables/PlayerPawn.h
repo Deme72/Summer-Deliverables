@@ -9,6 +9,10 @@
 #include "PlayerPawn.generated.h"
 
 class PossessableComponent;
+/**
+ * Ghostly player pawn.
+**/
+
 
 UCLASS()
 class SUMMERDELIVERABLES_API APlayerPawn : public APawn
@@ -16,7 +20,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
+	/// Sets default values for this pawn's properties
 	APlayerPawn();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate.*/
@@ -34,11 +38,6 @@ public:
 	/// The bounding shape in which the Player can interact with other possessables whose bounding shape collides with this
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)
     UShapeComponent * InteractBounds;
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	
 private:
 	/// The current bindings (the active input axis/actions and their code) of this player component

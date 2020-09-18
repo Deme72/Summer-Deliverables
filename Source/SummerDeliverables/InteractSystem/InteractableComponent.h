@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "InteractableComponent.generated.h"
 
+/**
+ * Base class for anything the player uses the interact button to interact with 
+ **/
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class SUMMERDELIVERABLES_API UInteractableComponent : public UActorComponent
