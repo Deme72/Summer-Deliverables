@@ -5,33 +5,23 @@
 #include "Components/ShapeComponent.h"
 #include "SummerDeliverables/DefinedDebugHelpers.h"
 
-// Sets default values for this component's properties
+/// Sets default values for this component's properties
 UParanoiaComponent::UParanoiaComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	uses=0; 			 // effectiveness modified by uses
+	uses=0; 			
 	usesCooldownTime = 0;
 	useCooldown = 0;
 	active = false;
 }
 
 
-// Called when the game starts
-void UParanoiaComponent::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-
-// Called every frame
 void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if(uses > 0) // use cooldown  
+	if(uses > 0)
 	{
 		usesCooldownTime += DeltaTime;
 		if(usesCooldownTime > useCooldown && uses > 0)
@@ -56,7 +46,7 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 				//V_LOG(TEXT("USES IS FALLING BELOW ZERO"));
 			//target->TakeDamage(paranoiaAmount);
 		}
-		
+		active = false;
 	}
 
 }

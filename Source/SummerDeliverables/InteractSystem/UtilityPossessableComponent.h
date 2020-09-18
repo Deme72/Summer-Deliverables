@@ -7,8 +7,9 @@
 #include "UtilityPossessableComponent.generated.h"
 
 /**
- * 
- */
+ * TODO: As is the same as all the utilities, this is incomplete
+**/
+
 UCLASS()
 class SUMMERDELIVERABLES_API UUtilityPossessableComponent : public UPossesableComponent
 {
