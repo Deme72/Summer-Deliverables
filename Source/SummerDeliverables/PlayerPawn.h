@@ -17,83 +17,122 @@ UCLASS()
 class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 {
 	GENERATED_BODY()
+	// ==============================
+	// ===== DEFINES_/_TYPEDEFS =====
+	// ==============================
 
-public:
-	/// Sets default values for this pawn's properties
-	APlayerPawn();
+	// ======================================
+	// ===== FRIEND_FUNCTIONS_/_CLASSES =====
+	// ======================================
 
-	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate.*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
-    float BaseTurnRate;
+	// ========================
+	// ===== ENUM_CLASSES =====
+	// ========================
+	private:
+	protected:
+	public:
+	// ==========================
+	// ===== NESTED_CLASSES =====
+	// ==========================
+	private:
+	protected:
+	public:
+	// ======================
+	// ===== ATTRIBUTES =====
+	// ======================
+	private:
+		/// The current bindings (the active input axis/actions and their code) of this player component
+		/// bindings change from possession to possession
+		PossessableComponent* CurrentBindings;
 
-	/// The speed, in Unreal units, that the player pawn moves right and forward at
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
-	float MovementSpeed;
+		/// An array of all interactable props within the bounding area of InteractBounds 
+		TArray<UInteractableComponent*> OverlappingInteractables;
 
-	/// The current stamina that the Player has
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
-	float Stamina;
+		/// An array of all props currently being selected from
+		TArray<UParanoiaComponent*> SelectedProps;
 
-	/// The bounding shape in which the Player can interact with other possessables whose bounding shape collides with this
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)
-    UShapeComponent * InteractBounds;
+		/// A boolean value; true if the player is currently checking for collisions with paranoia props
+		bool lookingForParaProps = false;
 	
-private:
-	/// The current bindings (the active input axis/actions and their code) of this player component
-	/// bindings change from possession to possession
-	PossessableComponent* CurrentBindings;
+	protected:
+	public:
+		/** Base turn rate, in deg/sec. Other scaling may affect final turn rate.*/
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+		float BaseTurnRate;
 
-	/// An array of all interactable props within the bounding area of InteractBounds 
-	TArray<UInteractableComponent*> OverlappingInteractables;
+		/// The speed, in Unreal units, that the player pawn moves right and forward at
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+		float MovementSpeed;
 
-	/// An array of all props currently being selected from
-	TArray<UParanoiaComponent*> SelectedProps;
+		/// The current stamina that the Player has
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
+		float Stamina;
 
-	/// A boolean value; true if the player is currently checking for collisions with paranoia props
-	bool lookingForParaProps = false;
+		/// The bounding shape in which the Player can interact with other possessables whose bounding shape collides with this
+		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)
+		UShapeComponent * InteractBounds;
 	
-public: // PUBLIC FUNCTIONS
-	/// Called every frame, put collision related code in here
-	virtual void Tick(float DeltaTime) override;
+	// ======================================
+	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
+	// ======================================
+	private:
+	protected:
+	public:
+		/// Sets default values for this pawn's properties
+		APlayerPawn();
+	// =============================
+	// ===== GETTERS_/_SETTERS =====
+	// =============================
+	private:
+	protected:
+	public:
+	// ===================
+	// ===== METHODS =====
+	// ===================
+	private:
+	protected:
+	public:
+		/// Called every frame, put collision related code in here
+		virtual void Tick(float DeltaTime) override;
 
-	/// Called to bind functionality to the InputComponents
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+		/// Called to bind functionality to the InputComponents
+		virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	/// Handles interacting with interactable component derived objects
-	UFUNCTION()
-	void Interact();
+		/// Handles interacting with interactable component derived objects
+		UFUNCTION()
+	    void Interact();
 
-	/// Handles calling the action mapping for a currently possessed object
-	UFUNCTION()
-    void ScareButtonStart();
+		/// Handles calling the action mapping for a currently possessed object
+		UFUNCTION()
+	    void ScareButtonStart();
 
-	/// Handles cleaning up an interaction with a prop
-	UFUNCTION()
-    void ScareButtonEnd();
-	
-	/// Returns a TArray of all interactable components currently within the player's InteractBounds
-	UFUNCTION()
-	TArray<UInteractableComponent*> GetOverlappingInteractables() const
-	{return OverlappingInteractables;}
+		/// Handles cleaning up an interaction with a prop
+		UFUNCTION()
+	    void ScareButtonEnd();
+		
+		/// Returns a TArray of all interactable components currently within the player's InteractBounds
+		UFUNCTION()
+	    TArray<UInteractableComponent*> GetOverlappingInteractables() const
+		{return OverlappingInteractables;}
 
-	/// Returns a boolean value; whether or not the Player is currently possessing a prop
-	UFUNCTION()
-	bool IsPossessing() const
-	{return CurrentBindings != nullptr;}
+		/// Returns a boolean value; whether or not the Player is currently possessing a prop
+		UFUNCTION()
+	    bool IsPossessing() const
+		{return CurrentBindings != nullptr;}
 
-	/// Handles moving the player along their Z axis
-	/// positive #s move forward, negative backwards
-	void MoveForward(float Value);
+		/// Handles moving the player along their Z axis
+		/// positive #s move forward, negative backwards
+		void MoveForward(float Value);
 
-	/// Handles moving the player along their X axis
-	/// positive #s move right, negative left
-	void MoveRight(float Value);
+		/// Handles moving the player along their X axis
+		/// positive #s move right, negative left
+		void MoveRight(float Value);
 
-	/// Handles turning the player's view around their Y axis
-	/// positive #s turning right, negative left
-	void LookRight(float Value);
+		/// Handles turning the player's view around their Y axis
+		/// positive #s turning right, negative left
+		void LookRight(float Value);
 
-	/// Handles turning the player's view around their X axis
-	/// positive #s turning up, negative down
-	void LookUp(float Value);
+		/// Handles turning the player's view around their X axis
+		/// positive #s turning up, negative down
+		void LookUp(float Value);	
 };
