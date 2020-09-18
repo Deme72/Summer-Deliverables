@@ -9,11 +9,10 @@
 #include "PlayerPawn.generated.h"
 
 class PossessableComponent;
+
 /**
  * Ghostly player pawn.
 **/
-
-
 UCLASS()
 class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 {

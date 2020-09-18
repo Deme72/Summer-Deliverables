@@ -51,7 +51,7 @@ public:
 
 	///getter for bInUse
 	UFUNCTION(BlueprintCallable, Category="Getter")
-	virtual bool IsInUse(){return bInUse;}; 
+	virtual bool IsInUse() const {return bInUse;}; 
 protected:
 	///True if the component is being used
 	UPROPERTY(VisibleAnywhere)
