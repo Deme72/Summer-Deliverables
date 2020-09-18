@@ -8,7 +8,9 @@
 
 // TODO: set up uses cooldown
 
-
+/**
+ * Component to deal with the interactable objects that cause the enemies to be paranoid
+**/
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
