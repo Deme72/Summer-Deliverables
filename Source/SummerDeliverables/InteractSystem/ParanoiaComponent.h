@@ -17,49 +17,87 @@ class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
 {
 	GENERATED_BODY()
 
-public:	
-	/// Sets default values for this component's properties
-	UParanoiaComponent();
+	// ==============================
+	// ===== DEFINES_/_TYPEDEFS =====
+	// ==============================
 
-	/// A bounding object that defines the area in which this object must collide with enemies to cause paranoia damage to them 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collision")
-	UShapeComponent * ParanoiaBounds;
+	// ======================================
+	// ===== FRIEND_FUNCTIONS_/_CLASSES =====
+	// ======================================
 
-	/// The amount of Paranoia damage inflicted on enemies within the ParanoiaBounds
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
-	float paranoiaAmount;
+	// ========================
+	// ===== ENUM_CLASSES =====
+	// ========================
+	private:
+	protected:
+	public:
+	// ==========================
+	// ===== NESTED_CLASSES =====
+	// ==========================
+	private:
+	protected:
+	public:
+	// ======================
+	// ===== ATTRIBUTES =====
+	// ======================
+	private:
+	protected:
+		/// How many times this paranoia component has been activated.
+		/// Affects the amount of paranoia damage caused by this prop's use (negative paranoia damage to uses correlation)
+		int uses;
 
-	/// The length of time a player must wait in between using this prop
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
-    float useCooldown;
-
-	/// Triggers the damage dealing call in Tick
-	UPROPERTY(VisibleAnywhere, Category="Debug")
-	bool active;
-
-
+		/// The current time in between uses of this prop
+		/// if greater than useCooldown then the uses variable will decrement
+		float usesCooldownTime;
+		
+		// TODO: TArray<AEnemies>
+		
+		// TODO: Effected enemies
 	
-protected:
-	/// How many times this paranoia component has been activated.
-	/// Affects the amount of paranoia damage caused by this prop's use (negative paranoia damage to uses correlation)
-	int uses;
+	public:
+		/// A bounding object that defines the area in which this object must collide with enemies to cause paranoia damage to them 
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collision")
+		UShapeComponent * ParanoiaBounds;
 
-	/// The current time in between uses of this prop
-	/// if greater than useCooldown then the uses variable will decrement
-	float usesCooldownTime;
+		/// The amount of Paranoia damage inflicted on enemies within the ParanoiaBounds
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+		float paranoiaAmount;
+
+		/// The length of time a player must wait in between using this prop
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+		float useCooldown;
+
+		/// Triggers the damage dealing call in Tick
+		UPROPERTY(VisibleAnywhere, Category="Debug")
+		bool active;
+	// ======================================
+	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
+	// ======================================
+	private:
+	protected:
+	public:
+		/// Sets default values for this component's properties
+		UParanoiaComponent();
+	// =============================
+	// ===== GETTERS_/_SETTERS =====
+	// =============================
+	private:
+	protected:
+	public:
+	// ===================
+	// ===== METHODS =====
+	// ===================
+	private:
+	protected:
+	public:
+		/// Called every frame, put collision functionality in here
+		virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+		/// A wrapper for the OnInteract, used to set relevant parameters before the event call
+		virtual void OnInteractInternal() override; 
+
+		/// A wrapper for the EndInteract, used to set relevant parameters before the event call
+		virtual void EndInteractInternal() override; 
 	
-	// TODO: TArray<AEnemies>
 	
-	// TODO: Effected enemies
-
-	
-public:	
-	/// Called every frame, put collision functionality in here
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	/// A wrapper for the OnInteract, used to set relevant parameters before the event call
-	virtual void OnInteractInternal() override; 
-
-	/// A wrapper for the EndInteract, used to set relevant parameters before the event call
-	virtual void EndInteractInternal() override; 
 };

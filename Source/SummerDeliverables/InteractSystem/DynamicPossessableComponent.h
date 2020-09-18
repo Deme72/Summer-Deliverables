@@ -15,11 +15,56 @@ UCLASS()
 class SUMMERDELIVERABLES_API UDynamicPossessableComponent : public UPossesableComponent
 {
 	GENERATED_BODY()
+	// ==============================
+	// ===== DEFINES_/_TYPEDEFS =====
+	// ==============================
 
-	///Override of move to basic movement functionality
-	virtual void MoveRightAxis_Implementation(float Axis) override;
-	///Override of move to basic movement functionality
-	virtual void MoveForwardAxis_Implementation(float Axis) override;
-	///Doesn't change anything, only here as a template
-	virtual void ScareButton_Implementation() override;
+	// ======================================
+	// ===== FRIEND_FUNCTIONS_/_CLASSES =====
+	// ======================================
+
+	// ========================
+	// ===== ENUM_CLASSES =====
+	// ========================
+	private:
+	protected:
+	public:
+	// ==========================
+	// ===== NESTED_CLASSES =====
+	// ==========================
+	private:
+	protected:
+	public:
+	// ======================
+	// ===== ATTRIBUTES =====
+	// ======================
+	private:
+	protected:
+	public:
+	// ======================================
+	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
+	// ======================================
+	private:
+	protected:
+	public:
+	// =============================
+	// ===== GETTERS_/_SETTERS =====
+	// =============================
+	private:
+	protected:
+	public:
+	// ===================
+	// ===== METHODS =====
+	// ===================
+	private:
+	protected:
+	public:
+		///Override of move to basic movement functionality
+		virtual void MoveRightAxis_Implementation(float Axis) override;
+	
+		///Override of move to basic movement functionality
+		virtual void MoveForwardAxis_Implementation(float Axis) override;
+	
+		///Doesn't change anything, only here as a template
+		virtual void ScareButton_Implementation() override;
 };

@@ -15,7 +15,52 @@ UCLASS()
 class SUMMERDELIVERABLES_API UStaticPossessableComponent : public UPossesableComponent
 {
 	GENERATED_BODY()
+	
+	// ==============================
+	// ===== DEFINES_/_TYPEDEFS =====
+	// ==============================
+
+	// ======================================
+	// ===== FRIEND_FUNCTIONS_/_CLASSES =====
+	// ======================================
+
+	// ========================
+	// ===== ENUM_CLASSES =====
+	// ========================
+	private:
+	protected:
 	public:
-	///Doesn't change anything, only here as a template
-	virtual void ScareButton_Implementation() override;
+	// ==========================
+	// ===== NESTED_CLASSES =====
+	// ==========================
+	private:
+	protected:
+	public:
+	// ======================
+	// ===== ATTRIBUTES =====
+	// ======================
+	private:
+	protected:
+	public:
+	// ======================================
+	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
+	// ======================================
+	private:
+	protected:
+	public:
+	// =============================
+	// ===== GETTERS_/_SETTERS =====
+	// =============================
+	private:
+	protected:
+	public:
+	// ===================
+	// ===== METHODS =====
+	// ===================
+	private:
+	protected:
+	public:
+		///Doesn't change anything, only here as a template
+		virtual void ScareButton_Implementation() override;
+
 };

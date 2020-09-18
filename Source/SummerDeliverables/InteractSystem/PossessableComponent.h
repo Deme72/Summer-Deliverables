@@ -16,10 +16,87 @@ UCLASS()
 class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponent
 {
 	GENERATED_BODY()
+	
+	// ==============================
+	// ===== DEFINES_/_TYPEDEFS =====
+	// ==============================
+
+	// ======================================
+	// ===== FRIEND_FUNCTIONS_/_CLASSES =====
+	// ======================================
+
+	// ========================
+	// ===== ENUM_CLASSES =====
+	// ========================
+	private:
+	protected:
+	public:
+	// ==========================
+	// ===== NESTED_CLASSES =====
+	// ==========================
+	private:
+	protected:
+	public:
+	// ======================
+	// ===== ATTRIBUTES =====
+	// ======================
+	private:
+		/// The time, in seconds, since this component has been used
+		float CurrentCooldown;
+	protected:
+	public:
+		/// The rate, in stamina/sec, at which this prop drains the player's stamina
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
+		float StamDrainRate;
+
+		/// The initial stamina cost required by a player to possess this prop
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
+		float StamFrontCost;
+
+		/// The length of time, in seconds, a Player must wait in between using this prop's abilities
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
+		float MaxCooldown;
+
+		/// The amount of Paranoia damage this prop causes to enemies
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+		float ParanoiaAmount;
+
+		/// The amount of health damage this prop causes to enemies 
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+		float DamageAmount;
+
+		/// The bounding shape in which this prop must collide with enemies to cause paranoia and/or health damage
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+		UShapeComponent * DamageBounds;
+	// ======================================
+	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
+	// ======================================
+	private:
+	protected:
 	public:
 		// Default constructor.
-		UPossesableComponent();
+        UPossesableComponent();
+	
+	// =============================
+	// ===== GETTERS_/_SETTERS =====
+	// =============================
+	private:
+	protected:
+	public:
+	// ===================
+	// ===== METHODS =====
+	// ===================
+	private:
+	protected:
+	public:
+		/// The UE4 Tick Component for handling realtime actions
+		virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
+		/// A component-side wrapper for endPossession
+		UFUNCTION(BlueprintCallable, Category="Possessing")
+	    void Eject();
+	
+	// === Input Event Functions ===
 		/// An Event for the left face button (keyboard: left shift button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void ScareButton();
@@ -118,42 +195,7 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		/// UE4 facing function. Only override, never use
 		virtual void LookRightAxis_Implementation(float Axis){};
 
-		/// A component-side wrapper for endPossession
-		UFUNCTION(BlueprintCallable, Category="Possessing")
-		void Eject();
-
 		// TODO: Add new virtual inputs as necessary
-
-		/// The UE4 Tick Component for handling realtime actions
-		virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
-
-	private:
-		/// The time, in seconds, since this component has been used
-		float CurrentCooldown;
-	
-	public:
-		/// The rate, in stamina/sec, at which this prop drains the player's stamina
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
-		float StamDrainRate;
-
-		/// The initial stamina cost required by a player to possess this prop
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
-		float StamFrontCost;
-
-		/// The length of time, in seconds, a Player must wait in between using this prop's abilities
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
-		float MaxCooldown;
-
-		/// The amount of Paranoia damage this prop causes to enemies
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
-		float ParanoiaAmount;
-
-		/// The amount of health damage this prop causes to enemies 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
-		float DamageAmount;
-
-		/// The bounding shape in which this prop must collide with enemies to cause paranoia and/or health damage
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
-		UShapeComponent * DamageBounds;
+	// === End >> Input Event Functions ===
 
 };
