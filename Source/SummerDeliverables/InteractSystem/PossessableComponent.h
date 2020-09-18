@@ -20,57 +20,111 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		// Default constructor.
 		UPossesableComponent();
 
-		/// An Event that should define using a prop's ability
+		/// An Event for the left face button (keyboard: left shift button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void ScareButton();
-		
+
+		/// UE4 facing function. Only override, never use
 		virtual void ScareButton_Implementation(){};
 
+		/// An Event for the release of the left face button (keyboard: left shift button)
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void ScareButtonRelease();
+
+		/// UE4 facing function. Only override, never use
+		virtual void ScareButtonRelease_Implementation(){};
+
+		/// An Event for the bottom face button (keyboard: space-bar button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 	    void MoveButton();
 
+		/// UE4 facing function. Only override, never use
 		virtual void MoveButton_Implementation(){};
 
+		/// An Event for the release of the left face button (keyboard: space-bar button)
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void MoveButtonRelease();
+
+		/// UE4 facing function. Only override, never use
+		virtual void MoveButtonRelease_Implementation(){};
+
+		/// An Event for the top face button (keyboard: 'Q' button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void ButtonTop();
-		
+
+		/// UE4 facing function. Only override, never use
 		virtual void ButtonTop_Implementation(){};
-	
+
+		/// An Event for the release of the top face button (keyboard: 'Q' button)
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void ButtonTopRelease();
+
+		/// UE4 facing function. Only override, never use
+		virtual void ButtonTopRelease_Implementation(){};
+
+		/// An Event for the right trigger button (Right Mouse button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 	    void RightTrigger();
-			
+
+		/// UE4 facing function. Only override, never use
 		virtual void RightTrigger_Implementation(){};
 
+		/// An Event for the release of the Right Trigger button (Right Mouse button)
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+		void RightTriggerRelease();
+
+		/// UE4 facing function. Only override, never use
+		virtual void RightTriggerRelease_Implementation(){};
+
+		/// An Event for the Left Trigger button (Left Mouse button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void LeftTrigger();
-			
+
+		/// UE4 facing function. Only override, never use
 		virtual void LeftTrigger_Implementation(){};
-	
+
+		/// An Event for the release of the Left Trigger button (Left Mouse button)
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void LeftTriggerRelease();
+
+		/// UE4 facing function. Only override, never use
+		virtual void LeftTriggerRelease_Implementation(){};
+
+		/// An axis event for the left thumbstick x-axis (keyboard: A, D buttons)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void MoveRightAxis(float Axis);
-	
+
+		/// UE4 facing function. Only override, never use
 		virtual void MoveRightAxis_Implementation(float Axis){}
-		
+
+		/// An axis event for the left thumbstick y-axis (keyboard: W, S buttons)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void MoveForwardAxis(float Axis);
-		
+
+		/// UE4 facing function. Only override, never use
 		virtual void MoveForwardAxis_Implementation(float Axis){}
 
+		/// An axis event for the right thumbstick y-axis (mouse y-axis)
 		UFUNCTION(BlueprintNativeEvent, Category = "InputEvent")
 	    void LookUpAxis(float Axis);
 
+		/// UE4 facing function. Only override, never use
 		virtual void LookUpAxis_Implementation(float Axis){};
 
+		/// An axis event for the right thumbstick x-axis (mouse x-axis)
 		UFUNCTION(BlueprintNativeEvent, Category = "InputEvent")
 	    void LookRightAxis(float Axis);
 
+		/// UE4 facing function. Only override, never use
 		virtual void LookRightAxis_Implementation(float Axis){};
 
+		/// A component-side wrapper for endPossession
 		UFUNCTION(BlueprintCallable, Category="Possessing")
 		void Eject();
 
 		// TODO: Add new virtual inputs as necessary
-	
+
+		/// The UE4 Tick Component for handling realtime actions
 		virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
 	private:

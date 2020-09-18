@@ -46,10 +46,15 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 	PlayerInputComponent->BindAction("InteractButton", IE_Released, this, &APossessablePawn::EndPossession);
 	PlayerInputComponent->BindAction("MoveButton", IE_Pressed, PossessableComponent, &UPossesableComponent::MoveButton);
+	PlayerInputComponent->BindAction("MoveButton", IE_Released, PossessableComponent, &UPossesableComponent::MoveButtonRelease);
 	PlayerInputComponent->BindAction("ScareButton", IE_Pressed, PossessableComponent, &UPossesableComponent::ScareButton);
+	PlayerInputComponent->BindAction("ScareButton", IE_Released, PossessableComponent, &UPossesableComponent::ScareButtonRelease);
 	PlayerInputComponent->BindAction("FaceButtonTop", IE_Pressed, PossessableComponent, &UPossesableComponent::ButtonTop);
+	PlayerInputComponent->BindAction("FaceButtonTop", IE_Released, PossessableComponent, &UPossesableComponent::ButtonTopRelease);
 	PlayerInputComponent->BindAction("RightTrigger", IE_Pressed, PossessableComponent, &UPossesableComponent::RightTrigger);
+	PlayerInputComponent->BindAction("RightTrigger", IE_Released, PossessableComponent, &UPossesableComponent::RightTriggerRelease);
 	PlayerInputComponent->BindAction("LeftTrigger", IE_Pressed, PossessableComponent, &UPossesableComponent::LeftTrigger);
+	PlayerInputComponent->BindAction("LeftTrigger", IE_Released, PossessableComponent, &UPossesableComponent::LeftTriggerRelease);
 	PlayerInputComponent->BindAxis("MoveRight", PossessableComponent, &UPossesableComponent::MoveRightAxis);
 	PlayerInputComponent->BindAxis("MoveForward", PossessableComponent, &UPossesableComponent::MoveForwardAxis);
 }
