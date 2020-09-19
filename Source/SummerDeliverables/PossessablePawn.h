@@ -19,11 +19,10 @@ protected:
 	virtual void OnConstruction(const FTransform & Transform) override;
 	
 protected:
-    // Reference to currently possessing player, used for un-possessing.
+	// Reference to currently possessing player, used for un-possessing.
     class APlayerPawn* CurrentPlayer;
-    
 public:
-
+	UFUNCTION(BlueprintCallable, Category="Possesion")
 	void setPlayer(APlayerPawn * p){CurrentPlayer = p;}
     // Called every frame
     virtual void Tick(float DeltaTime) override;
@@ -32,11 +31,14 @@ public:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Relocates the current player pawn to exit point and possesses it.
+	UFUNCTION(BlueprintCallable, Category="Possesion")
 	virtual void EndPossession();
 
 	UFUNCTION(BlueprintCallable, Category="Outline")
 	void Set_Outline(bool OutLine_ON,int depthInt); //depthInt Basically a number which will tell the outline material when we set the depth on the mesh which color to use.
-    
+
+	UFUNCTION(BlueprintCallable, Category="Getter")
+	APlayerPawn* getplayer(){return CurrentPlayer;}
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
     class USceneComponent* ExitPoint;
@@ -52,7 +54,4 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	class UStaticMeshComponent * StaticMeshComponent;
-
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly,Category= "OutLine")
-	bool OutLine_ON = false;*/
 };

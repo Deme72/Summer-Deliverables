@@ -46,18 +46,6 @@ void APlayerPawn::Tick(float DeltaTime)
 		{
 			UInteractableComponent * add = Cast<UInteractableComponent>(comp);
 			OverlappingInteractables.Add(add);
-			/*APossessablePawn * possess = Cast<APossessablePawn>(Cast<UPossesableComponent>(comp)->GetOwner());
-			if (possess)
-			{
-				if ((*i)->ActorHasTag(TEXT("DynamicProp")))
-				{
-					possess->Set_Outline(true,1);
-				}
-				else 
-				{
-					possess->Set_Outline(true,3);
-				}
-			}*/
 		}
 		
 		// PARANOIA

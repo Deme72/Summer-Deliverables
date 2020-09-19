@@ -49,7 +49,7 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("RightTrigger", IE_Pressed, PossessableComponent, &UPossesableComponent::RightTrigger);
 	PlayerInputComponent->BindAction("LeftTrigger", IE_Pressed, PossessableComponent, &UPossesableComponent::LeftTrigger);
 	PlayerInputComponent->BindAxis("MoveRight", PossessableComponent, &UPossesableComponent::MoveRightAxis);
-	PlayerInputComponent->BindAxis("MoveForward", PossessableComponent, &UPossesableComponent::MoveForwardAxis);
+	//PlayerInputComponent->BindAxis("MoveForward", PossessableComponent, &UPossesableComponent::MoveForwardAxis);
 }
 
 void APossessablePawn::Tick(float DeltaTime)
@@ -84,3 +84,4 @@ void APossessablePawn::Set_Outline(bool OutLine_ON,int depthInt)
 	StaticMeshComponent->SetRenderCustomDepth(OutLine_ON);
 	StaticMeshComponent->SetCustomDepthStencilValue(depthInt);
 }
+
