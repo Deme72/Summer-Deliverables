@@ -37,8 +37,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Outline")
 	void Set_Outline(bool OutLine_ON,int depthInt); //depthInt Basically a number which will tell the outline material when we set the depth on the mesh which color to use.
 
-	UFUNCTION(BlueprintCallable, Category="Getter")
-	APlayerPawn* getplayer(){return CurrentPlayer;}
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
     class USceneComponent* ExitPoint;

@@ -46,12 +46,12 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 			
 		virtual void LeftTrigger_Implementation(){};
 	
-		UFUNCTION(BlueprintNativeEvent, BlueprintCallable,Category="InputEvent")
+		UFUNCTION(BlueprintNativeEvent,Category="InputEvent")
 		void MoveRightAxis(float Axis);
 	
 		virtual void MoveRightAxis_Implementation(float Axis){}
 		
-		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="InputEvent")
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void MoveForwardAxis(float Axis);
 		
 		virtual void MoveForwardAxis_Implementation(float Axis){}
