@@ -45,6 +45,7 @@ void APlayerPawn::Tick(float DeltaTime)
 		if(comp)
 		{
 			UInteractableComponent * add = Cast<UInteractableComponent>(comp);
+			check(add);
 			OverlappingInteractables.Add(add);
 		}
 		

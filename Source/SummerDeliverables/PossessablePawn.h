@@ -22,7 +22,6 @@ protected:
 	// Reference to currently possessing player, used for un-possessing.
     class APlayerPawn* CurrentPlayer;
 public:
-	UFUNCTION(BlueprintCallable, Category="Possesion")
 	void setPlayer(APlayerPawn * p){CurrentPlayer = p;}
     // Called every frame
     virtual void Tick(float DeltaTime) override;
@@ -31,7 +30,6 @@ public:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Relocates the current player pawn to exit point and possesses it.
-	UFUNCTION(BlueprintCallable, Category="Possesion")
 	virtual void EndPossession();
 
 	UFUNCTION(BlueprintCallable, Category="Outline")
