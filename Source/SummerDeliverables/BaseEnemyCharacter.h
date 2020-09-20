@@ -67,28 +67,28 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	
 	public:
 	/// The Enemy's max Bravery (i.e. health)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Bravery")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design")
 	int BraveryMax;
 
 	/// The Enemy's max Paranoia
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Paranoia")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design")
 	int ParanoiaMax;
 
 	/// The rate at which paranoia decays (paranoia per second)(*not per tick)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Paranoia")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Paranoia")
 	float ParanoiaDecay;
 
 	/// The time after an enemy takes paranoia damage (in seconds) before it will decay
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Paranoia")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Paranoia")
 	float ParanoiaDecayDelay;
 
 	/// Additive bravery damage based on how far above ParanoiaMax the current Paranoia is
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Paranoia|Bravery")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Bravery")
 	float ParanoiaOverflowDamage;
 	
 	/// The rate at which paranoia decays (paranoia per second)(*not per tick) while the enemy
 	/// is in the running state
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Paranoia")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Paranoia")
 	float ParanoiaRunningDecay;
 
 	/// The percent of max paranoia in which the enemy will change to the Cautious State
@@ -101,15 +101,15 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 
 	/// A percent multiplying her Paranoia that creates an additive bonus to scare damage
 	/// (ScareBonus * (Paranoia / ParanoiaMax) + 1) * ScareDamage = TotalDamage
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Bravery")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Bravery")
 	float ScareBonus;
 
 	/// The time in which it takes for the scare combo counter to reset once it's > 1
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Bravery")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Bravery")
 	float ScareComboInteraval;
 
 	/// The percent of max Bravery (i.e. health) in which the enemy will change to the Running State
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Bravery|States")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Bravery")
 	float ScareRunningThreshold;
 
 	/// The speed at which an enemy will move at while in the searching state
@@ -141,7 +141,7 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	float RunningDurationMax;
 
 	/// The AI Controller for this Enemy
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="States|Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	AAIController* AIController;
 
 	/// The Skeletalmesh for this enemy
@@ -149,11 +149,11 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	USkeletalMeshComponent* SkeletalMesh;
 
 	/// The socket in BaseEnemyCharacter::Mesh that holds the Flashlight object
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Sockets|States")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
 	USkeletalMeshComponent* FlashLightSocket;
 
 	/// The socket in BaseEnemyCharacter::Mesh that holds the Treasure object
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Sockets|States")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
 	USkeletalMeshComponent* TreasureSocket;
 
 	// ======================================
@@ -210,11 +210,11 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	// ====== enemy class specific methods =====
 	/// Applies the treasure to the enemy skeletalmesh and modifies behavior
 	UFUNCTION(Category="States")
-    void PickUpTreasure(AActor* treasure);
+    virtual void PickUpTreasure(AActor* treasure);
 
 	/// Removes a treasure from the enemy skeletalmesh and modifies behavior
 	/// ; else throws a debug message
 	UFUNCTION(Category="States")
-    void DropTreasure();
+    virtual void DropTreasure();
 	
 };
