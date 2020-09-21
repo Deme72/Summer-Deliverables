@@ -33,7 +33,8 @@ public:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Relocates the current player pawn to exit point and possesses it.
-	virtual void EndPossession();
+    UFUNCTION(BlueprintCallable, Category = "Event")
+    virtual void EndPossession();
     
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
