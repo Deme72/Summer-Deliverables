@@ -4,9 +4,30 @@
 
 #include "AIController.h"
 #include "CoreMinimal.h"
+
+#include "EdGraphSchema_K2.h"
 #include "GameFramework/Character.h"
 #include "BaseEnemyCharacter.generated.h"
 
+/// The enum class for Enemy States
+UENUM(BlueprintType)
+enum EState
+{
+    Searching UMETA(DisplayName = "Searching"),
+    Cautious UMETA(DisplayName = "Cautious"),
+    Running UMETA(DisplayName = "Running"),
+    Stealing UMETA(DisplayName = "Stealing"),
+    Dying UMETA(DisplayName = "Searching")
+};
+
+/// The enum class for Enemy Targets
+UENUM(BlueprintType)
+enum TType 
+{
+	Treasure UMETA(DisplayName = "Treasure"),
+    Prop UMETA(DisplayName = "Prop"),
+    Ghost UMETA(DisplayName = "Ghost")
+};
 
 UCLASS()
 class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
@@ -25,9 +46,6 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	// ========================
 	private:
 	protected:
-	/// The enum class for Enemy States
-	enum class EState { Searching, Cautious, Running, Stealing, Dying };
-	
 	public:
 	// ==========================
 	// ===== NESTED_CLASSES =====
@@ -55,6 +73,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// The current ESate of this Enemy
 	EState CurrentEState;
 
+	/// The current target type of this enemy
+	TType CurrentTType;
+	
 	/// How much time the enemy has spent in this state
 	float CurrentEStateTime;
 
@@ -170,26 +191,35 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	// =============================
 	private:
 	protected:
-	/// Handles changing the enemy state to the new state
-	void SetEState(EState new_State);
-	
 	public:
+	/// Handles changing the enemy state to the new state
+	UFUNCTION(BlueprintCallable, Category="Setters")
+	void SetEState(EState NewEState);
+
+	/// Handles changing the enemy state to the new state
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	EState GetEState() const { return CurrentEState; }
+
+	/// Handles changing the enemy state to the new state
+	UFUNCTION(BlueprintCallable, Category="Getters")
+    TType GetTType() const { return CurrentTType; }
+	
 	/// Returns the current Bravery (i.e health) of the Enemy
-	UFUNCTION(Category="Getters|Bravery")
+	UFUNCTION(BlueprintCallable, Category="Getters|Bravery")
 	float GetBravery() const { return Bravery; }
 
 	/// Returns the current Paranoia of the Enemy
-	UFUNCTION(Category="Getters|Paranoia")
+	UFUNCTION(BlueprintCallable, Category="Getters|Paranoia")
     float GetParanoia() const { return Paranoia; }
 
 	/// Takes a base bravery damage and applies the damage formula
 	/// (ScareBonus * (Paranoia / ParanoiaMax) + 1) * ScareDamage = TotalDamage
 	/// before modifying enemy bravery (i.e health)
-	UFUNCTION(Category="Setters|Bravery")
+	UFUNCTION(BlueprintCallable, Category="Setters|Bravery")
     void TakeBraveryDamage(float BraveryBaseDamage);
 
 	/// Applies Paranoia Damage to the enemy's Paranoia
-	UFUNCTION(Category="Setters|Paranoia")
+	UFUNCTION(BlueprintCallable, Category="Setters|Paranoia")
     void TakeParanoiaDamage(float ParanoiaDamage);
 
 	// ===================
@@ -207,14 +237,17 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/// Handles the OnTick functionality related to Paranoia (A tidying function)
+	void ParanoiaTick(float DeltaTime);
+	
 	// ====== enemy class specific methods =====
 	/// Applies the treasure to the enemy skeletalmesh and modifies behavior
-	UFUNCTION(Category="States")
+	UFUNCTION(BlueprintCallable, Category="States")
     virtual void PickUpTreasure(AActor* treasure);
 
 	/// Removes a treasure from the enemy skeletalmesh and modifies behavior
 	/// ; else throws a debug message
-	UFUNCTION(Category="States")
+	UFUNCTION(BlueprintCallable, Category="States")
     virtual void DropTreasure();
 	
 };
