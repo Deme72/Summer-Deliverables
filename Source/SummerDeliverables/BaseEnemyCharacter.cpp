@@ -123,14 +123,28 @@ void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
 	{
 		if (ParanoiaDecayTime < 0.0f)
 		{
-			Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * DeltaTime), 0.0f);
+			if (CurrentEState == EState::Running)
+			{
+				Paranoia = FMath::Max(Paranoia - (ParanoiaRunningDecay * DeltaTime), 0.0f);
+			}
+			else
+			{
+				Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * DeltaTime), 0.0f);
+			}
 		}
 		else
 		{
 			float diff = DeltaTime - ParanoiaDecayTime;
 			if (diff > 0.0)
 			{
-				FMath::Max(Paranoia - (ParanoiaDecay * diff), 0.0f);
+				if (CurrentEState == EState::Running)
+				{
+					Paranoia = FMath::Max(Paranoia - (ParanoiaRunningDecay * diff), 0.0f);
+				}
+				else
+				{
+					Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * diff), 0.0f);
+				}
 			}
 			ParanoiaDecayTime -= DeltaTime;
 		}
