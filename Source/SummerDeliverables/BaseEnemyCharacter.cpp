@@ -2,6 +2,7 @@
 
 //#include <activation.h>
 #include "BaseEnemyCharacter.h"
+#include "GameFramework/Actor.h"
 
 
 // Sets default values
@@ -9,7 +10,6 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 void ABaseEnemyCharacter::SetEState(EState NewEState)
@@ -57,15 +57,18 @@ void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
 	ParanoiaDecayTime = ParanoiaDecayDelay;
 }
 
+// Pick up treasure functionality
 void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 {
-	// Pick up treasure functionality
+	treasure->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	treasureActor = treasure;
 }
 
+// Drop treasure functionality
 void ABaseEnemyCharacter::DropTreasure()
 {
-	
-	// Drop treasure functionality
+	treasureActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	treasureActor = 0;
 }
 
 // Called when the game starts or when spawned

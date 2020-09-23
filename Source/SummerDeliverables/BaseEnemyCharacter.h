@@ -85,7 +85,7 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Time until the enemy extis the running state
 	/// ; random > RunningDurationMin < RunningDurationMax
 	float CurrentRunningDuration;
-	
+
 	public:
 	/// The Enemy's max Bravery (i.e. health)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design")
@@ -176,6 +176,10 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// The socket in BaseEnemyCharacter::Mesh that holds the Treasure object
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
 	USkeletalMeshComponent* TreasureSocket;
+
+	/// Treasure that the enemy is holding
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	AActor* treasureActor;
 
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
