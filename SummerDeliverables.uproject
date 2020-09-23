@@ -23,6 +23,14 @@
 				"Linux",
 				"Mac"
 			]
+		},
+		{
+			"Name": "RiderLink",
+			"Enabled": false
+		},
+		{
+			"Name": "RiderSourceCodeAccess",
+			"Enabled": false
 		}
 	]
 }

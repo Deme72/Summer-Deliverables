@@ -70,6 +70,10 @@ Saved/*
 Intermediate/*
 Plugins/*/Intermediate/*
 
+# Specificly exclude RiderLink 
+Plugins/Developer/RiderLink/Binaries
+Plugins/Developer/RiderLink/Intermediate
+
 # Cache files for the editor to use
 DerivedDataCache/*
 
