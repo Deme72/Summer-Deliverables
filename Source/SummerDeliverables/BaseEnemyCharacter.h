@@ -87,78 +87,78 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	float CurrentRunningDuration;
 	
 	public:
-	/// The Enemy's max Bravery (i.e. health)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design")
+	/// The Enemy's max Bravery (i.e. health) | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design", meta=(ClampMin=0.0))
 	int BraveryMax;
 
-	/// The Enemy's max Paranoia
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design")
+	/// The Enemy's max Paranoia | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design", meta=(ClampMin=0.0))
 	int ParanoiaMax;
 
-	/// The rate at which paranoia decays (paranoia per second)(*not per tick)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Paranoia")
+	/// The rate at which paranoia decays (paranoia per second)(*not per tick) | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Paranoia", meta=(ClampMin=0.0))
 	float ParanoiaDecay;
 
-	/// The time after an enemy takes paranoia damage (in seconds) before it will decay
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Paranoia")
+	/// The time after an enemy takes paranoia damage (in seconds) before it will decay | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Paranoia", meta=(ClampMin=0.0))
 	float ParanoiaDecayDelay;
 
-	/// Additive bravery damage based on how far above ParanoiaMax the current Paranoia is
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Bravery")
+	/// Additive bravery damage based on how far above ParanoiaMax the current Paranoia is | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Bravery", meta=(ClampMin=0.0))
 	float ParanoiaOverflowDamage;
 	
 	/// The rate at which paranoia decays (paranoia per second)(*not per tick) while the enemy
-	/// is in the running state
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Paranoia")
+	/// is in the running state | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Paranoia", meta=(ClampMin=0.0))
 	float ParanoiaRunningDecay;
 
-	/// The percent of max paranoia in which the enemy will change to the Cautious State
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Paranoia")
+	/// The percent of max paranoia in which the enemy will change to the Cautious State | min=0.0, max=1.1
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Paranoia", meta=(ClampMin=0.0, ClampMax=1.1))
 	float ParanoiaCautiousThreshold;
 
-	/// The percent of max paranoia in which the enemy will change to the Running State
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Paranoia")
+	/// The percent of max paranoia in which the enemy will change to the Running State | min=0.0, max=1.1
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Paranoia",meta=(ClampMin=0.0, ClampMax=1.1))
 	float ParanoiaRunningThreshold;
 
-	/// A percent multiplying her Paranoia that creates an additive bonus to scare damage
+	/// A percent multiplying her Paranoia that creates an additive bonus to scare damage | min=0.0
 	/// (ScareBonus * (Paranoia / ParanoiaMax) + 1) * ScareDamage = TotalDamage
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Bravery")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Bravery", meta=(ClampMin=0.0))
 	float ScareBonus;
 
-	/// The time in which it takes for the scare combo counter to reset once it's > 1
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Bravery")
+	/// The time in which it takes for the scare combo counter to reset once the combo counter > 1 | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Bravery", meta=(ClampMin=0.0))
 	float ScareComboInteraval;
 
-	/// The percent of max Bravery (i.e. health) in which the enemy will change to the Running State
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Bravery")
+	/// The percent of max Bravery (i.e. health) in which the enemy will change to the Running State | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Bravery", meta=(ClampMin=0.0, ClampMax=1.0))
 	float ScareRunningThreshold;
 
-	/// The speed at which an enemy will move at while in the searching state
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement")
+	/// The speed at which an enemy will move at while in the searching state | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement", meta=(ClampMin=0.0))
 	float SearchingMovementSpeed;
 
-	/// The speed at which an enemy will move at while in the cautious state
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement")
+	/// The speed at which an enemy will move at while in the cautious state | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement", meta=(ClampMin=0.0))
 	float CautiousMovementSpeed;
 
-	/// The speed at which an enemy will move at while in the Running state
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement")
+	/// The speed at which an enemy will move at while in the Running state | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement", meta=(ClampMin=0.0))
 	float RunningMovementSpeed;
 
-	/// The speed at which an enemy will move at while in the Escaping state
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement")
+	/// The speed at which an enemy will move at while in the Escaping state | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement", meta=(ClampMin=0.0))
 	float EscapingMovementSpeed;
 
-	/// The speed at which an enemy will move at while in the Stealing state
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement")
+	/// The speed at which an enemy will move at while in the Stealing state | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement", meta=(ClampMin=0.0))
 	float StealingMovementSpeed;
 
-	/// The minimum amount of time an enemy will spend in the Running state before changing
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement")
+	/// The minimum amount of time an enemy will spend in the Running state before changing | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement", meta=(ClampMin=0.0))
 	float RunningDurationMin;
 
-	/// The maximum amount of time an enemy will spend in the Running state before changing
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement")
+	/// The maximum amount of time an enemy will spend in the Running state before changing | min=0.0
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement", meta=(ClampMin=0.0))
 	float RunningDurationMax;
 
 	/// The AI Controller for this Enemy
@@ -193,7 +193,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	protected:
 	public:
 	/// Handles changing the enemy state to the new state
-	UFUNCTION(BlueprintCallable, Category="Setters")
+	/// Currently a protected function
+	/// Let Jefferey know if you can't work with this 
+	UFUNCTION(BlueprintCallable, Category="Setters", meta=(BlueprintProtected))
 	void SetEState(EState NewEState);
 
 	/// Handles changing the enemy state to the new state
