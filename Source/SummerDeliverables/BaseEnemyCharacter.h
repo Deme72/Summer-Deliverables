@@ -17,7 +17,7 @@ enum EState
     Cautious UMETA(DisplayName = "Cautious"),
     Running UMETA(DisplayName = "Running"),
     Stealing UMETA(DisplayName = "Stealing"),
-    Dying UMETA(DisplayName = "Searching")
+    Dying UMETA(DisplayName = "Dying")
 };
 
 /// The enum class for Enemy Targets
