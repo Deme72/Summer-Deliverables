@@ -214,6 +214,38 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category="Getters|Paranoia")
     float GetParanoia() const { return Paranoia; }
 
+	/// Set the enemy's AIController
+	UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	void SetAIController( AAIController* new_aicontroller ) { AIController = new_aicontroller; };
+
+	/// Get the enemy's AIController
+	UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	AAIController* GetAIController() const { return AIController; };
+	
+	/// Set the enemy's SkeletalMesh
+	UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	void SetSkeletalmesh( USkeletalMeshComponent* new_skeletalmesh ) { SkeletalMesh = new_skeletalmesh; };
+
+	/// Get the enemy's SkeletalMesh
+	UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	USkeletalMeshComponent* GetSkeletalmesh() const { return SkeletalMesh; };
+
+	/// Set the enemy's Flashlight Socket
+	UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	void SetFlashlightSocket( USkeletalMeshComponent* new_flashlightsocket ) { FlashLightSocket = new_flashlightsocket; };
+
+	/// Get the enemy's FlashlightSocket
+	UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	USkeletalMeshComponent* GetFlashlightSocket() const { return FlashLightSocket; };
+
+	/// Set the enemy's TreasureSocket
+	UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	void SetTreasureSocket( USkeletalMeshComponent* new_treasuresocket ) { TreasureSocket = new_treasuresocket; };
+
+	/// Get the enemy's TreasureSocket
+	UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	USkeletalMeshComponent* GetTreasureSocket() const { return TreasureSocket; };
+	
 	/// Takes a base bravery damage and applies the damage formula
 	/// (ScareBonus * (Paranoia / ParanoiaMax) + 1) * ScareDamage = TotalDamage
 	/// before modifying enemy bravery (i.e health)
