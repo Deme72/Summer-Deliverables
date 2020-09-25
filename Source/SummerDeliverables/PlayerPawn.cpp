@@ -7,6 +7,7 @@
 #include "InteractSystem/PossessableComponent.h"
 #include "InteractSystem/ParanoiaComponent.h"
 #include "InteractSystem/PlayerGhostController.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -129,6 +130,25 @@ void APlayerPawn::ScareButtonEnd()
 	
 }
 
+void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                                 int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(OtherActor->ActorHasTag("Stamina"))
+	{
+		//APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
+		//Con->SetStamina(-OtherActor->StaminaVal);
+		OtherActor->Destroy();
+	}
+	if(OtherActor->ActorHasTag("TeamStamina"))
+	{
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, FoundActors);
+		for(int i=0; i< FoundActors.Num(); i++)
+		{
+			//Cast<APlayerGhostController>(((APlayerPawn*)FoundActors[i])->GetController())->SetStamina(-OtherActor->StaminaVal);
+		}
+		OtherActor->Destroy();
+	}
+}
 
 #pragma region Movement
 void APlayerPawn::MoveForward(float Value)
@@ -183,4 +203,4 @@ void APlayerPawn::LookUp(float Value)
 //	// calculate delta for this frame from the rate information
 //	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 //}
-#pragma endregion 
+#pragma endregion
