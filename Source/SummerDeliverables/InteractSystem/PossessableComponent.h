@@ -43,6 +43,10 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 	private:
 		/// The time, in seconds, since this component has been used
 		float CurrentCooldown;
+
+		/// Is per second stamina drain active
+		bool bIsDrainingStamina;
+	
 	protected:
 	public:
 		/// The rate, in stamina/sec, at which this prop drains the player's stamina
@@ -68,21 +72,39 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		/// The bounding shape in which this prop must collide with enemies to cause paranoia and/or health damage
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
 		UShapeComponent * DamageBounds;
+	
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
 	private:
 	protected:
 	public:
-		// Default constructor.
-        UPossesableComponent();
+	// Default constructor.
+    UPossesableComponent();
 	
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
-	private:
 	protected:
 	public:
+	UFUNCTION(BlueprintCallable, Category="Stamina")
+	/// Sets whether the possession is actively draining stamina w/ StaminaDrainRate
+	void SetActiveStaminaDrain(bool is_active) { bIsDrainingStamina = is_active; }
+
+	UFUNCTION(BlueprintCallable, Category="Stamina")
+    /// Sets whether the possession is actively draining stamina w/ StaminaDrainRate
+    bool GetIsActiveStaminaDrain() const { return bIsDrainingStamina; }
+	
+	UFUNCTION(BlueprintCallable, Category="Getters")
+    /// Gets the player's current stamina
+    float GetStamina() const;
+
+	UFUNCTION(BlueprintCallable, Category="Setters")
+    /// Subtracts the passed stamina value from the player's current stamina |
+    /// b_is_relative dictates with the action is relative (i.e. CurrentStamina -= stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
+    /// returns true if the player has no stamina left
+    bool SetStamina(float stamina_drain, bool b_is_relative = true);
+	
 	// ===================
 	// ===== METHODS =====
 	// ===================
@@ -197,5 +219,6 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		// TODO: Add new virtual inputs as necessary
 	// === End >> Input Event Functions ===
+	
 
 };

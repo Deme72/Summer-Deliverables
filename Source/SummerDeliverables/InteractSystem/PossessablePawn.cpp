@@ -9,6 +9,8 @@
 #include "Components/SceneComponent.h"
 #include "Components/ShapeComponent.h"
 #include "PossessableComponent.h"
+#include "PlayerGhostController.h"
+#include "../PlayerPawn.h"
 
 APossessablePawn::APossessablePawn():APawn()
 {
@@ -27,7 +29,7 @@ APossessablePawn::APossessablePawn():APawn()
 void APossessablePawn::OnConstruction(const FTransform & Transform)
 {
 	Super::OnConstruction(Transform);
-	CurrentPlayer = nullptr;
+	CurrentPlayerController = nullptr;
 	if(PossessableComponentType && !IsValid(PossessableComponent))
 	{
 		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
@@ -63,25 +65,26 @@ void APossessablePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (CurrentPlayer)
+	if (CurrentPlayerController && PossessableComponent->GetIsActiveStaminaDrain())
 	{
-		CurrentPlayer->Stamina -= PossessableComponent->StamDrainRate*DeltaTime;
-		if(CurrentPlayer->Stamina <= 0)
+		
+		if(CurrentPlayerController->SetStamina(PossessableComponent->StamDrainRate*DeltaTime))
 		{
 			EndPossession();
-			CurrentPlayer->Stamina = 0;
 		}
 	}
 }
 
 void APossessablePawn::EndPossession()
 {
-	if (CurrentPlayer)
+	if (CurrentPlayerController)
 	{
 		// move player pawn to the exit point and repossess
-		CurrentPlayer->SetActorLocation(ExitPoint->GetComponentLocation());
-		GetController()->Possess(CurrentPlayer);
+		APlayerPawn* new_pawn = CurrentPlayerController->CreatePlayerPawn(ExitPoint->GetComponentLocation());
+		CurrentPlayerController->Possess(new_pawn);
+		new_pawn->setPlayer(CurrentPlayerController);
+		
 		PossessableComponent->EndInteractInternal();
-		CurrentPlayer = nullptr;
+		CurrentPlayerController = nullptr;
 	}
 }

@@ -41,6 +41,9 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	// ===== ATTRIBUTES =====
 	// ======================
 	private:
+		/// The current possessing Player controller; used for possession/ unpossession
+		class APlayerGhostController* CurrentPlayerController;
+	
 		/// The current bindings (the active input axis/actions and their code) of this player component
 		/// bindings change from possession to possession
 		PossessableComponent* CurrentBindings;
@@ -64,10 +67,6 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 		float MovementSpeed;
 
-		/// The current stamina that the Player has
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
-		float Stamina;
-
 		/// The bounding shape in which the Player can interact with other possessables whose bounding shape collides with this
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)
 		UShapeComponent * InteractBounds;
@@ -86,6 +85,9 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	private:
 	protected:
 	public:
+	/// Setter for CurrentPlayer pointer
+	void setPlayer(APlayerGhostController * p){CurrentPlayerController = p;}
+	
 	// ===================
 	// ===== METHODS =====
 	// ===================
