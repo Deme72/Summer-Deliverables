@@ -94,8 +94,8 @@ void APlayerPawn::Interact()
 		{
 			APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
 			check(possess);
-			CurrentPlayerController->Possess(possess);
-			possess->SetPlayerController(CurrentPlayerController);
+			GetController()->Possess(possess);
+			possess->SetPlayerController(Cast<APlayerGhostController>(GetController()));
 		}
 		else
 		{
