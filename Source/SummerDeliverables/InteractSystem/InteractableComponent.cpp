@@ -6,6 +6,8 @@
 // Sets default values for this component's properties
 UInteractableComponent::UInteractableComponent()
 {
+    PrimaryComponentTick.bCanEverTick = true;
+    PrimaryComponentTick.bStartWithTickEnabled = true;
     bInUse = false;
 }
 
