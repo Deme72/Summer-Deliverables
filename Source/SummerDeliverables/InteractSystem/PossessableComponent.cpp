@@ -3,6 +3,7 @@
 
 #include "PossessableComponent.h"
 #include "PlayerGhostController.h"
+#include "SummerDeliverables/DefinedDebugHelpers.h"
 #include "SummerDeliverables/PlayerPawn.h"
 
 UPossesableComponent::UPossesableComponent():UInteractableComponent()
@@ -15,8 +16,15 @@ UPossesableComponent::UPossesableComponent():UInteractableComponent()
 
 float UPossesableComponent::GetStamina() const
 {
-    if (Cast<APossessablePawn>(GetOwner())->IsPossessing())
-        return Cast<APlayerGhostController>(Cast<APawn>(GetOwner())->GetController())->GetStamina();
+    APossessablePawn* owner = Cast<APossessablePawn>(GetOwner());
+    if (owner->IsPossessing())
+    {
+        APlayerGhostController* controller = Cast<APlayerGhostController>(owner->GetController());
+        if (controller)
+            return controller->GetStamina();
+        else
+            SCREENMSG("Controller isn't of APlayerGhostController");
+    }
     return 0.0f;
 }
 

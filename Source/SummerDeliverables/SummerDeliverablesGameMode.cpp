@@ -3,6 +3,7 @@
 #include "SummerDeliverablesGameMode.h"
 #include "SummerDeliverablesCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "InteractSystem/PlayerGhostController.h"
 
 ASummerDeliverablesGameMode::ASummerDeliverablesGameMode()
 {
@@ -12,4 +13,5 @@ ASummerDeliverablesGameMode::ASummerDeliverablesGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+	PlayerControllerClass = APlayerGhostController::StaticClass();
 }
