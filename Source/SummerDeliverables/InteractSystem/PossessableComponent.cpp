@@ -2,10 +2,22 @@
 
 
 #include "PossessableComponent.h"
+#include "PlayerGhostController.h"
 
 UPossesableComponent::UPossesableComponent()
 {
     CurrentCooldown = 0.0f;
+    bIsDrainingStamina = true;
+}
+
+float UPossesableComponent::GetStamina() const
+{
+    return Cast<APlayerGhostController>(Cast<APawn>(GetOwner())->GetController())->GetStamina();
+}
+
+bool UPossesableComponent::SetStamina(float stamina_drain, bool b_is_relative)
+{
+    return Cast<APlayerGhostController>(Cast<APawn>(GetOwner())->GetController())->SetStamina(stamina_drain, b_is_relative);
 }
 
 

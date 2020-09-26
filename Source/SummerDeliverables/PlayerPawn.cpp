@@ -9,7 +9,6 @@
 #include "InteractSystem/PlayerGhostController.h"
 #include "Kismet/GameplayStatics.h"
 
-
 // Sets default values
 APlayerPawn::APlayerPawn()
 {
@@ -18,7 +17,6 @@ APlayerPawn::APlayerPawn()
 
 	// Set default values for properties...
 	BaseTurnRate = 1.f;
-	Stamina = 1.f;
 	MovementSpeed = 1.f;
 
 	// ... and components
@@ -97,8 +95,8 @@ void APlayerPawn::Interact()
 		{
 			APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
 			check(possess);
-			GetController()->Possess(possess);
-			possess->setPlayer(this);
+			CurrentPlayerController->Possess(possess);
+			possess->SetPlayerController(CurrentPlayerController);
 		}
 		else
 		{
@@ -180,6 +178,7 @@ void APlayerPawn::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value * MovementSpeed);
 	}
+	Cast<APlayerGhostController>(GetController());
 }
 
 
