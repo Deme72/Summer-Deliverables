@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "DynamicPossessableComponent.h"
 #include "PossessableComponent.h"
 #include "StaticPossessableComponent.generated.h"
 
@@ -46,6 +48,7 @@ class SUMMERDELIVERABLES_API UStaticPossessableComponent : public UPossesableCom
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
 	private:
+	UStaticPossessableComponent();
 	protected:
 	public:
 	// =============================

@@ -45,6 +45,7 @@ class SUMMERDELIVERABLES_API UDynamicPossessableComponent : public UPossesableCo
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
 	private:
+	UDynamicPossessableComponent();
 	protected:
 	public:
 	// =============================
