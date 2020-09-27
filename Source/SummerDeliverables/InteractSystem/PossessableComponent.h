@@ -46,7 +46,6 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// Is per second stamina drain active
 		bool bIsDrainingStamina;
-	
 	protected:
 	public:
 		/// The rate, in stamina/sec, at which this prop drains the player's stamina
@@ -124,7 +123,11 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// A component-side wrapper for endPossession
 		UFUNCTION(BlueprintCallable, Category="Possessing")
-	    void Eject();
+		void Eject();
+
+		/// Function to deal damage
+		UFUNCTION(BlueprintCallable, Category="Damage")
+	    void Scare(float baseMultiplier = 1.0);
 	
 	// === Input Event Functions ===
 		/// An Event for the left face button (keyboard: left shift button)

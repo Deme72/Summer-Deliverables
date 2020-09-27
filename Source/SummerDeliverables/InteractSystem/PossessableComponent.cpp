@@ -7,6 +7,7 @@
 #include "PlayerGhostController.h"
 #include "SummerDeliverables/DefinedDebugHelpers.h"
 #include "SummerDeliverables/PlayerPawn.h"
+#include "SummerDeliverables/BaseEnemyCharacter.h"
 
 UPossesableComponent::UPossesableComponent():UInteractableComponent()
 {
@@ -18,6 +19,7 @@ UPossesableComponent::UPossesableComponent():UInteractableComponent()
 
 float UPossesableComponent::GetStamina() const
 {
+	TArray<AActor *> EnemyCollisions;
     APossessablePawn* owner = Cast<APossessablePawn>(GetOwner());
     if (owner->IsPossessing())
     {
@@ -53,6 +55,21 @@ void UPossesableComponent::Eject()
 {
     APossessablePawn * tmp = Cast<APossessablePawn>(GetOwner());
     tmp->EndPossession();
+}
+
+void UPossesableComponent::Scare(float baseMultiplier)
+{
+    TArray<AActor *> EnemyCollisions;
+    DamageBounds->GetOverlappingActors(EnemyCollisions);
+    for(auto collision:EnemyCollisions)
+    {
+        ABaseEnemyCharacter * enemy = Cast<ABaseEnemyCharacter>(collision);
+        if(enemy)
+        {
+            enemy->TakeBraveryDamage(DamageAmount*baseMultiplier);
+            enemy->TakeParanoiaDamage(ParanoiaAmount*baseMultiplier);
+        }
+    }
 }
 
 void UPossesableComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)

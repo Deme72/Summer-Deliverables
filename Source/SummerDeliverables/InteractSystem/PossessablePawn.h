@@ -60,6 +60,9 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     protected:
     	/// Called when an instance of this class is placed (in editor) or spawned.
     	virtual void OnConstruction(const FTransform & Transform) override;
+
+		/// Called after components are initialized
+		virtual void PostInitializeComponents() override;
 	
     public:
     	/// Constructor and destructor

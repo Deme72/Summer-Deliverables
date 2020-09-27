@@ -34,11 +34,24 @@ void APossessablePawn::OnConstruction(const FTransform & Transform)
 	{
 		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
 		PossessableComponent->RegisterComponent();
-		//TODO: BAD WAY OF GETTING SHAPE COMPONENTS, DOESN'T WORK WITH MORE THAN ONE, FIX LATER
+	}
+}
+
+void APossessablePawn::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if(PossessableComponent)
+	{
 		TArray<UShapeComponent*> tmp = {};
 		GetComponents<UShapeComponent>(tmp);
-		if(tmp.Num())
-			PossessableComponent->InteractBounds = tmp.Pop();
+		for(auto shape:tmp){
+			if(PossessableComponent->InteractBounds == nullptr &&
+                shape->ComponentHasTag("Interact"))
+                	PossessableComponent->InteractBounds = shape;
+			if(PossessableComponent->DamageBounds == nullptr &&
+                shape->ComponentHasTag("Damage"))
+                	PossessableComponent->DamageBounds = shape;
+		}
 	}
 }
 
