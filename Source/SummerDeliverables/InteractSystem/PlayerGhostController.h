@@ -55,6 +55,8 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	// =============================
 	private:
 	protected:
+	/// The BP pawn class to spawn
+	UClass * PawnClass;
 	public:
 	/// Gets the player's current stamina
 	UFUNCTION(BlueprintCallable, Category="Getters")

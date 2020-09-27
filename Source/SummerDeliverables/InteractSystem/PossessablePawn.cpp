@@ -45,7 +45,7 @@ void APossessablePawn::OnConstruction(const FTransform & Transform)
 void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	
 	PlayerInputComponent->BindAction("InteractButton", IE_Released, this, &APossessablePawn::EndPossession);
 	PlayerInputComponent->BindAction("MoveButton", IE_Pressed, PossessableComponent, &UPossesableComponent::MoveButton);
 	PlayerInputComponent->BindAction("MoveButton", IE_Released, PossessableComponent, &UPossesableComponent::MoveButtonRelease);

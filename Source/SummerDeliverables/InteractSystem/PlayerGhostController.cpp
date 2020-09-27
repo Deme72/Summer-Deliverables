@@ -7,9 +7,14 @@
 #include "SummerDeliverables/DefinedDebugHelpers.h"
 
 
-APlayerGhostController::APlayerGhostController()
+APlayerGhostController::APlayerGhostController() :APlayerController()
 {
     MaxStamina = 100.0f;
+    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/PlayerPawn_BP"));
+    if (PlayerPawnBPClass.Class != NULL)
+    {
+        PawnClass = PlayerPawnBPClass.Class;
+    }
 }
 
 bool APlayerGhostController::SetStamina(float stamina_drain, bool b_is_relative)
