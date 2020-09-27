@@ -47,6 +47,9 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	private:
 	protected:
 	public:
+	/// The default Constructor
+	APlayerGhostController();
+	
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
@@ -73,5 +76,6 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	UFUNCTION(BlueprintCallable, Category="Possession")
 	class APlayerPawn* CreatePlayerPawn(FVector spawn_location) const;
 
+	virtual void BeginPlay() override;
 };
 

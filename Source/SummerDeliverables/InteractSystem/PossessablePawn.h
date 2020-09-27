@@ -76,7 +76,7 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 
 		/// Returns true if the pawn is currently possessed by a player
 		UFUNCTION(BlueprintCallable, Category="Possession")
-		bool IsPossessing() const { if(CurrentPlayerController==nullptr){	return false;	}	return true;}
+		bool IsPossessing() const { if(GetOwner()==nullptr){	return false;	}	return true;}
 	
     	// ===================
     	// ===== METHODS =====
