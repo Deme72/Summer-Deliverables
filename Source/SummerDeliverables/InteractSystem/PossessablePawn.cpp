@@ -45,7 +45,7 @@ void APossessablePawn::OnConstruction(const FTransform & Transform)
 void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	
 	PlayerInputComponent->BindAction("InteractButton", IE_Released, this, &APossessablePawn::EndPossession);
 	PlayerInputComponent->BindAction("MoveButton", IE_Pressed, PossessableComponent, &UPossesableComponent::MoveButton);
 	PlayerInputComponent->BindAction("MoveButton", IE_Released, PossessableComponent, &UPossesableComponent::MoveButtonRelease);
@@ -65,6 +65,8 @@ void APossessablePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	CurrentPlayerController = Cast<APlayerGhostController>(GetController());
+	
 	if (CurrentPlayerController && PossessableComponent->GetIsActiveStaminaDrain())
 	{
 		
@@ -80,7 +82,7 @@ void APossessablePawn::EndPossession()
 	if (CurrentPlayerController)
 	{
 		// move player pawn to the exit point and repossess
-		APlayerPawn* new_pawn = CurrentPlayerController->CreatePlayerPawn(ExitPoint->GetComponentLocation());
+		APlayerPawn* new_pawn = CurrentPlayerController->CreatePlayerPawn(ExitPoint->GetComponentTransform().GetLocation());
 		CurrentPlayerController->Possess(new_pawn);
 		new_pawn->setPlayer(CurrentPlayerController);
 		

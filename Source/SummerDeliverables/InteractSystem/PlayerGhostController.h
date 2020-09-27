@@ -55,6 +55,8 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	// =============================
 	private:
 	protected:
+	/// The BP pawn class to spawn
+	UClass * PawnClass;
 	public:
 	/// Gets the player's current stamina
 	UFUNCTION(BlueprintCallable, Category="Getters")
@@ -74,7 +76,7 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	public:
 	/// Creates an APlayerPawn at the given location and returns the pointer
 	UFUNCTION(BlueprintCallable, Category="Possession")
-	class APlayerPawn* CreatePlayerPawn(FVector spawn_location) const;
+	class APlayerPawn* CreatePlayerPawn(FVector spawn_location);
 
 	virtual void BeginPlay() override;
 };

@@ -7,9 +7,14 @@
 #include "SummerDeliverables/DefinedDebugHelpers.h"
 
 
-APlayerGhostController::APlayerGhostController()
+APlayerGhostController::APlayerGhostController() :APlayerController()
 {
     MaxStamina = 100.0f;
+    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/PlayerPawn_BP"));
+    if (PlayerPawnBPClass.Class != NULL)
+    {
+        PawnClass = PlayerPawnBPClass.Class;
+    }
 }
 
 bool APlayerGhostController::SetStamina(float stamina_drain, bool b_is_relative)
@@ -29,9 +34,9 @@ bool APlayerGhostController::SetStamina(float stamina_drain, bool b_is_relative)
     return false;
 }
 
-APlayerPawn* APlayerGhostController::CreatePlayerPawn(FVector spawn_location) const
+APlayerPawn* APlayerGhostController::CreatePlayerPawn(FVector spawn_location)
 {
-    return dynamic_cast<APlayerPawn*>(GetWorld()->SpawnActor(PlayerPawn, &spawn_location));
+    return Cast<APlayerPawn>(GetWorld()->SpawnActor(PawnClass, &spawn_location));
 }
 
 void APlayerGhostController::BeginPlay()
