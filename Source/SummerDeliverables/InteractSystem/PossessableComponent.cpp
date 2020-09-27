@@ -41,6 +41,13 @@ bool UPossesableComponent::SetStamina(float stamina_drain, bool b_is_relative)
     return false;
 }
 
+bool UPossesableComponent::CanAffordStaminaCost(const float stamina_cost) const
+{
+    if (Cast<APossessablePawn>(GetOwner())->IsPossessing())
+        return Cast<APlayerGhostController>(Cast<APawn>(GetOwner())->GetController())->CanAffordStaminaCost(stamina_cost);
+    return false;
+}
+
 
 void UPossesableComponent::Eject()
 {
