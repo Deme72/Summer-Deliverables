@@ -32,12 +32,19 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	/// The Player's current Stamina
 	float CurrentStamina;
 
+	/// For Science
+	float LivingTime;
+	
 	protected:
 	public:
 	/// The Player's max Stamina
 	UPROPERTY(EditAnywhere, Category="Stamina", meta=(ClampMin=0.0))
 	float MaxStamina;
 
+	/// The player's stamina regen (in stamina/second)
+	UPROPERTY(EditAnywhere, Category="Stamina", meta=(clampMin=0.0))
+	float StaminaRegen;
+	
 	/// The type of APlayerPawn that Player Controller spawns when unpossessing a possessable
 	UPROPERTY(EditAnywhere, Category="Possession")
 	TSubclassOf<class APlayerPawn> PlayerPawn; 
@@ -47,18 +54,24 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	private:
 	protected:
 	public:
+	/// The default Constructor
+	APlayerGhostController();
+	
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
 	private:
 	protected:
+	/// The BP pawn class to spawn
+	UClass * PawnClass;
 	public:
 	/// Gets the player's current stamina
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	float GetStamina() const { return CurrentStamina; }
 
 	/// Subtracts the passed stamina value from the player's current stamina |
-	/// b_is_relative dictates with the action is relative (i.e. CurrentStamina -= stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
+	/// b_is_relative dictates with the action is relative (i.e. CurrentStamina -= stamina_drain)
+	/// or is absolute (i.e. CurrentStamina = stamina_drain) |
 	/// returns true if the player has no stamina left
 	UFUNCTION(BlueprintCallable, Category="Setters")
     bool SetStamina(float stamina_drain, bool b_is_relative = true);
@@ -69,9 +82,16 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	private:
 	protected:
 	public:
+	virtual void Tick(float DeltaSeconds) override;
+	
 	/// Creates an APlayerPawn at the given location and returns the pointer
 	UFUNCTION(BlueprintCallable, Category="Possession")
-	class APlayerPawn* CreatePlayerPawn(FVector spawn_location) const;
+	class APlayerPawn* CreatePlayerPawn(FVector spawn_location);
 
+	/// Returns true if the player currently has enough stamina to afford the stamina cost
+	UFUNCTION(BlueprintCallable, Category="Possession")
+	bool CanAffordStaminaCost(const float stamina_cost) const {return CurrentStamina - stamina_cost > 0.0;}
+	
+	virtual void BeginPlay() override;
 };
 

@@ -1,17 +1,36 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayerGhostController.h"
+
+#include <string>
+
 #include "PossessablePawn.h"
 #include "../PlayerPawn.h"
-bool APlayerGhostController::SetStamina(float stamina_drain, bool b_is_relative)
+#include "Chaos/ChaosPerfTest.h"
+#include "SummerDeliverables/DefinedDebugHelpers.h"
+
+
+APlayerGhostController::APlayerGhostController() :APlayerController()
+{
+    MaxStamina = 100.0f;
+    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/PlayerPawn_BP"));
+    if (PlayerPawnBPClass.Class != NULL)
+    {
+        PawnClass = PlayerPawnBPClass.Class;
+    }
+    StaminaRegen = 5.0f;
+    LivingTime = 0.0f;
+}
+
+bool APlayerGhostController::SetStamina(float delta_stamina, bool b_is_relative)
 {
     if (b_is_relative)
     {
-        CurrentStamina = FMath::Max( FMath::Min(CurrentStamina - stamina_drain, MaxStamina), 0.0f);
+        CurrentStamina = FMath::Max( FMath::Min(CurrentStamina + delta_stamina, MaxStamina), 0.0f);
     }
     else
     {
-        CurrentStamina = stamina_drain;
+        CurrentStamina = delta_stamina;
     }
     if (CurrentStamina == 0.0f)
     {
@@ -20,9 +39,30 @@ bool APlayerGhostController::SetStamina(float stamina_drain, bool b_is_relative)
     return false;
 }
 
-APlayerPawn* APlayerGhostController::CreatePlayerPawn(FVector spawn_location) const
+void APlayerGhostController::Tick(float DeltaSeconds)
 {
-    return dynamic_cast<APlayerPawn*>(GetWorld()->SpawnActor(PlayerPawn, &spawn_location));
+    SetStamina(StaminaRegen*DeltaSeconds);
+    LivingTime += DeltaSeconds;
+    if (LivingTime > 2.0f)
+    {
+        std::string msg = "PlayerStamina = " + std::to_string(CurrentStamina);
+        SCREENMSG(msg.c_str());
+        LivingTime -= 2.0f;
+    }
+    
+}
+
+APlayerPawn* APlayerGhostController::CreatePlayerPawn(FVector spawn_location) 
+{
+    FActorSpawnParameters params = *new FActorSpawnParameters();
+    params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+    return Cast<APlayerPawn>(GetWorld()->SpawnActor(PawnClass, &spawn_location, 0, params));
+}
+
+void APlayerGhostController::BeginPlay()
+{
+    CurrentStamina = MaxStamina;
+    SCREENMSG("BeginPlay Initialized a PlayerGhostController");
 }
 
 

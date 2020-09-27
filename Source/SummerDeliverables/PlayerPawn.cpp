@@ -89,17 +89,27 @@ void APlayerPawn::Interact()
 	}
 	if(target && !target->IsInUse())
 	{
-		target->OnInteractInternal();
+		
 		UPossesableComponent * comp = Cast<UPossesableComponent>(target);
 		if(comp)
 		{
 			APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
 			check(possess);
-			CurrentPlayerController->Possess(possess);
-			possess->SetPlayerController(CurrentPlayerController);
+			auto ghost_controller = Cast<APlayerGhostController>(GetController());
+			auto possessable = Cast<UPossesableComponent>(comp);
+			if(ghost_controller && possessable)
+				if (ghost_controller->CanAffordStaminaCost(possessable->GetFrontStaminaCost()))
+				{
+					target->OnInteractInternal();
+					ghost_controller->SetStamina(-possessable->GetFrontStaminaCost());
+					GetController()->Possess(possess);
+					Destroy();
+				}
+			
 		}
 		else
 		{
+			target->OnInteractInternal();
 			target->EndInteractInternal();
 		}
 	}

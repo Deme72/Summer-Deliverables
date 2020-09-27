@@ -30,7 +30,7 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     private:
     protected:
     	/// Reference to currently possessing player controller, used for un-possessing.
-    	class APlayerGhostController* CurrentPlayerController;
+    	//class APlayerGhostController* CurrentPlayerController;
 	
     public:
     	/// A scenecomponent for providing an exit location to spawn an unpossessing player
@@ -60,6 +60,9 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     protected:
     	/// Called when an instance of this class is placed (in editor) or spawned.
     	virtual void OnConstruction(const FTransform & Transform) override;
+
+		/// Called after components are initialized
+		virtual void PostInitializeComponents() override;
 	
     public:
     	/// Constructor and destructor
@@ -72,11 +75,11 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     protected:
     public:
     	/// Setter for CurrentPlayer pointer
-    	void SetPlayerController(APlayerGhostController * pc){CurrentPlayerController = pc;}
+    	// void SetPlayerController(APlayerGhostController * pc){CurrentPlayerController = pc;}
 
 		/// Returns true if the pawn is currently possessed by a player
 		UFUNCTION(BlueprintCallable, Category="Possession")
-		bool IsPossessing() const { if(CurrentPlayerController==nullptr){	return false;	}	return true;}
+		bool IsPossessing() const { if(GetOwner()==nullptr){	return false;	}	return true;}
 	
     	// ===================
     	// ===== METHODS =====

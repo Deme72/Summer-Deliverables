@@ -46,7 +46,6 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// Is per second stamina drain active
 		bool bIsDrainingStamina;
-	
 	protected:
 	public:
 		/// The rate, in stamina/sec, at which this prop drains the player's stamina
@@ -100,10 +99,18 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
     float GetStamina() const;
 
 	UFUNCTION(BlueprintCallable, Category="Setters")
-    /// Subtracts the passed stamina value from the player's current stamina |
-    /// b_is_relative dictates with the action is relative (i.e. CurrentStamina -= stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
+    /// Adds the passed stamina value to the possessing player's current stamina |
+    /// b_is_relative dictates with the action is relative (i.e. CurrentStamina += stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
     /// returns true if the player has no stamina left
     bool SetStamina(float stamina_drain, bool b_is_relative = true);
+
+	/// Returns true if the current possessing player has enough stamina to afford the stamina_cost
+	UFUNCTION(BlueprintCallable, Category="Possession")
+    bool CanAffordStaminaCost(const float stamina_cost) const;
+	
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	/// Returns the up-front stamina cost of this possessable
+	float GetFrontStaminaCost() const { return StamFrontCost; }
 	
 	// ===================
 	// ===== METHODS =====
@@ -116,7 +123,11 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// A component-side wrapper for endPossession
 		UFUNCTION(BlueprintCallable, Category="Possessing")
-	    void Eject();
+		void Eject();
+
+		/// Function to deal damage
+		UFUNCTION(BlueprintCallable, Category="Damage")
+	    void Scare(float baseMultiplier = 1.0);
 	
 	// === Input Event Functions ===
 		/// An Event for the left face button (keyboard: left shift button)
