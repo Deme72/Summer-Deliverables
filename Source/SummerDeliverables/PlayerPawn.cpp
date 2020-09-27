@@ -100,10 +100,11 @@ void APlayerPawn::Interact()
 			if(ghost_controller && possessable)
 				if (ghost_controller->CanAffordStaminaCost(possessable->GetFrontStaminaCost()))
 				{
-					ghost_controller->SetStamina(possessable->GetFrontStaminaCost());
+					ghost_controller->SetStamina(-possessable->GetFrontStaminaCost());
+					GetController()->Possess(possess);
+					Destroy();
 				}
-			GetController()->Possess(possess);
-			//possess->SetPlayerController(Cast<APlayerGhostController>(GetController()));
+			
 		}
 		else
 		{

@@ -68,7 +68,7 @@ void APossessablePawn::Tick(float DeltaTime)
 	if (current_controller && PossessableComponent->GetIsActiveStaminaDrain())
 	{
 		
-		if(current_controller->SetStamina(PossessableComponent->StamDrainRate*DeltaTime))
+		if(current_controller->SetStamina(-PossessableComponent->StamDrainRate*DeltaTime))
 		{
 			EndPossession();
 		}
@@ -81,7 +81,7 @@ void APossessablePawn::EndPossession()
 	if (ghost_controller)
 	{
 		// move player pawn to the exit point and repossess
-		APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(ExitPoint->GetComponentLocation());
+		APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(ExitPoint->GetComponentTransform().GetLocation());
 		if (new_pawn)
 		{
 			ghost_controller->Possess(new_pawn);

@@ -32,12 +32,19 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	/// The Player's current Stamina
 	float CurrentStamina;
 
+	/// For Science
+	float LivingTime;
+	
 	protected:
 	public:
 	/// The Player's max Stamina
 	UPROPERTY(EditAnywhere, Category="Stamina", meta=(ClampMin=0.0))
 	float MaxStamina;
 
+	/// The player's stamina regen (in stamina/second)
+	UPROPERTY(EditAnywhere, Category="Stamina", meta=(clampMin=0.0))
+	float StaminaRegen;
+	
 	/// The type of APlayerPawn that Player Controller spawns when unpossessing a possessable
 	UPROPERTY(EditAnywhere, Category="Possession")
 	TSubclassOf<class APlayerPawn> PlayerPawn; 
@@ -75,9 +82,11 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	private:
 	protected:
 	public:
+	virtual void Tick(float DeltaSeconds) override;
+	
 	/// Creates an APlayerPawn at the given location and returns the pointer
 	UFUNCTION(BlueprintCallable, Category="Possession")
-	class APlayerPawn* CreatePlayerPawn(const FVector spawn_location) const;
+	class APlayerPawn* CreatePlayerPawn(FVector spawn_location);
 
 	/// Returns true if the player currently has enough stamina to afford the stamina cost
 	UFUNCTION(BlueprintCallable, Category="Possession")
