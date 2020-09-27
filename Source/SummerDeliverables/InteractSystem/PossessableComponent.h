@@ -104,6 +104,10 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
     /// b_is_relative dictates with the action is relative (i.e. CurrentStamina -= stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
     /// returns true if the player has no stamina left
     bool SetStamina(float stamina_drain, bool b_is_relative = true);
+
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	/// Returns the up-front stamina cost of this possessable
+	float GetFrontStaminaCost() const { return StamFrontCost; }
 	
 	// ===================
 	// ===== METHODS =====

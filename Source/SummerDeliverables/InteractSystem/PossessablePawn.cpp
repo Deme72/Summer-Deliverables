@@ -29,7 +29,7 @@ APossessablePawn::APossessablePawn():APawn()
 void APossessablePawn::OnConstruction(const FTransform & Transform)
 {
 	Super::OnConstruction(Transform);
-	CurrentPlayerController = nullptr;
+	//CurrentPlayerController = nullptr;
 	if(PossessableComponentType && !IsValid(PossessableComponent))
 	{
 		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
@@ -64,11 +64,11 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 void APossessablePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (CurrentPlayerController && PossessableComponent->GetIsActiveStaminaDrain())
+	auto current_controller = Cast<APlayerGhostController>(GetController());
+	if (current_controller && PossessableComponent->GetIsActiveStaminaDrain())
 	{
 		
-		if(CurrentPlayerController->SetStamina(PossessableComponent->StamDrainRate*DeltaTime))
+		if(current_controller->SetStamina(PossessableComponent->StamDrainRate*DeltaTime))
 		{
 			EndPossession();
 		}
@@ -77,14 +77,22 @@ void APossessablePawn::Tick(float DeltaTime)
 
 void APossessablePawn::EndPossession()
 {
-	if (CurrentPlayerController)
+	auto ghost_controller = Cast<APlayerGhostController>(GetController());
+	if (ghost_controller)
 	{
 		// move player pawn to the exit point and repossess
-		APlayerPawn* new_pawn = CurrentPlayerController->CreatePlayerPawn(ExitPoint->GetComponentLocation());
-		CurrentPlayerController->Possess(new_pawn);
-		new_pawn->setPlayer(CurrentPlayerController);
+		APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(ExitPoint->GetComponentLocation());
+		if (new_pawn)
+		{
+			ghost_controller->Possess(new_pawn);
+			new_pawn->setPlayer(ghost_controller);
+			PossessableComponent->EndInteractInternal();
+		}
+		else if (new_pawn == nullptr)
+		{
+			SCREENMSG("new APlayerPawn is a nullptr");
+		}
 		
-		PossessableComponent->EndInteractInternal();
-		CurrentPlayerController = nullptr;
+		//CurrentPlayerController = nullptr;
 	}
 }

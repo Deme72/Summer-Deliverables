@@ -29,9 +29,11 @@ bool APlayerGhostController::SetStamina(float stamina_drain, bool b_is_relative)
     return false;
 }
 
-APlayerPawn* APlayerGhostController::CreatePlayerPawn(FVector spawn_location) const
+APlayerPawn* APlayerGhostController::CreatePlayerPawn(const FVector spawn_location) const
 {
-    return dynamic_cast<APlayerPawn*>(GetWorld()->SpawnActor(PlayerPawn, &spawn_location));
+    FActorSpawnParameters params = *new FActorSpawnParameters();
+    params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+    return Cast<APlayerPawn>(GetWorld()->SpawnActor(APlayerPawn::StaticClass(), &spawn_location, 0, params));
 }
 
 void APlayerGhostController::BeginPlay()

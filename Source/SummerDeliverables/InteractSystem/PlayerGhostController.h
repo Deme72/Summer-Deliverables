@@ -61,7 +61,8 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	float GetStamina() const { return CurrentStamina; }
 
 	/// Subtracts the passed stamina value from the player's current stamina |
-	/// b_is_relative dictates with the action is relative (i.e. CurrentStamina -= stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
+	/// b_is_relative dictates with the action is relative (i.e. CurrentStamina -= stamina_drain)
+	/// or is absolute (i.e. CurrentStamina = stamina_drain) |
 	/// returns true if the player has no stamina left
 	UFUNCTION(BlueprintCallable, Category="Setters")
     bool SetStamina(float stamina_drain, bool b_is_relative = true);
@@ -74,8 +75,12 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	public:
 	/// Creates an APlayerPawn at the given location and returns the pointer
 	UFUNCTION(BlueprintCallable, Category="Possession")
-	class APlayerPawn* CreatePlayerPawn(FVector spawn_location) const;
+	class APlayerPawn* CreatePlayerPawn(const FVector spawn_location) const;
 
+	/// Returns true if the player currently has enough stamina to afford the stamina cost
+	UFUNCTION(BlueprintCallable, Category="Possession")
+	bool CanAffordStaminaCost(const float stamina_cost) const {return CurrentStamina - stamina_cost > 0.0;}
+	
 	virtual void BeginPlay() override;
 };
 
