@@ -60,7 +60,9 @@ void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
 // Pick up treasure functionality
 void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 {
-	treasure->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	treasure->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(false);
+	treasure->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("RightHandSocket"));
+	treasure->SetActorEnableCollision(false);
 	treasureActor = treasure;
 }
 
@@ -68,6 +70,8 @@ void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 void ABaseEnemyCharacter::DropTreasure()
 {
 	treasureActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	treasureActor->SetActorEnableCollision(true);	
+	treasureActor->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
 	treasureActor = 0;
 }
 
