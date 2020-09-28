@@ -6,7 +6,8 @@
 #include "InteractSystem/PossessablePawn.h"
 #include "InteractSystem/PossessableComponent.h"
 #include "InteractSystem/ParanoiaComponent.h"
-
+#include "InteractSystem/PlayerGhostController.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -16,7 +17,6 @@ APlayerPawn::APlayerPawn()
 
 	// Set default values for properties...
 	BaseTurnRate = 1.f;
-	Stamina = 1.f;
 	MovementSpeed = 1.f;
 
 	// ... and components
@@ -89,17 +89,27 @@ void APlayerPawn::Interact()
 	}
 	if(target && !target->IsInUse())
 	{
-		target->OnInteractInternal();
+		
 		UPossesableComponent * comp = Cast<UPossesableComponent>(target);
 		if(comp)
 		{
 			APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
 			check(possess);
-			GetController()->Possess(possess);
-			possess->setPlayer(this);
+			auto ghost_controller = Cast<APlayerGhostController>(GetController());
+			auto possessable = Cast<UPossesableComponent>(comp);
+			if(ghost_controller && possessable)
+				if (ghost_controller->CanAffordStaminaCost(possessable->GetFrontStaminaCost()))
+				{
+					target->OnInteractInternal();
+					ghost_controller->SetStamina(-possessable->GetFrontStaminaCost());
+					GetController()->Possess(possess);
+					Destroy();
+				}
+			
 		}
 		else
 		{
+			target->OnInteractInternal();
 			target->EndInteractInternal();
 		}
 	}
@@ -130,6 +140,25 @@ void APlayerPawn::ScareButtonEnd()
 	
 }
 
+void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                                 int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(OtherActor->ActorHasTag("Stamina"))
+	{
+		//APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
+		//Con->SetStamina(-OtherActor->StaminaVal);
+		OtherActor->Destroy();
+	}
+	if(OtherActor->ActorHasTag("TeamStamina"))
+	{
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, FoundActors);
+		for(int i=0; i< FoundActors.Num(); i++)
+		{
+			//Cast<APlayerGhostController>(((APlayerPawn*)FoundActors[i])->GetController())->SetStamina(-OtherActor->StaminaVal);
+		}
+		OtherActor->Destroy();
+	}
+}
 
 #pragma region Movement
 void APlayerPawn::MoveForward(float Value)
@@ -159,6 +188,7 @@ void APlayerPawn::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value * MovementSpeed);
 	}
+	Cast<APlayerGhostController>(GetController());
 }
 
 
@@ -183,4 +213,4 @@ void APlayerPawn::LookUp(float Value)
 //	// calculate delta for this frame from the rate information
 //	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 //}
-#pragma endregion 
+#pragma endregion

@@ -9,12 +9,14 @@
 #include "Components/SceneComponent.h"
 #include "Components/ShapeComponent.h"
 #include "PossessableComponent.h"
+#include "PlayerGhostController.h"
+#include "../PlayerPawn.h"
 
 APossessablePawn::APossessablePawn():APawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PossessableBaseMesh"));
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalBaseMesh"));
 	ExitPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Exit Point"));
@@ -27,23 +29,36 @@ APossessablePawn::APossessablePawn():APawn()
 void APossessablePawn::OnConstruction(const FTransform & Transform)
 {
 	Super::OnConstruction(Transform);
-	CurrentPlayer = nullptr;
+	//CurrentPlayerController = nullptr;
 	if(PossessableComponentType && !IsValid(PossessableComponent))
 	{
 		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
 		PossessableComponent->RegisterComponent();
-		//TODO: BAD WAY OF GETTING SHAPE COMPONENTS, DOESN'T WORK WITH MORE THAN ONE, FIX LATER
+	}
+}
+
+void APossessablePawn::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if(PossessableComponent)
+	{
 		TArray<UShapeComponent*> tmp = {};
 		GetComponents<UShapeComponent>(tmp);
-		if(tmp.Num())
-			PossessableComponent->InteractBounds = tmp.Pop();
+		for(auto shape:tmp){
+			if(PossessableComponent->InteractBounds == nullptr &&
+                shape->ComponentHasTag("Interact"))
+                	PossessableComponent->InteractBounds = shape;
+			if(PossessableComponent->DamageBounds == nullptr &&
+                shape->ComponentHasTag("Damage"))
+                	PossessableComponent->DamageBounds = shape;
+		}
 	}
 }
 
 void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	
 	PlayerInputComponent->BindAction("InteractButton", IE_Released, this, &APossessablePawn::EndPossession);
 	PlayerInputComponent->BindAction("MoveButton", IE_Pressed, PossessableComponent, &UPossesableComponent::MoveButton);
 	PlayerInputComponent->BindAction("MoveButton", IE_Released, PossessableComponent, &UPossesableComponent::MoveButtonRelease);
@@ -62,26 +77,35 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 void APossessablePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (CurrentPlayer)
+	auto current_controller = Cast<APlayerGhostController>(GetController());
+	if (current_controller && PossessableComponent->GetIsActiveStaminaDrain())
 	{
-		CurrentPlayer->Stamina -= PossessableComponent->StamDrainRate*DeltaTime;
-		if(CurrentPlayer->Stamina <= 0)
+		
+		if(current_controller->SetStamina(-PossessableComponent->StamDrainRate*DeltaTime))
 		{
 			EndPossession();
-			CurrentPlayer->Stamina = 0;
 		}
 	}
 }
 
 void APossessablePawn::EndPossession()
 {
-	if (CurrentPlayer)
+	auto ghost_controller = Cast<APlayerGhostController>(GetController());
+	if (ghost_controller)
 	{
 		// move player pawn to the exit point and repossess
-		CurrentPlayer->SetActorLocation(ExitPoint->GetComponentLocation());
-		GetController()->Possess(CurrentPlayer);
-		PossessableComponent->EndInteractInternal();
-		CurrentPlayer = nullptr;
+		APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(ExitPoint->GetComponentTransform().GetLocation());
+		if (new_pawn)
+		{
+			ghost_controller->Possess(new_pawn);
+			new_pawn->setPlayer(ghost_controller);
+			PossessableComponent->EndInteractInternal();
+		}
+		else if (new_pawn == nullptr)
+		{
+			SCREENMSG("new APlayerPawn is a nullptr");
+		}
+		
+		//CurrentPlayerController = nullptr;
 	}
 }
