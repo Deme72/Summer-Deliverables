@@ -5,7 +5,7 @@
 #include "AIController.h"
 #include "CoreMinimal.h"
 
-#include "EdGraphSchema_K2.h"
+//#include "EdGraphSchema_K2.h"
 #include "GameFramework/Character.h"
 #include "BaseEnemyCharacter.generated.h"
 
