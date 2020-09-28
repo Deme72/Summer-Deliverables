@@ -8,6 +8,7 @@
 #include "InteractSystem/ParanoiaComponent.h"
 #include "InteractSystem/PlayerGhostController.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerStamina.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -153,8 +154,9 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 {
 	if(OtherActor->ActorHasTag("Stamina"))
 	{
-		//APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
-		//Con->SetStamina(-OtherActor->StaminaVal);
+		
+		APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
+		Con->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
 		OtherActor->Destroy();
 	}
 	if(OtherActor->ActorHasTag("TeamStamina"))
@@ -162,7 +164,7 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, FoundActors);
 		for(int i=0; i< FoundActors.Num(); i++)
 		{
-			//Cast<APlayerGhostController>(((APlayerPawn*)FoundActors[i])->GetController())->SetStamina(-OtherActor->StaminaVal);
+			Cast<APlayerGhostController>(((APlayerPawn*)FoundActors[i])->GetController())->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
 		}
 		OtherActor->Destroy();
 	}
