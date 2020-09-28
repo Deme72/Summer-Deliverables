@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SummerDeliverablesGameMode.h"
+
+#include "DefinedDebugHelpers.h"
 #include "SummerDeliverablesCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "InteractSystem/PlayerGhostController.h"
@@ -20,6 +22,7 @@ void ASummerDeliverablesGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SCREENMSG("BeginPlay intialized gamemode as SummerDeliverablesGameMode.cpp");
 	///This timer handles when to call SpawnStamina()
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASummerDeliverablesGameMode::SpawnStamina,
