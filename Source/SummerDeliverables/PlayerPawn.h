@@ -100,6 +100,8 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	// ===================
 	private:
 	protected:
+		/// Called when the game starts or when spawned
+		void BeginPlay();
 	public:
 		/// Called every frame, put collision related code in here
 		virtual void Tick(float DeltaTime) override;

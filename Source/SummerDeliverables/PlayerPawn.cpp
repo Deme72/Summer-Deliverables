@@ -24,6 +24,14 @@ APlayerPawn::APlayerPawn()
 	OverlappingInteractables = {};
 }
 
+/// Called when the game starts or when spawned
+void APlayerPawn::BeginPlay()
+{
+	Super::BeginPlay();
+
+	InteractBounds->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnBeginOverlap);
+}
+
 // Called every frame
 void APlayerPawn::Tick(float DeltaTime)
 {
