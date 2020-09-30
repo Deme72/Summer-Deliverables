@@ -44,7 +44,7 @@ void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
 
 void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
 {
-	Paranoia = FMath::Max(Paranoia - ParanoiaDamage, 0.0f);
+	Paranoia = Paranoia + ParanoiaDamage, 0.0f;
 	if (Paranoia <= ParanoiaCautiousThreshold)
 	{
 		SetEState(EState::Cautious);
@@ -92,7 +92,7 @@ void ABaseEnemyCharacter::Tick(float DeltaTime)
 		ComboCounter = 0;
 	}
 
-	ParanoiaDecayTime -= DeltaTime;
+	ParanoiaTick(DeltaTime);
 
 	CurrentEStateTime += DeltaTime;
 	if (CurrentEState == EState::Running && CurrentEStateTime > CurrentRunningDuration)
@@ -118,35 +118,32 @@ void ABaseEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
 {
-	while (DeltaTime > 0.0f)
+	if (ParanoiaDecayTime <= 0.0f)
 	{
-		if (ParanoiaDecayTime < 0.0f)
+		if (CurrentEState == EState::Running)
 		{
-			if (CurrentEState == EState::Running)
-			{
-				Paranoia = FMath::Max(Paranoia - (ParanoiaRunningDecay * DeltaTime), 0.0f);
-			}
-			else
-			{
-				Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * DeltaTime), 0.0f);
-			}
+			Paranoia = FMath::Max(Paranoia - (ParanoiaRunningDecay * DeltaTime), 0.0f);
 		}
 		else
 		{
-			float diff = DeltaTime - ParanoiaDecayTime;
-			if (diff > 0.0)
-			{
-				if (CurrentEState == EState::Running)
-				{
-					Paranoia = FMath::Max(Paranoia - (ParanoiaRunningDecay * diff), 0.0f);
-				}
-				else
-				{
-					Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * diff), 0.0f);
-				}
-			}
-			ParanoiaDecayTime -= DeltaTime;
+			Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * DeltaTime), 0.0f);
 		}
+	}
+	else
+	{
+		float diff = DeltaTime - ParanoiaDecayTime;
+		if (diff > 0.0)
+		{
+			if (CurrentEState == EState::Running)
+			{
+				Paranoia = FMath::Max(Paranoia - (ParanoiaRunningDecay * diff), 0.0f);
+			}
+			else
+			{
+				Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * diff), 0.0f);
+			}
+		}
+		ParanoiaDecayTime -= DeltaTime;
 	}
 }
 
