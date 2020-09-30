@@ -36,7 +36,7 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	{
 		TArray<AActor *> collisions = {};
 		ParanoiaBounds->GetOverlappingActors(collisions);
-		for(auto i = collisions.begin(); i != collisions.end(); ++i)
+		/*for(auto i = collisions.begin(); i != collisions.end(); ++i)
 		{
 			// TODO: get an enemy component to check against and make sure our target is an enemy
 			// TODO: Find the cause of ParanoiaComponent::uses falling below zero (parallel security issue(?))
@@ -45,7 +45,7 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 			//else
 				//V_LOG(TEXT("USES IS FALLING BELOW ZERO"));
 			//target->TakeDamage(paranoiaAmount);
-		}
+		}*/
 		active = false;
 	}
 
