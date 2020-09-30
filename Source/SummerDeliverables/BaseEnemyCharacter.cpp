@@ -44,14 +44,14 @@ void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
 
 void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
 {
-	Paranoia = Paranoia + ParanoiaDamage, 0.0f;
-	if (Paranoia <= ParanoiaCautiousThreshold)
-	{
-		SetEState(EState::Cautious);
-	}
-	else if (Paranoia <= ParanoiaRunningThreshold)
+	Paranoia = Paranoia + ParanoiaDamage; /// Paranoia max isn't a clamp - based on the fact that paranoia overflow damage exists
+	if (Paranoia >= ParanoiaRunningThreshold)
 	{
 		SetEState(EState::Running);
+	}
+	else if (Paranoia >= ParanoiaCautiousThreshold)
+	{
+		SetEState(EState::Cautious);
 	}
 
 	ParanoiaDecayTime = ParanoiaDecayDelay;
@@ -97,7 +97,7 @@ void ABaseEnemyCharacter::Tick(float DeltaTime)
 	CurrentEStateTime += DeltaTime;
 	if (CurrentEState == EState::Running && CurrentEStateTime > CurrentRunningDuration)
 	{
-		if (Paranoia < ParanoiaCautiousThreshold)
+		if (Paranoia >= ParanoiaCautiousThreshold)
 		{
 			SetEState(EState::Cautious);
 		}
