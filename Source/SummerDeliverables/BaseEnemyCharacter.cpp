@@ -30,7 +30,7 @@ void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
 {
 	float damage = (ScareBonus * (Paranoia / ParanoiaMax) + 1) * BraveryBaseDamage;
 	damage += FMath::Max(Paranoia - ParanoiaMax, 0.0f) * ParanoiaOverflowDamage;
-	damage *= ComboCounter;
+	damage *= (ComboCounter+1);
 	Bravery = FMath::Max(Bravery - damage, 0.0f);
 
 	ComboCounter += 1;
@@ -40,11 +40,16 @@ void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
 	{
 		SetEState(EState::Running);
 	}
+
+	if (Bravery <= 0)
+	{
+		SetEState(EState::Dying);
+	}
 }
 
 void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
 {
-	Paranoia = FMath::Max(Paranoia - ParanoiaDamage, 0.0f);
+	Paranoia = FMath::Min((float)Paranoia + (float)ParanoiaDamage, (float)ParanoiaMax);
 	if (Paranoia <= ParanoiaCautiousThreshold)
 	{
 		SetEState(EState::Cautious);
@@ -64,6 +69,7 @@ void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 	treasure->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("RightHandSocket"));
 	treasure->SetActorEnableCollision(false);
 	treasureActor = treasure;
+	SetEState(EState::Stealing);
 }
 
 // Drop treasure functionality
@@ -86,7 +92,6 @@ void ABaseEnemyCharacter::BeginPlay()
 	ComboTimer = 0.0f;
 
 	SetEState(EState::Searching);
-	
 }
 
 // Called every frame
