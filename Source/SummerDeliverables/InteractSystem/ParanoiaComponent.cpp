@@ -29,7 +29,7 @@ void UParanoiaComponent::InitializeComponent()
             shape->ComponentHasTag("Interact"))
             	InteractBounds = shape;
 		if(ParanoiaBounds == nullptr &&
-            shape->ComponentHasTag("Damage"))
+            shape->ComponentHasTag("Paranoia"))
             	ParanoiaBounds = shape;
 	}
 }
