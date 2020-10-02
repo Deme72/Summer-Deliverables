@@ -6,6 +6,7 @@
 
 #include "PossessablePawn.h"
 #include "../PlayerPawn.h"
+#include "Blueprint/UserWidget.h"
 #include "Chaos/ChaosPerfTest.h"
 #include "SummerDeliverables/DefinedDebugHelpers.h"
 
@@ -39,6 +40,11 @@ bool APlayerGhostController::SetStamina(float delta_stamina, bool b_is_relative)
     return false;
 }
 
+float APlayerGhostController::GetStaminaPercent() const
+{
+    return CurrentStamina / MaxStamina;
+}
+
 void APlayerGhostController::Tick(float DeltaSeconds)
 {
     SetStamina(StaminaRegen*DeltaSeconds);
@@ -61,8 +67,13 @@ APlayerPawn* APlayerGhostController::CreatePlayerPawn(FVector spawn_location)
 
 void APlayerGhostController::BeginPlay()
 {
+    Super::BeginPlay();
+    
     CurrentStamina = MaxStamina;
+    PlayerHUD = CreateWidget(this, HUDClass);
+    if(PlayerHUD != nullptr)
+    {
+        PlayerHUD->AddToViewport();
+    }
     SCREENMSG("BeginPlay Initialized a PlayerGhostController");
 }
-
-
