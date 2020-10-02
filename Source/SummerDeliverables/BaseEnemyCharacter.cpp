@@ -7,19 +7,22 @@
 // Sets default values
 ABaseEnemyCharacter::ABaseEnemyCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 }
 
-void ABaseEnemyCharacter::SetEState(EState new_State)
+void ABaseEnemyCharacter::SetEState(EState NewEState)
 {
-	CurrentEState = new_State;
-	CurrentEStateTime = 0;
-
-	if (new_State == EState::Running)
+	if (NewEState != CurrentEState)
 	{
-		CurrentRunningDuration = FMath::FRandRange(RunningDurationMin, RunningDurationMax);
+		CurrentEState = NewEState;
+		CurrentEStateTime = 0;
+
+		if (NewEState == EState::Running)
+		{
+			CurrentRunningDuration = FMath::FRandRange(RunningDurationMin, RunningDurationMax);
+		}
 	}
 }
 
@@ -50,7 +53,8 @@ void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
 	{
 		SetEState(EState::Running);
 	}
-	
+
+	ParanoiaDecayTime = ParanoiaDecayDelay;
 }
 
 void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
@@ -75,7 +79,6 @@ void ABaseEnemyCharacter::BeginPlay()
 	ComboTimer = 0.0f;
 
 	SetEState(EState::Searching);
-	
 }
 
 // Called every frame
@@ -111,5 +114,39 @@ void ABaseEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	
+}
+
+void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
+{
+	while (DeltaTime > 0.0f)
+	{
+		if (ParanoiaDecayTime < 0.0f)
+		{
+			if (CurrentEState == EState::Running)
+			{
+				Paranoia = FMath::Max(Paranoia - (ParanoiaRunningDecay * DeltaTime), 0.0f);
+			}
+			else
+			{
+				Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * DeltaTime), 0.0f);
+			}
+		}
+		else
+		{
+			float diff = DeltaTime - ParanoiaDecayTime;
+			if (diff > 0.0)
+			{
+				if (CurrentEState == EState::Running)
+				{
+					Paranoia = FMath::Max(Paranoia - (ParanoiaRunningDecay * diff), 0.0f);
+				}
+				else
+				{
+					Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * diff), 0.0f);
+				}
+			}
+			ParanoiaDecayTime -= DeltaTime;
+		}
+	}
 }
 

@@ -41,6 +41,9 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	// ===== ATTRIBUTES =====
 	// ======================
 	private:
+		/// The current possessing Player controller; used for possession/ unpossession
+		class APlayerGhostController* CurrentPlayerController;
+	
 		/// The current bindings (the active input axis/actions and their code) of this player component
 		/// bindings change from possession to possession
 		PossessableComponent* CurrentBindings;
@@ -53,6 +56,9 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 
 		/// A boolean value; true if the player is currently checking for collisions with paranoia props
 		bool lookingForParaProps = false;
+
+		/// A TArray for holding the other found players to give them team stamina
+		TArray<AActor*> FoundActors;
 	
 	protected:
 	public:
@@ -64,13 +70,13 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 		float MovementSpeed;
 
-		/// The current stamina that the Player has
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
-		float Stamina;
-
 		/// The bounding shape in which the Player can interact with other possessables whose bounding shape collides with this
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)
 		UShapeComponent * InteractBounds;
+
+		//For Team Stamina
+		UPROPERTY(EditAnywhere)
+		TSubclassOf<AActor> ClassToFind; // Needs to be populated somehow (e.g. by exposing to blueprints as uproperty and setting it there
 	
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
@@ -86,6 +92,9 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	private:
 	protected:
 	public:
+	/// Setter for CurrentPlayer pointer
+	void setPlayer(APlayerGhostController * p){CurrentPlayerController = p;}
+	
 	// ===================
 	// ===== METHODS =====
 	// ===================
@@ -134,5 +143,11 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 
 		/// Handles turning the player's view around their X axis
 		/// positive #s turning up, negative down
-		void LookUp(float Value);	
+		void LookUp(float Value);
+
+		/// An overlap function used to pickup stamina
+		UFUNCTION()
+	    void OnBeginOverlap(class UPrimitiveComponent* HitComp, class AActor* OtherActor,
+	                       class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+	                       bool bFromSweep, const FHitResult & SweepResult);
 };
