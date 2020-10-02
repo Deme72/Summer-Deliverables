@@ -63,6 +63,14 @@ SCREENMSG("Have fun today!");
 #define SCREENMSG2(Param1,Param2) if(GEngine) (GEngine->AddOnScreenDebugMessage(-1, 30.f, FColor::Emerald, *(CUR_CLASS_LINE + ": " + Param1 + " " + Param2)) )
 
 /* 
+Class Name + Line# + First Param is a message, second is time on screen!
+Ex:
+SCREENMSGT("TEST", 10.5);
+*/
+#define SCREENMSGT(Param1,Param2) if(GEngine) (GEngine->AddOnScreenDebugMessage(-1, Param2, FColor::Turquoise, *(CUR_CLASS_LINE + ": " + Param1)))
+
+
+/* 
 	Class Name + Line# + First Param is a message, second is a float!
 	Ex:
 	SCREENMSGF("TEST", 10.5);

@@ -67,6 +67,7 @@ void UPossesableComponent::Scare(float baseMultiplier)
         ABaseEnemyCharacter * enemy = Cast<ABaseEnemyCharacter>(collision);
         if(enemy)
         {
+            SCREENMSGT("Enemy has been scared", 3.0f);
             enemy->TakeBraveryDamage(DamageAmount*baseMultiplier);
             enemy->TakeParanoiaDamage(ParanoiaAmount*baseMultiplier);
         }
