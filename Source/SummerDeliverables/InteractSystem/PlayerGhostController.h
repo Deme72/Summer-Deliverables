@@ -34,11 +34,20 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 
 	/// For Science
 	float LivingTime;
+
+	/// The instance of the player HUD widget.
+	/// The empty uproperty is there so we can keep the ptr around and to make sure it's garbage collected properly.
+	UPROPERTY()
+	UUserWidget* PlayerHUD;
 	
 	protected:
 	public:
+	/// The class that will be used for the player's HUD
+	UPROPERTY(EditAnywhere, Category="HUD and UI")
+	TSubclassOf<class UUserWidget> HUDClass;
+	
 	/// The Player's max Stamina
-	UPROPERTY(EditAnywhere, Category="Stamina", meta=(ClampMin=0.0))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stamina", meta=(ClampMin=0.0))
 	float MaxStamina;
 
 	/// The player's stamina regen (in stamina/second)
@@ -75,6 +84,10 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	/// returns true if the player has no stamina left
 	UFUNCTION(BlueprintCallable, Category="Setters")
     bool SetStamina(float delta_stamina, bool b_is_relative = true);
+
+	/// Gets the percentage [0...1] of player stamina.
+	UFUNCTION(BlueprintPure)
+	float GetStaminaPercent() const;
 	
 	// ===================
 	// ===== METHODS =====
