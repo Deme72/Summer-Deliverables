@@ -107,10 +107,13 @@ void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 // Drop treasure functionality
 void ABaseEnemyCharacter::DropTreasure()
 {
-	treasureActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	treasureActor->SetActorEnableCollision(true);	
-	treasureActor->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
-	treasureActor = 0;
+	if (treasureActor != nullptr)
+	{
+		treasureActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		treasureActor->SetActorEnableCollision(true);	
+		treasureActor->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
+		treasureActor = nullptr;
+	}
 }
 
 // Called when the game starts or when spawned
