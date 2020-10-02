@@ -49,10 +49,6 @@ class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
 		/// The current time in between uses of this prop
 		/// if greater than useCooldown then the uses variable will decrement
 		float usesCooldownTime;
-		
-		// TODO: TArray<AEnemies>
-		
-		// TODO: Effected enemies
 	
 	public:
 		/// A bounding object that defines the area in which this object must collide with enemies to cause paranoia damage to them 
@@ -75,6 +71,8 @@ class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
 	// ======================================
 	private:
 	protected:
+	/// Called after to initialize this component
+	virtual void InitializeComponent() override;
 	public:
 		/// Sets default values for this component's properties
 		UParanoiaComponent();
