@@ -2,6 +2,7 @@
 
 
 #include "PossessableComponent.h"
+#include "PlayerGhostController.h"
 
 #include "AIController.h"
 #include "PlayerGhostController.h"
@@ -36,10 +37,10 @@ float UPossesableComponent::GetStamina() const
     return 0.0f;
 }
 
-bool UPossesableComponent::SetStamina(float stamina_drain, bool b_is_relative)
+bool UPossesableComponent::SetStamina(float delta_stamina, bool b_is_relative)
 {
     if (Cast<APossessablePawn>(GetOwner())->IsPossessing())
-        return Cast<APlayerGhostController>(Cast<APawn>(GetOwner())->GetController())->SetStamina(stamina_drain, b_is_relative);
+        return Cast<APlayerGhostController>(Cast<APawn>(GetOwner())->GetController())->SetStamina(delta_stamina, b_is_relative);
     return false;
 }
 

@@ -69,12 +69,12 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	float GetStamina() const { return CurrentStamina; }
 
-	/// Subtracts the passed stamina value from the player's current stamina |
-	/// b_is_relative dictates with the action is relative (i.e. CurrentStamina -= stamina_drain)
-	/// or is absolute (i.e. CurrentStamina = stamina_drain) |
+	/// Adds the passed stamina value to the player's current stamina |
+	/// b_is_relative dictates with the action is relative (i.e. CurrentStamina += delta_stamina)
+	/// or is absolute (i.e. CurrentStamina = delta_stamina) |
 	/// returns true if the player has no stamina left
 	UFUNCTION(BlueprintCallable, Category="Setters")
-    bool SetStamina(float stamina_drain, bool b_is_relative = true);
+    bool SetStamina(float delta_stamina, bool b_is_relative = true);
 	
 	// ===================
 	// ===== METHODS =====
