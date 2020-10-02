@@ -3,19 +3,36 @@
 
 #include "ParanoiaComponent.h"
 #include "Components/ShapeComponent.h"
+#include "SummerDeliverables/BaseEnemyCharacter.h"
 #include "SummerDeliverables/DefinedDebugHelpers.h"
+
 
 /// Sets default values for this component's properties
 UParanoiaComponent::UParanoiaComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
+	bWantsInitializeComponent = true;
+	
 	uses=0; 			
 	usesCooldownTime = 0;
 	useCooldown = 0;
 	active = false;
 }
 
+void UParanoiaComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+	TArray<UShapeComponent*> tmp = {};
+	GetOwner()->GetComponents<UShapeComponent>(tmp);
+	for(auto shape:tmp){
+		if(InteractBounds == nullptr &&
+            shape->ComponentHasTag("Interact"))
+            	InteractBounds = shape;
+		if(ParanoiaBounds == nullptr &&
+            shape->ComponentHasTag("Damage"))
+            	ParanoiaBounds = shape;
+	}
+}
 
 void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -24,27 +41,26 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	if(uses > 0)
 	{
 		usesCooldownTime += DeltaTime;
-		if(usesCooldownTime > useCooldown && uses > 0)
+		if(usesCooldownTime > useCooldown)
 		{
-			uses -= 1;
-			usesCooldownTime = 0;
+			uses--;
+			usesCooldownTime -= useCooldown;
 		}
 	}
 
 	
-	if(active) // dealing damage  (UNFINISHED)
+	if(active)
 	{
-		TArray<AActor *> collisions = {};
-		ParanoiaBounds->GetOverlappingActors(collisions);
-		for(auto i = collisions.begin(); i != collisions.end(); ++i)
+		if(ParanoiaBounds)
 		{
-			// TODO: get an enemy component to check against and make sure our target is an enemy
-			// TODO: Find the cause of ParanoiaComponent::uses falling below zero (parallel security issue(?))
-			if (uses > 0)
-				paranoiaAmount = 1/uses+1;
-			//else
-				//V_LOG(TEXT("USES IS FALLING BELOW ZERO"));
-			//target->TakeDamage(paranoiaAmount);
+			TArray<AActor *> collisions = {};
+			ParanoiaBounds->GetOverlappingActors(collisions);
+			for(auto collision:collisions)
+			{
+				ABaseEnemyCharacter * enemy = Cast<ABaseEnemyCharacter>(collision);
+				if(enemy)
+					enemy->TakeParanoiaDamage(paranoiaAmount);
+			}
 		}
 		active = false;
 	}
@@ -61,7 +77,7 @@ void UParanoiaComponent::OnInteractInternal() // When Selected
 void UParanoiaComponent::EndInteractInternal() // Activate ParaProp
 {
 	active = true;
-	uses += 1;
+	uses++;
 	Super::EndInteractInternal();
 }
 
