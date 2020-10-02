@@ -8,6 +8,7 @@
 #include "InteractSystem/ParanoiaComponent.h"
 #include "InteractSystem/PlayerGhostController.h"
 #include "Kismet/GameplayStatics.h"
+#include "DefinedDebugHelpers.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -40,23 +41,27 @@ void APlayerPawn::Tick(float DeltaTime)
 			check(add);
 			OverlappingInteractables.Add(add);
 		}
-		
 		// PARANOIA
 		if(lookingForParaProps)
 		{
-			UParanoiaComponent* paraProp = Cast<UParanoiaComponent>((*i)->FindComponentByClass(UParanoiaComponent::StaticClass()));
-			if(paraProp && !paraProp->IsInUse())
+			if (CanAffordStaminaCost(ParanoiaDrainRate * DeltaTime))
 			{
-				UParanoiaComponent* add = Cast<UParanoiaComponent>(paraProp);
-				check(add);
-				if(!SelectedProps.Contains(add))
+				UParanoiaComponent* paraProp = Cast<UParanoiaComponent>((*i)->FindComponentByClass(UParanoiaComponent::StaticClass()));
+				if(paraProp && !paraProp->IsInUse())
 				{
-					SelectedProps.Add(add);
-					add->OnInteractInternal();
+					UParanoiaComponent* add = Cast<UParanoiaComponent>(paraProp);
+					check(add);
+					if(!SelectedProps.Contains(add))
+					{
+						SelectedProps.Add(add);
+						add->OnInteractInternal();
+					}
 				}
+				SetStamina(-ParanoiaDrainRate * DeltaTime);
 			}
+			else
+				ScareButtonEnd();
 		}
-		//TODO: Add stamina drain for selecting multiple paranoia props
 	}
 	AddActorWorldOffset(ConsumeMovementInputVector());
 	SetActorRotation(GetControlRotation());
@@ -79,13 +84,13 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void APlayerPawn::Interact()
 {
 	UInteractableComponent * target = nullptr;
-	for(auto i = OverlappingInteractables.begin(); i!= OverlappingInteractables.end(); ++i)
+	for(auto interactable: OverlappingInteractables)
 	{
 		if(!target ||
-			FVector::Dist((*i)->GetOwner()->GetActorLocation(), GetActorLocation())
-			< FVector::Dist((*i)->GetOwner()->GetActorLocation(),target->GetOwner()->GetActorLocation()))
-			if(!Cast<UParanoiaComponent>(*i))
-				target = *i;
+			FVector::Dist(interactable->GetOwner()->GetActorLocation(), GetActorLocation())
+			< FVector::Dist(interactable->GetOwner()->GetActorLocation(),target->GetOwner()->GetActorLocation()))
+			if(!Cast<UParanoiaComponent>(interactable))
+				target = interactable;
 	}
 	if(target && !target->IsInUse())
 	{
@@ -159,6 +164,33 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 		OtherActor->Destroy();
 	}
 }
+
+#pragma region stamana
+
+float APlayerPawn::GetStamina() const
+{
+	AController* controller = GetController();
+	if (controller != nullptr)
+	{
+		APlayerGhostController* ghost_controller = Cast<APlayerGhostController>(controller);
+		if (ghost_controller)
+			return ghost_controller->GetStamina();
+		else 
+			SCREENMSG("Controller isn't of APlayerGhostController");
+	}
+	return 0.0f;
+}
+
+bool APlayerPawn::SetStamina(float stamina_drain, bool b_is_relative) const
+{
+	return Cast<APlayerGhostController>(GetController())->SetStamina(stamina_drain, b_is_relative);
+}
+
+bool APlayerPawn::CanAffordStaminaCost(const float stamina_cost) const
+{
+	return Cast<APlayerGhostController>(GetController())->CanAffordStaminaCost(stamina_cost);
+}
+#pragma endregion 
 
 #pragma region Movement
 void APlayerPawn::MoveForward(float Value)

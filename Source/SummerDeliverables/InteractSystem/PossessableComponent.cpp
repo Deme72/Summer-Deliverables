@@ -36,7 +36,7 @@ float UPossesableComponent::GetStamina() const
     return 0.0f;
 }
 
-bool UPossesableComponent::SetStamina(float stamina_drain, bool b_is_relative)
+bool UPossesableComponent::SetStamina(float stamina_drain, bool b_is_relative) const
 {
     if (Cast<APossessablePawn>(GetOwner())->IsPossessing())
         return Cast<APlayerGhostController>(Cast<APawn>(GetOwner())->GetController())->SetStamina(stamina_drain, b_is_relative);
@@ -51,13 +51,13 @@ bool UPossesableComponent::CanAffordStaminaCost(const float stamina_cost) const
 }
 
 
-void UPossesableComponent::Eject()
+void UPossesableComponent::Eject() const
 {
     APossessablePawn * tmp = Cast<APossessablePawn>(GetOwner());
     tmp->EndPossession();
 }
 
-void UPossesableComponent::Scare(float baseMultiplier)
+void UPossesableComponent::Scare(float baseMultiplier) const
 {
     TArray<AActor *> EnemyCollisions;
     DamageBounds->GetOverlappingActors(EnemyCollisions);

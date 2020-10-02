@@ -102,7 +102,7 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
     /// Adds the passed stamina value to the possessing player's current stamina |
     /// b_is_relative dictates with the action is relative (i.e. CurrentStamina += stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
     /// returns true if the player has no stamina left
-    bool SetStamina(float stamina_drain, bool b_is_relative = true);
+    bool SetStamina(float stamina_drain, bool b_is_relative = true) const;
 
 	/// Returns true if the current possessing player has enough stamina to afford the stamina_cost
 	UFUNCTION(BlueprintCallable, Category="Possession")
@@ -123,11 +123,11 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// A component-side wrapper for endPossession
 		UFUNCTION(BlueprintCallable, Category="Possessing")
-		void Eject();
+		void Eject() const;
 
 		/// Function to deal damage
 		UFUNCTION(BlueprintCallable, Category="Damage")
-	    void Scare(float baseMultiplier = 1.0);
+	    void Scare(float baseMultiplier = 1.0) const;
 	
 	// === Input Event Functions ===
 		/// An Event for the left face button (keyboard: left shift button)
