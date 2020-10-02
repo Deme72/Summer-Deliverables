@@ -58,7 +58,7 @@ void APlayerPawn::Tick(float DeltaTime)
 		}
 		//TODO: Add stamina drain for selecting multiple paranoia props
 	}
-	AddActorWorldOffset(ConsumeMovementInputVector());
+	AddActorWorldOffset(ConsumeMovementInputVector(), true);
 	SetActorRotation(GetControlRotation());
 }
 
