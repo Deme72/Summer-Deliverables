@@ -18,6 +18,12 @@ void ABaseEnemyCharacter::SetEState(EState NewEState)
 {
 	if (NewEState != CurrentEState)
 	{
+		//adjust the character movement speed to account for the different state
+		const float MovementSpeedMultiplier = GetStateSpeed(NewEState)/GetStateSpeed(CurrentEState);
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Old Movement SPeed: %f"),FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed));    
+		FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed *= MovementSpeedMultiplier;
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("New Movement Speed: %f"),FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed));    
+		//change the speed
 		CurrentEState = NewEState;
 		CurrentEStateTime = 0;
 
@@ -25,6 +31,30 @@ void ABaseEnemyCharacter::SetEState(EState NewEState)
 		{
 			CurrentRunningDuration = FMath::FRandRange(RunningDurationMin, RunningDurationMax);
 		}
+	}
+}
+
+float ABaseEnemyCharacter::GetStateSpeed(EState State)
+{
+	switch(State)
+	{
+		case EState::Searching:
+			return SearchingMovementSpeed;
+		break;
+		case EState::Cautious:
+			return CautiousMovementSpeed;
+		break;
+		case EState::Running:
+			return RunningMovementSpeed;
+		break;
+		case EState::Stealing:
+			return StealingMovementSpeed;
+		break;
+		case EState::Dying:
+			return EscapingMovementSpeed;
+		break;
+		default:
+			return 1;
 	}
 }
 
@@ -142,6 +172,10 @@ void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
 		else
 		{
 			Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * DeltaTime), 0.0f);
+		}
+		if (Paranoia < ParanoiaCautiousThreshold && CurrentEState == EState::Cautious)
+		{
+			SetEState(EState::Searching);
 		}
 	}
 	else

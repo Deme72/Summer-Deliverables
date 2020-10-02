@@ -133,11 +133,11 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Bravery")
 	float ScareRunningThreshold;
 
-	/// The speed at which an enemy will move at while in the searching state
+	/// The speed at which an enemy will move at while in the Searching state
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement")
 	float SearchingMovementSpeed;
 
-	/// The speed at which an enemy will move at while in the cautious state
+	/// The speed at which an enemy will move at while in the Cautious state
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|States|Movement")
 	float CautiousMovementSpeed;
 
@@ -199,6 +199,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Handles changing the enemy state to the new state
 	UFUNCTION(BlueprintCallable, Category="Setters")
 	void SetEState(EState NewEState);
+
+	/// Helper for the speed change functionality
+	float GetStateSpeed(EState State);
 
 	/// Handles changing the enemy state to the new state
 	UFUNCTION(BlueprintCallable, Category="Getters")
