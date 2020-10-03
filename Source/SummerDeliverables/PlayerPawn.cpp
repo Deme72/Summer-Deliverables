@@ -45,13 +45,7 @@ void APlayerPawn::Tick(float DeltaTime)
 		UActorComponent * comp2  = (*i)->FindComponentByClass(UFlashlightComponent::StaticClass());
 		if(comp2)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Your message"));
 			APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
-			if(Con)
-			{
-				
-				SCREENMSG("Success");
-			}
 			Con->SetStamina(-20.0f * DeltaTime);
 		}
 		
