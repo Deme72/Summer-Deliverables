@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "InteractSystem/PlayerGhostController.h"
 #include "SwitchboardPawn.h"
+#include "InteractSystem/PlayerGhostController.h"
 
 ASwitchboardPawn::ASwitchboardPawn():APossessablePawn()
 {
