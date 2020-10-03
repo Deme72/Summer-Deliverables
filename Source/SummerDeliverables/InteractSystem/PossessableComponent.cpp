@@ -40,7 +40,11 @@ float UPossesableComponent::GetStamina() const
 bool UPossesableComponent::SetStamina(float delta_stamina, bool b_is_relative)
 {
     if (Cast<APossessablePawn>(GetOwner())->IsPossessing())
-        return Cast<APlayerGhostController>(Cast<APawn>(GetOwner())->GetController())->SetStamina(delta_stamina, b_is_relative);
+    {
+        auto controller = Cast<APlayerGhostController>(Cast<APawn>(GetOwner())->GetController());
+        if (controller)
+            return controller->SetStamina(delta_stamina, b_is_relative);
+    }
     return false;
 }
 
