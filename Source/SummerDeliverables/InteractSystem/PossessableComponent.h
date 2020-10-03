@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InteractableComponent.h"
+#include "PlayerGhostController.h"
 #include "PossessablePawn.h"
 #include "GameFramework/Pawn.h"
 #include "PossessableComponent.generated.h"
@@ -119,6 +120,9 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	/// Returns the up-front stamina cost of this possessable
 	float GetFrontStaminaCost() const { return StamFrontCost; }
+
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	APlayerGhostController* GetCurrentPlayer() const;
 	
 	// ===================
 	// ===== METHODS =====

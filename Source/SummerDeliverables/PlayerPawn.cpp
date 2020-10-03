@@ -41,6 +41,17 @@ void APlayerPawn::Tick(float DeltaTime)
 	OverlappingInteractables.Empty();
 	TArray<AActor *> collisions = {};
 	InteractBounds->GetOverlappingActors(collisions);
+	if(lookingForParaProps)
+	{
+		if (CanAffordStaminaCost(ParanoiaDrainRate * DeltaTime))
+		{
+			SetStamina(-ParanoiaDrainRate * DeltaTime);
+		}
+		else
+		{
+			ScareButtonEnd();
+		}
+	}
 	for(auto i = collisions.begin(); i != collisions.end(); ++i)
 	{
 		UActorComponent * comp  = (*i)->FindComponentByClass(UInteractableComponent::StaticClass());
@@ -53,23 +64,17 @@ void APlayerPawn::Tick(float DeltaTime)
 		// PARANOIA
 		if(lookingForParaProps)
 		{
-			if (CanAffordStaminaCost(ParanoiaDrainRate * DeltaTime))
+			UParanoiaComponent* paraProp = Cast<UParanoiaComponent>((*i)->FindComponentByClass(UParanoiaComponent::StaticClass()));
+			if(paraProp && !paraProp->IsInUse())
 			{
-				UParanoiaComponent* paraProp = Cast<UParanoiaComponent>((*i)->FindComponentByClass(UParanoiaComponent::StaticClass()));
-				if(paraProp && !paraProp->IsInUse())
+				UParanoiaComponent* add = Cast<UParanoiaComponent>(paraProp);
+				check(add);
+				if(!SelectedProps.Contains(add))
 				{
-					UParanoiaComponent* add = Cast<UParanoiaComponent>(paraProp);
-					check(add);
-					if(!SelectedProps.Contains(add))
-					{
-						SelectedProps.Add(add);
-						add->OnInteractInternal();
-					}
+					SelectedProps.Add(add);
+					add->OnInteractInternal();
 				}
-				SetStamina(-ParanoiaDrainRate * DeltaTime);
 			}
-			else
-				ScareButtonEnd();
 		}
 	}
 	AddActorWorldOffset(ConsumeMovementInputVector(), true);
