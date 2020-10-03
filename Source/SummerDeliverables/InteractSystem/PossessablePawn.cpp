@@ -106,10 +106,6 @@ void APossessablePawn::EndPossession()
 			new_pawn->setPlayer(ghost_controller);
 			PossessableComponent->EndInteractInternal();
 		}
-		else if (new_pawn == nullptr)
-		{
-			SCREENMSG("new APlayerPawn is a nullptr");
-		}
 		
 		//CurrentPlayerController = nullptr;
 	}
