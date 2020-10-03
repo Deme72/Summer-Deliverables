@@ -64,6 +64,10 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
 		float ParanoiaAmount;
 
+		/// The bounding shape in which this prop must collide with enemies to cause paranoia and/or health damage
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+		UShapeComponent * ParanoiaBounds;
+
 		/// The amount of health damage this prop causes to enemies 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
 		float DamageAmount;
