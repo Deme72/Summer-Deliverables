@@ -80,3 +80,10 @@ void APlayerGhostController::BeginPlay()
     }*/
     SCREENMSG("BeginPlay Initialized a PlayerGhostController");
 }
+
+void APlayerGhostController::OnUnPossess()
+{
+    LastPossessedPawn = Cast<APossessablePawn>(GetPawn());
+}
+
+

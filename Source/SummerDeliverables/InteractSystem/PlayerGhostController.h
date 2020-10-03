@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "PossessablePawn.h"
 #include "GameFramework/PlayerController.h"
 #include "PlayerGhostController.generated.h"
 
@@ -42,6 +44,9 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	
 	protected:
 	public:
+	UPROPERTY(EditAnywhere)
+	APossessablePawn* LastPossessedPawn;
+	
 	/// The class that will be used for the player's HUD
 	UPROPERTY(EditAnywhere, Category="HUD and UI")
 	TSubclassOf<class UUserWidget> HUDClass;
@@ -106,5 +111,7 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	bool CanAffordStaminaCost(const float stamina_cost) const {return CurrentStamina - stamina_cost > 0.0;}
 	
 	virtual void BeginPlay() override;
+
+	virtual void OnUnPossess() override;
 };
 

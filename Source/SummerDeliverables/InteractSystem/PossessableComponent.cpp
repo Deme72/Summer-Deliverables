@@ -86,3 +86,13 @@ void UPossesableComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
     else
         CurrentCooldown = 0;
 }
+
+APlayerGhostController* UPossesableComponent::GetCurrentPlayer() const
+{
+    const auto owner = Cast<APossessablePawn>(GetOwner());
+    if (owner)
+    {
+        return Cast<APlayerGhostController>(owner->GetController());
+    }
+    return nullptr;
+}
