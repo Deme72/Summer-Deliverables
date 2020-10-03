@@ -51,8 +51,8 @@ void APlayerGhostController::Tick(float DeltaSeconds)
     LivingTime += DeltaSeconds;
     if (LivingTime > 2.0f)
     {
-        std::string msg = "PlayerStamina = " + std::to_string(CurrentStamina);
-        SCREENMSG(msg.c_str());
+        //std::string msg = "PlayerStamina = " + std::to_string(CurrentStamina);
+        //SCREENMSG(msg.c_str());
         LivingTime -= 2.0f;
     }
     
@@ -70,10 +70,13 @@ void APlayerGhostController::BeginPlay()
     Super::BeginPlay();
     
     CurrentStamina = MaxStamina;
-    PlayerHUD = CreateWidget(this, HUDClass);
+    //if(!HUDClass)
+    //    SCREENMSG("no hud :(");
+    /*PlayerHUD = CreateWidget(this, HUDClass);
     if(PlayerHUD != nullptr)
     {
-        PlayerHUD->AddToViewport();
-    }
+        SCREENMSG("HUD thingy");
+        PlayerHUD->AddToPlayerScreen();
+    }*/
     SCREENMSG("BeginPlay Initialized a PlayerGhostController");
 }

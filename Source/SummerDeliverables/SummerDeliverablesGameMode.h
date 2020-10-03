@@ -51,6 +51,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	float Spawn_Y_Min;
 
+	// ===================
+	// ===== METHODS =====
+	// ===================
+private:
+protected:
+public:
 	///This function spawns the stamina pickups
 	void SpawnStamina();
 };
