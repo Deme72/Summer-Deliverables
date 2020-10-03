@@ -41,17 +41,6 @@ void APlayerPawn::Tick(float DeltaTime)
 	OverlappingInteractables.Empty();
 	TArray<AActor *> collisions = {};
 	InteractBounds->GetOverlappingActors(collisions);
-	if(lookingForParaProps)
-	{
-		if (CanAffordStaminaCost(ParanoiaDrainRate * DeltaTime))
-		{
-			SetStamina(-ParanoiaDrainRate * DeltaTime);
-		}
-		else
-		{
-			ScareButtonEnd();
-		}
-	}
 	for(auto i = collisions.begin(); i != collisions.end(); ++i)
 	{
 		UActorComponent * comp  = (*i)->FindComponentByClass(UInteractableComponent::StaticClass());
@@ -71,8 +60,17 @@ void APlayerPawn::Tick(float DeltaTime)
 				check(add);
 				if(!SelectedProps.Contains(add))
 				{
-					SelectedProps.Add(add);
-					add->OnInteractInternal();
+					if(SelectedProps.Num() == 0)
+					{
+						SelectedProps.Add(add);
+						add->OnInteractInternal();
+					}
+					else if (CanAffordStaminaCost(ParanoiaCost))
+					{
+						SetStamina(-ParanoiaCost);
+						SelectedProps.Add(add);
+						add->OnInteractInternal();
+					}
 				}
 			}
 		}

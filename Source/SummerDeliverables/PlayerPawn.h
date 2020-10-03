@@ -72,7 +72,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	
 		/// The speed, in Unreal units, that the player pawn moves right and forward at
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
-		float ParanoiaDrainRate;
+		float ParanoiaCost;
 
 		/// The bounding shape in which the Player can interact with other possessables whose bounding shape collides with this
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)

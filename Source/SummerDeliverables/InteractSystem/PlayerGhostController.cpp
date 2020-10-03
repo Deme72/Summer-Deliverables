@@ -19,7 +19,7 @@ APlayerGhostController::APlayerGhostController() :APlayerController()
     {
         PawnClass = PlayerPawnBPClass.Class;
     }
-    StaminaRegen = 5.0f;
+    StaminaRegen = 0.5f;
     LivingTime = 0.0f;
 }
 
