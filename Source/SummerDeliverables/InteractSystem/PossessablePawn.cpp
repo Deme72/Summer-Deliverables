@@ -83,7 +83,7 @@ void APossessablePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	auto current_controller = Cast<APlayerGhostController>(GetController());
-	if (current_controller && PossessableComponent->GetIsActiveStaminaDrain())
+	if (current_controller && PossessableComponent->GetIsActiveStaminaDrain() && PossessableComponent->IsInUse())
 	{
 		
 		if(current_controller->SetStamina(-PossessableComponent->StamDrainRate*DeltaTime))
