@@ -16,5 +16,5 @@ class SUMMERDELIVERABLES_API UUtilityPossessableComponent : public UPossesableCo
 	GENERATED_BODY()
 	public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Network")
-	TArray<UUtilityPossessableComponent*> Network;
+	TArray<APossessablePawn*> Network;
 };

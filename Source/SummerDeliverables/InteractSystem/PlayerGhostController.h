@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "PossessablePawn.h"
 #include "GameFramework/PlayerController.h"
 #include "PlayerGhostController.generated.h"
 
@@ -37,6 +39,9 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	
 	protected:
 	public:
+	UPROPERTY(EditAnywhere)
+	APossessablePawn* LastPossessedPawn;
+	
 	/// The Player's max Stamina
 	UPROPERTY(EditAnywhere, Category="Stamina", meta=(ClampMin=0.0))
 	float MaxStamina;
@@ -93,5 +98,7 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	bool CanAffordStaminaCost(const float stamina_cost) const {return CurrentStamina - stamina_cost > 0.0;}
 	
 	virtual void BeginPlay() override;
+
+	virtual void OnUnPossess() override;
 };
 

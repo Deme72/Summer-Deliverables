@@ -123,11 +123,14 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// A component-side wrapper for endPossession
 		UFUNCTION(BlueprintCallable, Category="Possessing")
-		void Eject();
+		virtual void Eject();
 
 		/// Function to deal damage
 		UFUNCTION(BlueprintCallable, Category="Damage")
 	    void Scare(float baseMultiplier = 1.0);
+
+		UFUNCTION(BlueprintCallable, Category="Getters")
+		class APlayerGhostController* GetCurrentPlayer() const;
 	
 	// === Input Event Functions ===
 		/// An Event for the left face button (keyboard: left shift button)
