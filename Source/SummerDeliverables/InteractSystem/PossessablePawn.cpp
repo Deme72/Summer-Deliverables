@@ -51,6 +51,9 @@ void APossessablePawn::PostInitializeComponents()
 			if(PossessableComponent->DamageBounds == nullptr &&
                 shape->ComponentHasTag("Damage"))
                 	PossessableComponent->DamageBounds = shape;
+			if(PossessableComponent->ParanoiaBounds == nullptr &&
+                shape->ComponentHasTag("Paranoia"))
+                	PossessableComponent->ParanoiaBounds = shape;
 		}
 	}
 }

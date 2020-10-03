@@ -65,10 +65,15 @@ void UPossesableComponent::Scare(float baseMultiplier)
     {
         ABaseEnemyCharacter * enemy = Cast<ABaseEnemyCharacter>(collision);
         if(enemy)
-        {
             enemy->TakeBraveryDamage(DamageAmount*baseMultiplier);
+    }
+    ParanoiaBounds->GetOverlappingActors(EnemyCollisions);
+    for(auto collision:EnemyCollisions)
+    {
+        ABaseEnemyCharacter * enemy = Cast<ABaseEnemyCharacter>(collision);
+        if(enemy)
             enemy->TakeParanoiaDamage(ParanoiaAmount*baseMultiplier);
-        }
+        
     }
 }
 
