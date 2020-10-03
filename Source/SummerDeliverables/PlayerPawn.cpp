@@ -3,12 +3,13 @@
 
 #include "PlayerPawn.h"
 #include "Components/ShapeComponent.h"
+#include "InteractSystem/FlashlightComponent.h"
 #include "InteractSystem/PossessablePawn.h"
 #include "InteractSystem/PossessableComponent.h"
 #include "InteractSystem/ParanoiaComponent.h"
 #include "InteractSystem/PlayerGhostController.h"
 #include "Kismet/GameplayStatics.h"
-#include "DefinedDebugHelpers.h"
+#include "SummerDeliverables/DefinedDebugHelpers.h"
 #include "PlayerStamina.h"
 
 // Sets default values
@@ -50,6 +51,13 @@ void APlayerPawn::Tick(float DeltaTime)
 			check(add);
 			OverlappingInteractables.Add(add);
 		}
+		UActorComponent * comp2  = (*i)->FindComponentByClass(UFlashlightComponent::StaticClass());
+		if(comp2)
+		{
+			APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
+			Con->SetStamina(-20.0f * DeltaTime);
+		}
+		
 		// PARANOIA
 		if(lookingForParaProps)
 		{
@@ -160,6 +168,7 @@ void APlayerPawn::ScareButtonEnd()
 void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                                  int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	
 	if(OtherActor->ActorHasTag("Stamina"))
 	{
 		
