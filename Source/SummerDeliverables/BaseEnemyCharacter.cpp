@@ -3,19 +3,27 @@
 //#include <activation.h>
 #include "BaseEnemyCharacter.h"
 
+#include "DefinedDebugHelpers.h"
+#include "GameFramework/Actor.h"
+
 
 // Sets default values
 ABaseEnemyCharacter::ABaseEnemyCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
 }
 
 void ABaseEnemyCharacter::SetEState(EState NewEState)
 {
 	if (NewEState != CurrentEState)
 	{
+		//adjust the character movement speed to account for the different state
+		const float MovementSpeedMultiplier = GetStateSpeed(NewEState)/GetStateSpeed(CurrentEState);
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Old Movement SPeed: %f"),FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed));    
+		FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed *= MovementSpeedMultiplier;
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("New Movement Speed: %f"),FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed));    
+		//change the speed
 		CurrentEState = NewEState;
 		CurrentEStateTime = 0;
 
@@ -26,11 +34,35 @@ void ABaseEnemyCharacter::SetEState(EState NewEState)
 	}
 }
 
+float ABaseEnemyCharacter::GetStateSpeed(EState State)
+{
+	switch(State)
+	{
+		case EState::Searching:
+			return SearchingMovementSpeed;
+		break;
+		case EState::Cautious:
+			return CautiousMovementSpeed;
+		break;
+		case EState::Running:
+			return RunningMovementSpeed;
+		break;
+		case EState::Stealing:
+			return StealingMovementSpeed;
+		break;
+		case EState::Dying:
+			return EscapingMovementSpeed;
+		break;
+		default:
+			return 1;
+	}
+}
+
 void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
 {
 	float damage = (ScareBonus * (Paranoia / ParanoiaMax) + 1) * BraveryBaseDamage;
 	damage += FMath::Max(Paranoia - ParanoiaMax, 0.0f) * ParanoiaOverflowDamage;
-	damage *= ComboCounter;
+	damage *= (ComboCounter+1);
 	Bravery = FMath::Max(Bravery - damage, 0.0f);
 
 	ComboCounter += 1;
@@ -39,6 +71,11 @@ void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
 	if (Bravery <= ScareRunningThreshold)
 	{
 		SetEState(EState::Running);
+	}
+
+	if (Bravery <= 0)
+	{
+		SetEState(EState::Dying);
 	}
 }
 
@@ -57,15 +94,26 @@ void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
 	ParanoiaDecayTime = ParanoiaDecayDelay;
 }
 
+// Pick up treasure functionality
 void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 {
-	// Pick up treasure functionality
+	treasure->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(false);
+	treasure->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("RightHandSocket"));
+	treasure->SetActorEnableCollision(false);
+	treasureActor = treasure;
+	SetEState(EState::Stealing);
 }
 
+// Drop treasure functionality
 void ABaseEnemyCharacter::DropTreasure()
 {
-	
-	// Drop treasure functionality
+	if (treasureActor != nullptr)
+	{
+		treasureActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		treasureActor->SetActorEnableCollision(true);	
+		treasureActor->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
+		treasureActor = nullptr;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -127,6 +175,10 @@ void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
 		else
 		{
 			Paranoia = FMath::Max(Paranoia - (ParanoiaDecay * DeltaTime), 0.0f);
+		}
+		if (Paranoia < ParanoiaCautiousThreshold && CurrentEState == EState::Cautious)
+		{
+			SetEState(EState::Searching);
 		}
 	}
 	else

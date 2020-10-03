@@ -17,7 +17,7 @@ enum EState
     Cautious UMETA(DisplayName = "Cautious"),
     Running UMETA(DisplayName = "Running"),
     Stealing UMETA(DisplayName = "Stealing"),
-    Dying UMETA(DisplayName = "Searching")
+    Dying UMETA(DisplayName = "Dying")
 };
 
 /// The enum class for Enemy Targets
@@ -85,7 +85,7 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Time until the enemy extis the running state
 	/// ; random > RunningDurationMin < RunningDurationMax
 	float CurrentRunningDuration;
-	
+
 	public:
 	/// The Enemy's max Bravery (i.e. health) | min=0.0
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design", meta=(ClampMin=0.0))
@@ -177,6 +177,10 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
 	USkeletalMeshComponent* TreasureSocket;
 
+	/// Treasure that the enemy is holding
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	AActor* treasureActor;
+
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
@@ -197,6 +201,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Let Jefferey know if you can't work with this 
 	UFUNCTION(BlueprintCallable, Category="Setters", meta=(BlueprintProtected))
 	void SetEState(EState NewEState);
+
+	/// Helper for the speed change functionality
+	float GetStateSpeed(EState State);
 
 	/// Handles changing the enemy state to the new state
 	UFUNCTION(BlueprintCallable, Category="Getters")
