@@ -69,6 +69,10 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		/// The speed, in Unreal units, that the player pawn moves right and forward at
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 		float MovementSpeed;
+	
+		/// The speed, in Unreal units, that the player pawn moves right and forward at
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
+		float ParanoiaDrainRate;
 
 		/// The bounding shape in which the Player can interact with other possessables whose bounding shape collides with this
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)
@@ -92,6 +96,20 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	private:
 	protected:
 	public:
+		UFUNCTION(BlueprintCallable, Category="Getters")
+	    /// Gets the player's current stamina
+	    float GetStamina() const;
+
+		UFUNCTION(BlueprintCallable, Category="Setters")
+	    /// Adds the passed stamina value to the possessing player's current stamina |
+	    /// b_is_relative dictates with the action is relative (i.e. CurrentStamina += stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
+	    /// returns true if the player has no stamina left
+	    bool SetStamina(float stamina_drain, bool b_is_relative = true) const;
+
+		/// Returns true if the current possessing player has enough stamina to afford the stamina_cost
+		UFUNCTION(BlueprintCallable, Category="Possession")
+	    bool CanAffordStaminaCost(const float stamina_cost) const;
+	
 	/// Setter for CurrentPlayer pointer
 	void setPlayer(APlayerGhostController * p){CurrentPlayerController = p;}
 	
