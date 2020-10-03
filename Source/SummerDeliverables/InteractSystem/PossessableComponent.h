@@ -228,7 +228,21 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// UE4 facing function. Only override, never use
 		virtual void LookRightAxis_Implementation(float Axis){};
+		
+		/// An Event for the right special button (keyboard: escape button)
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void StartButton();
 
+		/// UE4 facing function. Only override, never use
+		virtual void StartButton_Implementation(){};
+
+		/// An Event for the release of the right special button (keyboard: escape button)
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void StartButtonRelease();
+
+		/// UE4 facing function. Only override, never use
+		virtual void StartButtonRelease_Implementation(){};
+	
 		// TODO: Add new virtual inputs as necessary
 	// === End >> Input Event Functions ===
 	
