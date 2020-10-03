@@ -70,6 +70,8 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("RightTrigger", IE_Released, PossessableComponent, &UPossesableComponent::RightTriggerRelease);
 	PlayerInputComponent->BindAction("LeftTrigger", IE_Pressed, PossessableComponent, &UPossesableComponent::LeftTrigger);
 	PlayerInputComponent->BindAction("LeftTrigger", IE_Released, PossessableComponent, &UPossesableComponent::LeftTriggerRelease);
+	PlayerInputComponent->BindAction("StartButton", IE_Pressed, PossessableComponent, &UPossesableComponent::StartButton);
+	PlayerInputComponent->BindAction("StartButton", IE_Released, PossessableComponent, &UPossesableComponent::StartButtonRelease);
 	PlayerInputComponent->BindAxis("MoveRight", PossessableComponent, &UPossesableComponent::MoveRightAxis);
 	PlayerInputComponent->BindAxis("MoveForward", PossessableComponent, &UPossesableComponent::MoveForwardAxis);
 }
