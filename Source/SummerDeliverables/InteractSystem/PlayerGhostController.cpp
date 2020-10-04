@@ -14,7 +14,8 @@
 APlayerGhostController::APlayerGhostController() :APlayerController()
 {
     MaxStamina = 100.0f;
-    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/PlayerPawn_BP"));
+    //static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/PlayerPawn_BP"));
+    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_Ghosty"));
     if (PlayerPawnBPClass.Class != NULL)
     {
         PawnClass = PlayerPawnBPClass.Class;
