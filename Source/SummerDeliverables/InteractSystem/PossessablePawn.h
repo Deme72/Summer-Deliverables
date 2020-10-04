@@ -73,7 +73,12 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     	// =============================
     private:
     protected:
-    public:
+	public:
+		///Sets outline properties.
+		UFUNCTION(BlueprintCallable, Category="Outline")
+	    void Set_Outline(bool OutLine_ON,int depthInt);
+		//depthInt A number which will tell the outline material when we set the depth on the mesh which color to use.
+    	
     	/// Setter for CurrentPlayer pointer
     	// void SetPlayerController(APlayerGhostController * pc){CurrentPlayerController = pc;}
 
