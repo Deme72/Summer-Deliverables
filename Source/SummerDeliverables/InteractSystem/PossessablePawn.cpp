@@ -24,8 +24,6 @@ APossessablePawn::APossessablePawn():APawn()
 	RootComponent = StaticMeshComponent;
 	SkeletalMeshComponent->SetupAttachment(StaticMeshComponent);
 	ExitPoint->SetupAttachment(SkeletalMeshComponent);
-	SubPawn = nullptr;
-	bHasSubPawn = false;
     ExitPawn = nullptr;
 }
 
@@ -136,9 +134,7 @@ void APossessablePawn::Set_Outline(bool OutLine_ON,int depthInt)
 
 bool APossessablePawn::SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTransform const pos)
 {
-	if(bHasSubPawn)
-		return false;
-	SubPawn = Cast<APossessablePawn>(GetWorld()->SpawnActor(subclass.Get(), &pos));
+	APossessablePawn * SubPawn = Cast<APossessablePawn>(GetWorld()->SpawnActor(subclass.Get(), &pos));
 	if(SubPawn)
 	{
 		auto controller = Cast<APlayerGhostController>(GetController());
@@ -150,7 +146,6 @@ bool APossessablePawn::SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTra
 				controller->Possess(SubPawn);
 				SubPawn->SetNextExit(this);
 			}
-		return bHasSubPawn = true;
 	}
 	return false;
 }

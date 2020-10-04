@@ -35,12 +35,6 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 		///Pawn to possess on exit
 		APossessablePawn * ExitPawn;
 		
-		/// A pawn that is possessed from this pawn. This pawn is only ever temporary and is deleted after use
-		APossessablePawn * SubPawn;
-
-		/// true if SubPawn exists
-		bool bHasSubPawn;
-		
     	/// Reference to currently possessing player controller, used for un-possessing.
     	//class APlayerGhostController* CurrentPlayerController;
 	
