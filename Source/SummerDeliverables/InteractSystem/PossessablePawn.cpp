@@ -110,3 +110,9 @@ void APossessablePawn::EndPossession()
 		//CurrentPlayerController = nullptr;
 	}
 }
+
+void APossessablePawn::Set_Outline(bool OutLine_ON,int depthInt)
+{
+	StaticMeshComponent->SetRenderCustomDepth(OutLine_ON);
+	StaticMeshComponent->SetCustomDepthStencilValue(depthInt);
+}
