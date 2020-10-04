@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Controller.h"
+#include "SummerDeliverables/PlayerPawn.h"
+
 #include "PossessablePawn.generated.h"
 
 /**
@@ -29,6 +31,16 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     	// ======================
     private:
     protected:
+
+		///Pawn to possess on exit
+		APossessablePawn * ExitPawn;
+		
+		/// A pawn that is possessed from this pawn. This pawn is only ever temporary and is deleted after use
+		APossessablePawn * SubPawn;
+
+		/// true if SubPawn exists
+		bool bHasSubPawn;
+		
     	/// Reference to currently possessing player controller, used for un-possessing.
     	//class APlayerGhostController* CurrentPlayerController;
 	
@@ -82,6 +94,11 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     	/// Setter for CurrentPlayer pointer
     	// void SetPlayerController(APlayerGhostController * pc){CurrentPlayerController = pc;}
 
+
+		/// Sets a pawn to exit to
+		UFUNCTION(BlueprintCallable, Category="Getters")
+	    void SetNextExit(APossessablePawn * pawn){ExitPawn  = pawn;};
+	
 		/// Returns true if the pawn is currently possessed by a player
 		UFUNCTION(BlueprintCallable, Category="Possession")
 		bool IsPossessing() const { if(GetOwner()==nullptr){	return false;	}	return true;}
@@ -100,5 +117,9 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 	
     	/// Relocates the current player pawn to exit point and possesses it.
     	virtual void EndPossession();
+
+		/// Creates a sub pawn
+		UFUNCTION(BlueprintCallable, Category="Possession")
+		bool SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTransform const pos);
 		
 };

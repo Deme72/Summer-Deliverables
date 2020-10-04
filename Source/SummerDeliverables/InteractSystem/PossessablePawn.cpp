@@ -24,6 +24,9 @@ APossessablePawn::APossessablePawn():APawn()
 	RootComponent = StaticMeshComponent;
 	SkeletalMeshComponent->SetupAttachment(StaticMeshComponent);
 	ExitPoint->SetupAttachment(SkeletalMeshComponent);
+	SubPawn = nullptr;
+	bHasSubPawn = false;
+    ExitPawn = nullptr;
 }
 
 void APossessablePawn::OnConstruction(const FTransform & Transform)
@@ -81,6 +84,7 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 void APossessablePawn::Tick(float DeltaTime)
 {
+	
 	Super::Tick(DeltaTime);
 	auto current_controller = Cast<APlayerGhostController>(GetController());
 	if (current_controller && PossessableComponent->GetIsActiveStaminaDrain() && PossessableComponent->IsInUse())
@@ -98,15 +102,26 @@ void APossessablePawn::EndPossession()
 	auto ghost_controller = Cast<APlayerGhostController>(GetController());
 	if (ghost_controller)
 	{
-		// move player pawn to the exit point and repossess
-		APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(ExitPoint->GetComponentTransform().GetLocation());
-		if (new_pawn)
+		if(ExitPawn)
 		{
-			ghost_controller->Possess(new_pawn);
-			new_pawn->setPlayer(ghost_controller);
 			PossessableComponent->EndInteractInternal();
+			ghost_controller->Possess(ExitPawn);
+			if(!ExitPawn->PossessableComponent->IsInUse())
+				ExitPawn->PossessableComponent->OnInteractInternal();
+			
+			ExitPawn = nullptr;
 		}
-		
+		else
+		{
+			// move player pawn to the exit point and repossess
+			APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(ExitPoint->GetComponentTransform().GetLocation());
+			if (new_pawn)
+			{
+				ghost_controller->Possess(new_pawn);
+				new_pawn->setPlayer(ghost_controller);
+				PossessableComponent->EndInteractInternal();
+			}
+		}
 		//CurrentPlayerController = nullptr;
 	}
 }
@@ -117,4 +132,25 @@ void APossessablePawn::Set_Outline(bool OutLine_ON,int depthInt)
 	StaticMeshComponent->SetCustomDepthStencilValue(depthInt);
 	SkeletalMeshComponent->SetRenderCustomDepth(OutLine_ON);
 	SkeletalMeshComponent->SetCustomDepthStencilValue(depthInt);
+}
+
+bool APossessablePawn::SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTransform const pos)
+{
+	if(bHasSubPawn)
+		return false;
+	SubPawn = Cast<APossessablePawn>(GetWorld()->SpawnActor(subclass.Get(), &pos));
+	if(SubPawn)
+	{
+		auto controller = Cast<APlayerGhostController>(GetController());
+		if(controller)
+			if (controller->CanAffordStaminaCost(SubPawn->PossessableComponent->GetFrontStaminaCost()))
+			{
+				SubPawn->PossessableComponent->OnInteractInternal();
+				controller->SetStamina(-SubPawn->PossessableComponent->GetFrontStaminaCost());
+				controller->Possess(SubPawn);
+				SubPawn->SetNextExit(this);
+			}
+		return bHasSubPawn = true;
+	}
+	return false;
 }
