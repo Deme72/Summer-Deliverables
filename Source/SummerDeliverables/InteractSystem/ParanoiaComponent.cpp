@@ -81,3 +81,14 @@ void UParanoiaComponent::EndInteractInternal() // Activate ParaProp
 	Super::EndInteractInternal();
 }
 
+void UParanoiaComponent::Set_Outline(bool OutLine_ON,int depthInt)
+{
+	UActorComponent* staticmesh = GetOwner()->GetOwner()->GetComponentByClass(UStaticMeshComponent::StaticClass());
+	UStaticMeshComponent* staticmeshc = Cast<UStaticMeshComponent>(staticmesh);
+	if (staticmeshc)
+	{
+		staticmeshc->SetRenderCustomDepth(OutLine_ON);
+		staticmeshc->SetCustomDepthStencilValue(depthInt);
+	}
+}
+

@@ -114,6 +114,6 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 
 		/// Creates a sub pawn
 		UFUNCTION(BlueprintCallable, Category="Possession")
-		bool SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTransform const pos);
+		APossessablePawn* SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTransform const pos);
 		
 };

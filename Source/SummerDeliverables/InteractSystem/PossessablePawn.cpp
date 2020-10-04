@@ -132,7 +132,7 @@ void APossessablePawn::Set_Outline(bool OutLine_ON,int depthInt)
 	SkeletalMeshComponent->SetCustomDepthStencilValue(depthInt);
 }
 
-bool APossessablePawn::SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTransform const pos)
+APossessablePawn* APossessablePawn::SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTransform const pos)
 {
 	APossessablePawn * SubPawn = Cast<APossessablePawn>(GetWorld()->SpawnActor(subclass.Get(), &pos));
 	if(SubPawn)
@@ -145,7 +145,8 @@ bool APossessablePawn::SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTra
 				controller->SetStamina(-SubPawn->PossessableComponent->GetFrontStaminaCost());
 				controller->Possess(SubPawn);
 				SubPawn->SetNextExit(this);
+				return SubPawn;
 			}
 	}
-	return false;
+	return nullptr;
 }

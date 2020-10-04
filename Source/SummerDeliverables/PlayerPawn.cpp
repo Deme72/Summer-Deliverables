@@ -33,6 +33,7 @@ void APlayerPawn::BeginPlay()
 	Super::BeginPlay();
 
 	InteractBounds->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnBeginOverlap);
+	InteractBounds->OnComponentEndOverlap.AddDynamic(this, &APlayerPawn::OnOverlapEnd);
 }
 
 // Called every frame
@@ -184,6 +185,35 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 			Cast<APlayerGhostController>(((APlayerPawn*)FoundActors[i])->GetController())->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
 		}
 		OtherActor->Destroy();
+	}
+	if(OtherActor->ActorHasTag("DynamicProp"))
+	{
+		APossessablePawn* dprop = Cast<APossessablePawn>(OtherActor);
+		dprop->Set_Outline(true,0);
+	}
+	if(OtherActor->ActorHasTag("StaticProp"))
+	{
+		APossessablePawn* sprop = Cast<APossessablePawn>(OtherActor);
+		sprop->Set_Outline(true,3);
+	}
+	if (OtherActor->ActorHasTag("ParanoiaProp"))
+	{
+		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor);
+		pprop->Set_Outline(true,2);
+	}
+}
+
+void APlayerPawn::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,int32 OtherBodyIndex)
+{
+	if (OtherActor->ActorHasTag("DynamicProp") || OtherActor->ActorHasTag("StaticProp"))
+	{
+		APossessablePawn* prop = Cast<APossessablePawn>(OtherActor);
+		prop->Set_Outline(false,0);
+	}
+	if (OtherActor->ActorHasTag("ParanoiaProp"))
+	{
+		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor);
+		pprop->Set_Outline(false,0);
 	}
 }
 
