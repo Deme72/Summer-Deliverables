@@ -79,7 +79,7 @@ void APlayerGhostController::BeginPlay()
         SCREENMSG("HUD thingy");
         PlayerHUD->AddToPlayerScreen();
     }*/
-    SCREENMSG("BeginPlay Initialized a PlayerGhostController");
+    //SCREENMSG("BeginPlay Initialized a PlayerGhostController");
 }
 
 void APlayerGhostController::OnUnPossess()
