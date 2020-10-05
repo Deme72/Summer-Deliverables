@@ -11,6 +11,7 @@
 #include "PossessableComponent.h"
 #include "PlayerGhostController.h"
 #include "../PlayerPawn.h"
+#include "Chaos/CollisionResolutionUtil.h"
 
 APossessablePawn::APossessablePawn():APawn()
 {
@@ -99,12 +100,14 @@ void APossessablePawn::EndPossession()
 	if (ghost_controller)
 	{
 		// move player pawn to the exit point and repossess
-		APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(ExitPoint->GetComponentTransform().GetLocation());
+		APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(GetActorLocation());
 		if (new_pawn)
 		{
+			new_pawn->SetActorRotation(GetActorRotation());
 			ghost_controller->Possess(new_pawn);
 			new_pawn->setPlayer(ghost_controller);
 			PossessableComponent->EndInteractInternal();
+			new_pawn->PlayPossessAnimation(false, ExitPoint->GetComponentTransform());
 		}
 		
 		//CurrentPlayerController = nullptr;

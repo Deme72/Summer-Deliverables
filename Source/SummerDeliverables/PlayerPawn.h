@@ -6,9 +6,9 @@
 #include "InteractSystem/InteractableComponent.h"
 #include "InteractSystem/ParanoiaComponent.h"
 #include "GameFramework/Pawn.h"
-#include "PlayerPawn.generated.h"
+#include "InteractSystem/PossessableComponent.h"
 
-class PossessableComponent;
+#include "PlayerPawn.generated.h"
 
 /**
  * Ghostly player pawn.
@@ -20,7 +20,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	// ==============================
 	// ===== DEFINES_/_TYPEDEFS =====
 	// ==============================
-
+	
 	// ======================================
 	// ===== FRIEND_FUNCTIONS_/_CLASSES =====
 	// ======================================
@@ -42,23 +42,35 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	// ======================
 	private:
 		/// The current possessing Player controller; used for possession/ unpossession
-		class APlayerGhostController* CurrentPlayerController;
+		class APlayerGhostController * CurrentPlayerController;
 	
 		/// The current bindings (the active input axis/actions and their code) of this player component
 		/// bindings change from possession to possession
-		PossessableComponent* CurrentBindings;
+		class UPossesableComponent * CurrentBindings;
 
 		/// An array of all interactable props within the bounding area of InteractBounds 
-		TArray<UInteractableComponent*> OverlappingInteractables;
+		TArray<UInteractableComponent *> OverlappingInteractables;
 
 		/// An array of all props currently being selected from
-		TArray<UParanoiaComponent*> SelectedProps;
+		TArray<UParanoiaComponent *> SelectedProps;
 
 		/// A boolean value; true if the player is currently checking for collisions with paranoia props
 		bool lookingForParaProps = false;
 
 		/// A TArray for holding the other found players to give them team stamina
 		TArray<AActor*> FoundActors;
+
+		/// The possessable component to possess after entering
+		class UPossesableComponent * animPossess;
+
+		/// Current animation progress
+		float animTimer;
+
+		/// Start position of the animation
+		FTransform animStartPos;
+
+		/// End position of the animation
+		FTransform animExitPos;
 	
 	protected:
 	public:
@@ -81,7 +93,23 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		//For Team Stamina
 		UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> ClassToFind; // Needs to be populated somehow (e.g. by exposing to blueprints as uproperty and setting it there
-	
+
+		/// Time to enter a prop
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animation)
+		float enterTime;
+
+		/// Time to exit a prop
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animation)
+		float exitTime;
+
+		/// If this is in the exiting animation
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Animation)
+		bool exiting;
+
+		/// If this is in the entering animation
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Animation)
+		bool entering;
+		
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
@@ -129,8 +157,14 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 
 		/// Handles interacting with interactable component derived objects
 		UFUNCTION()
-	    void Interact();
+		void Interact();
+		
+		/// Possesses the component and its owner
+		void Possess(class UPossesableComponent * comp);
 
+		/// Sets up all the animation variables
+		void PlayPossessAnimation(bool enter, FTransform lerpLoc, UPossesableComponent * comp = nullptr);
+	
 		/// Handles calling the action mapping for a currently possessed object
 		UFUNCTION()
 	    void ScareButtonStart();
@@ -143,12 +177,12 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		UFUNCTION()
 	    TArray<UInteractableComponent*> GetOverlappingInteractables() const
 		{return OverlappingInteractables;}
-
+		
 		/// Returns a boolean value; whether or not the Player is currently possessing a prop
 		UFUNCTION()
 	    bool IsPossessing() const
 		{return CurrentBindings != nullptr;}
-
+		
 		/// Handles moving the player along their Z axis
 		/// positive #s move forward, negative backwards
 		void MoveForward(float Value);
