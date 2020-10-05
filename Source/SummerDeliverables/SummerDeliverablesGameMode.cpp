@@ -44,7 +44,7 @@ void ASummerDeliverablesGameMode::SpawnStamina()
 	}
 	else
 	{
-		GetWorld()->SpawnActor(TeamStamina, &SpawnPosition, &SpawnRotation);
+		GetWorld()->SpawnActor(PlayerStamina, &SpawnPosition, &SpawnRotation);
 	}
     
 }
