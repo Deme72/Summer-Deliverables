@@ -101,7 +101,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		/// Time to exit a prop
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animation)
 		float exitTime;
-
+		
 		/// If this is in the exiting animation
 		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Animation)
 		bool exiting;

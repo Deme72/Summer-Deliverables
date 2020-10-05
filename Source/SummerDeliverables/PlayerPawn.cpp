@@ -51,9 +51,19 @@ void APlayerPawn::Tick(float DeltaTime)
 		}
 		else
 		{
-			float lerp = 1 - animTimer/(entering?enterTime:exitTime);
+			float lerp;
+			if(entering)
+			{
+				lerp = 1 - animTimer/enterTime;
+			}
+			else
+			{
+				lerp = 1 - animTimer/exitTime;
+			}
+			
 			SetActorLocation(FMath::Lerp(animStartPos.GetLocation(), animExitPos.GetLocation(), lerp));
 			SetActorRotation(FMath::Lerp(animStartPos.GetRotation(), animExitPos.GetRotation(), lerp));
+			
 			animTimer-=DeltaTime;
 		}
 	}
@@ -165,12 +175,11 @@ void APlayerPawn::Possess(class UPossesableComponent * comp)
 	auto ghost_controller = Cast<APlayerGhostController>(GetController());
 	auto possessable = Cast<UPossesableComponent>(comp);
 	if(ghost_controller && possessable)
-		if (ghost_controller->CanAffordStaminaCost(possessable->GetFrontStaminaCost()))
-		{
-			comp->OnInteractInternal();
-			GetController()->Possess(possess);
-			Destroy();
-		}
+	{
+		comp->OnInteractInternal();
+		GetController()->Possess(possess);
+		Destroy();
+	}
 }
 
 void APlayerPawn::PlayPossessAnimation(bool enter, FTransform lerpLoc, class UPossesableComponent * comp)
@@ -181,6 +190,7 @@ void APlayerPawn::PlayPossessAnimation(bool enter, FTransform lerpLoc, class UPo
 	animStartPos = GetTransform();
 	animExitPos = lerpLoc;
 	animPossess = comp;
+	
 }
 
 
