@@ -5,12 +5,12 @@
 #include "Components/ShapeComponent.h"
 #include "InteractSystem/FlashlightComponent.h"
 #include "InteractSystem/PossessablePawn.h"
-#include "InteractSystem/PossessableComponent.h"
 #include "InteractSystem/ParanoiaComponent.h"
 #include "InteractSystem/PlayerGhostController.h"
 #include "Kismet/GameplayStatics.h"
 #include "SummerDeliverables/DefinedDebugHelpers.h"
 #include "PlayerStamina.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -25,6 +25,8 @@ APlayerPawn::APlayerPawn()
 	// ... and components
 	CurrentBindings = nullptr;
 	OverlappingInteractables = {};
+
+	entering = exiting = false;
 }
 
 /// Called when the game starts or when spawned
@@ -39,52 +41,81 @@ void APlayerPawn::BeginPlay()
 void APlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	OverlappingInteractables.Empty();
-	TArray<AActor *> collisions = {};
-	InteractBounds->GetOverlappingActors(collisions);
-	for(auto i = collisions.begin(); i != collisions.end(); ++i)
+	if(entering||exiting)
 	{
-		UActorComponent * comp  = (*i)->FindComponentByClass(UInteractableComponent::StaticClass());
-		if(comp)
+		if(animTimer <= 0.0)
 		{
-			UInteractableComponent * add = Cast<UInteractableComponent>(comp);
-			check(add);
-			OverlappingInteractables.Add(add);
+			if(entering)
+				Possess(animPossess);
+			entering = exiting = false;
 		}
-		UActorComponent * comp2  = (*i)->FindComponentByClass(UFlashlightComponent::StaticClass());
-		if(comp2)
+		else
 		{
-			APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
-			Con->SetStamina(-20.0f * DeltaTime);
-		}
-		
-		// PARANOIA
-		if(lookingForParaProps)
-		{
-			UParanoiaComponent* paraProp = Cast<UParanoiaComponent>((*i)->FindComponentByClass(UParanoiaComponent::StaticClass()));
-			if(paraProp && !paraProp->IsInUse())
+			float lerp;
+			if(entering)
 			{
-				UParanoiaComponent* add = Cast<UParanoiaComponent>(paraProp);
+				lerp = 1 - animTimer/enterTime;
+			}
+			else
+			{
+				lerp = 1 - animTimer/exitTime;
+			}
+			
+			SetActorLocation(FMath::Lerp(animStartPos.GetLocation(), animExitPos.GetLocation(), lerp));
+			SetActorRotation(FMath::Lerp(animStartPos.GetRotation(), animExitPos.GetRotation(), lerp));
+			
+			animTimer-=DeltaTime;
+		}
+	}
+	else
+	{
+		OverlappingInteractables.Empty();
+		TArray<AActor *> collisions = {};
+		InteractBounds->GetOverlappingActors(collisions);
+		for(auto i = collisions.begin(); i != collisions.end(); ++i)
+		{
+			UActorComponent * comp  = (*i)->FindComponentByClass(UInteractableComponent::StaticClass());
+			if(comp)
+			{
+				UInteractableComponent * add = Cast<UInteractableComponent>(comp);
 				check(add);
-				if(!SelectedProps.Contains(add))
+				OverlappingInteractables.Add(add);
+			}
+			UActorComponent * comp2  = (*i)->FindComponentByClass(UFlashlightComponent::StaticClass());
+			if(comp2)
+			{
+				APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
+				Con->SetStamina(-20.0f * DeltaTime);
+			}
+		
+			// PARANOIA
+			if(lookingForParaProps)
+			{
+				UParanoiaComponent* paraProp = Cast<UParanoiaComponent>((*i)->FindComponentByClass(UParanoiaComponent::StaticClass()));
+				if(paraProp && !paraProp->IsInUse())
 				{
-					if(SelectedProps.Num() == 0)
+					UParanoiaComponent* add = Cast<UParanoiaComponent>(paraProp);
+					check(add);
+					if(!SelectedProps.Contains(add))
 					{
-						SelectedProps.Add(add);
-						add->OnInteractInternal();
-					}
-					else if (CanAffordStaminaCost(ParanoiaCost))
-					{
-						SetStamina(-ParanoiaCost);
-						SelectedProps.Add(add);
-						add->OnInteractInternal();
+						if(SelectedProps.Num() == 0)
+						{
+							SelectedProps.Add(add);
+							add->OnInteractInternal();
+						}
+						else if (CanAffordStaminaCost(ParanoiaCost))
+						{
+							SetStamina(-ParanoiaCost);
+							SelectedProps.Add(add);
+							add->OnInteractInternal();
+						}
 					}
 				}
 			}
 		}
+		AddActorWorldOffset(ConsumeMovementInputVector(), true);
+		SetActorRotation(GetControlRotation());
 	}
-	AddActorWorldOffset(ConsumeMovementInputVector(), true);
-	SetActorRotation(GetControlRotation());
 }
 
 
@@ -103,67 +134,96 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void APlayerPawn::Interact()
 {
-	UInteractableComponent * target = nullptr;
-	for(auto interactable: OverlappingInteractables)
-	{
-		if(!target ||
-			FVector::Dist(interactable->GetOwner()->GetActorLocation(), GetActorLocation())
-			< FVector::Dist(interactable->GetOwner()->GetActorLocation(),target->GetOwner()->GetActorLocation()))
-			if(!Cast<UParanoiaComponent>(interactable))
-				target = interactable;
-	}
-	if(target && !target->IsInUse())
-	{
-		
-		UPossesableComponent * comp = Cast<UPossesableComponent>(target);
-		if(comp)
+	if(!entering && !exiting){
+		UInteractableComponent * target = nullptr;
+		for(auto interactable: OverlappingInteractables)
 		{
-			APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
-			check(possess);
-			auto ghost_controller = Cast<APlayerGhostController>(GetController());
-			auto possessable = Cast<UPossesableComponent>(comp);
-			if(ghost_controller && possessable)
+			if(!target ||
+                FVector::Dist(interactable->GetOwner()->GetActorLocation(), GetActorLocation())
+                < FVector::Dist(interactable->GetOwner()->GetActorLocation(),target->GetOwner()->GetActorLocation()))
+                	if(!Cast<UParanoiaComponent>(interactable))
+                		target = interactable;
+		}
+		if(target && !target->IsInUse())
+		{
+		
+			UPossesableComponent * comp = Cast<UPossesableComponent>(target);
+			if(comp)
+			{
+				auto ghost_controller = Cast<APlayerGhostController>(GetController());
+				auto possessable = Cast<UPossesableComponent>(comp);
 				if (ghost_controller->CanAffordStaminaCost(possessable->GetFrontStaminaCost()))
 				{
-					target->OnInteractInternal();
 					ghost_controller->SetStamina(-possessable->GetFrontStaminaCost());
-					GetController()->Possess(possess);
-					Destroy();
+					PlayPossessAnimation(true, comp->GetOwner()->GetTransform(), comp);
 				}
-			
-		}
-		else
-		{
-			target->OnInteractInternal();
-			target->EndInteractInternal();
+			}
+			else
+			{
+				target->OnInteractInternal();
+				target->EndInteractInternal();
+			}
 		}
 	}
+}
+
+
+void APlayerPawn::Possess(class UPossesableComponent * comp)
+{
+	APossessablePawn * possess = Cast<APossessablePawn>(comp->GetOwner());
+	check(possess);
+	auto ghost_controller = Cast<APlayerGhostController>(GetController());
+	auto possessable = Cast<UPossesableComponent>(comp);
+	if(ghost_controller && possessable)
+	{
+		comp->OnInteractInternal();
+		GetController()->Possess(possess);
+		Destroy();
+	}
+}
+
+void APlayerPawn::PlayPossessAnimation(bool enter, FTransform lerpLoc, class UPossesableComponent * comp)
+{
+	entering = enter;
+	exiting = !enter;
+	animTimer = enter ? enterTime : exitTime;
+	animStartPos = GetTransform();
+	animExitPos = lerpLoc;
+	animPossess = comp;
+	
 }
 
 
 void APlayerPawn::ScareButtonStart()
 {
-	lookingForParaProps = true;
+	if(!entering || !exiting)
+		lookingForParaProps = true;
 }
 
 
 void APlayerPawn::ScareButtonEnd()
 {
+	
 #pragma region ParanoiaProps
-	lookingForParaProps = false;
-	for(auto& prop: SelectedProps)
+	if(lookingForParaProps)
 	{
-		if (GEngine)
+		lookingForParaProps = false;
+		for(auto& prop: SelectedProps)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Prop Went Off"));
-		}
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Prop Went Off"));
+			}
 		
-		prop->EndInteractInternal();
+			prop->EndInteractInternal();
+		}
+		SelectedProps.Empty();
 	}
-	SelectedProps.Empty();
 #pragma endregion
 	
 }
+
+#pragma region stamana
 
 void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                                  int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -171,7 +231,6 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 	
 	if(OtherActor->ActorHasTag("Stamina"))
 	{
-		
 		APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
 		Con->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
 		OtherActor->Destroy();
@@ -186,8 +245,6 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 		OtherActor->Destroy();
 	}
 }
-
-#pragma region stamana
 
 float APlayerPawn::GetStamina() const
 {
@@ -215,51 +272,55 @@ bool APlayerPawn::CanAffordStaminaCost(const float stamina_cost) const
 #pragma endregion 
 
 #pragma region Movement
+
 void APlayerPawn::MoveForward(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
-	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+	if(!exiting && !entering)
+		if ((Controller != NULL) && (Value != 0.0f))
+		{
+			// find out which way is forward
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value * MovementSpeed);
-	}
+			// get forward vector
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+			AddMovementInput(Direction, Value * MovementSpeed);
+		}
 }
 
 void APlayerPawn::MoveRight(float Value)
 {
-	if ( (Controller != NULL) && (Value != 0.0f) )
-	{
-		// find out which way is right
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-		// get right vector 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
-		AddMovementInput(Direction, Value * MovementSpeed);
-	}
-	Cast<APlayerGhostController>(GetController());
+	if(!exiting && !entering)
+		if ( (Controller != NULL) && (Value != 0.0f) )
+		{
+			// find out which way is right
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
+		
+			// get right vector 
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			// add movement in that direction
+			AddMovementInput(Direction, Value * MovementSpeed);
+		}
 }
 
 
 void APlayerPawn::LookRight(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
-	{
-		AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-	}
+	if(!exiting && !entering)
+		if ((Controller != NULL) && (Value != 0.0f))
+		{
+			AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+		}
 }
 
 void APlayerPawn::LookUp(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
-	{
-		AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
-	}
+	if(!exiting && !entering)
+		if ((Controller != NULL) && (Value != 0.0f))
+		{
+			AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
+		}
 }
 
 //void APlayerPawn::TurnAtRate(float Rate)
