@@ -15,7 +15,12 @@ ASummerDeliverablesGameMode::ASummerDeliverablesGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
-	PlayerControllerClass = APlayerGhostController::StaticClass();
+	//Blueprint'/Game/Blueprints/BP_ActualController.BP_ActualController'
+	//static ConstructorHelpers::FClassFinder<APawn> GhostControllerBPClass(TEXT("/Game/Blueprints/BP_ActualController"));
+	//if (GhostControllerBPClass.Class != NULL)
+	//{
+	//	PlayerControllerClass = GhostControllerBPClass.Class;
+	//}
 }
 
 void ASummerDeliverablesGameMode::BeginPlay()
