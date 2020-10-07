@@ -141,9 +141,9 @@ APossessablePawn* APossessablePawn::SpawnSubPawn(TSubclassOf<APossessablePawn> s
 		if(controller)
 			if (controller->CanAffordStaminaCost(SubPawn->PossessableComponent->GetFrontStaminaCost()))
 			{
-				SubPawn->PossessableComponent->OnInteractInternal();
 				controller->SetStamina(-SubPawn->PossessableComponent->GetFrontStaminaCost());
 				controller->Possess(SubPawn);
+				SubPawn->PossessableComponent->OnInteractInternal();
 				SubPawn->SetNextExit(this);
 				return SubPawn;
 			}

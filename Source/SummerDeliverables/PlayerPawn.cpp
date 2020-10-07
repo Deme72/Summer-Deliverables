@@ -126,9 +126,9 @@ void APlayerPawn::Interact()
 			if(ghost_controller && possessable)
 				if (ghost_controller->CanAffordStaminaCost(possessable->GetFrontStaminaCost()))
 				{
-					target->OnInteractInternal();
 					ghost_controller->SetStamina(-possessable->GetFrontStaminaCost());
 					GetController()->Possess(possess);
+					target->OnInteractInternal();
 					Destroy();
 				}
 			
