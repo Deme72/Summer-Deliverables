@@ -3,11 +3,10 @@
 
 #include "PossessableComponent.h"
 #include "PlayerGhostController.h"
-
 #include "AIController.h"
-#include "PlayerGhostController.h"
 #include "SummerDeliverables/DefinedDebugHelpers.h"
 #include "SummerDeliverables/PlayerPawn.h"
+#include "PossessablePawn.h"
 #include "SummerDeliverables/BaseEnemyCharacter.h"
 
 UPossesableComponent::UPossesableComponent():UInteractableComponent()

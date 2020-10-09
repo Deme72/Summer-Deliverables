@@ -177,8 +177,8 @@ void APlayerPawn::Possess(class UPossesableComponent * comp)
 	auto possessable = Cast<UPossesableComponent>(comp);
 	if(ghost_controller && possessable)
 	{
-		comp->OnInteractInternal();
 		GetController()->Possess(possess);
+		comp->OnInteractInternal();
 		Destroy();
 	}
 }

@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "InteractableComponent.h"
-#include "PlayerGhostController.h"
-#include "PossessablePawn.h"
 #include "GameFramework/Pawn.h"
 #include "PossessableComponent.generated.h"
 
@@ -117,7 +115,7 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 	float GetFrontStaminaCost() const { return StamFrontCost; }
 
 	UFUNCTION(BlueprintCallable, Category="Getters")
-	APlayerGhostController* GetCurrentPlayer() const;
+	class APlayerGhostController* GetCurrentPlayer() const;
 
 	
 	
@@ -140,11 +138,11 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// Function to spawn a sub Pawn
 		UFUNCTION(BlueprintCallable, Category="Possessing")		
-		void SpawnSubPawn(TSubclassOf<APossessablePawn> pawn, FTransform pos) const;
+		void SpawnSubPawn(TSubclassOf<class APossessablePawn> pawn, FTransform pos) const;
 
 		/// Function to spawn a sub Pawn
 		UFUNCTION(BlueprintCallable, Category="Possessing")		
-		void SetNextExit(APossessablePawn* pawn) const;
+		void SetNextExit(class APossessablePawn* pawn) const;
 
 	// === Input Event Functions ===
 		/// An Event for the left face button (keyboard: left shift button)

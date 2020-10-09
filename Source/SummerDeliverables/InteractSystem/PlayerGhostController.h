@@ -45,7 +45,7 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	protected:
 	public:
 	UPROPERTY(EditAnywhere)
-	APossessablePawn* LastPossessedPawn;
+	class APossessablePawn* LastPossessedPawn;
 	
 	/// The class that will be used for the player's HUD
 	UPROPERTY(EditAnywhere, Category="HUD and UI")
