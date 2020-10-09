@@ -95,7 +95,12 @@ class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
 		virtual void OnInteractInternal() override; 
 
 		/// A wrapper for the EndInteract, used to set relevant parameters before the event call
-		virtual void EndInteractInternal() override; 
+		virtual void EndInteractInternal() override;
+
+		///Sets outline properties.
+		UFUNCTION(BlueprintCallable, Category="Outline")
+	    void Set_Outline(bool OutLine_ON,int depthInt);
+		//depthInt A number which will tell the outline material when we set the depth on the mesh which color to use.
 	
 	
 };

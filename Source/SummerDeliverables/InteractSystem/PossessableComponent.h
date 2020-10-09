@@ -47,7 +47,6 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// Is per second stamina drain active
 		bool bIsDrainingStamina;
-	protected:
 	public:
 		/// The rate, in stamina/sec, at which this prop drains the player's stamina
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
@@ -102,12 +101,8 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 	UFUNCTION(BlueprintCallable, Category="Getters")
     /// Gets the player's current stamina
     float GetStamina() const;
-
-	/// Adds the passed stamina value to the player's current stamina |
-	/// b_is_relative dictates with the action is relative (i.e. CurrentStamina += delta_stamina)
-	/// or is absolute (i.e. CurrentStamina = delta_stamina) |
-	/// returns true if the player has no stamina left
-	UFUNCTION(BlueprintCallable, Category="Setters")
+	
+	UFUNCTION(BlueprintCallable, Category="Getters")
     /// Adds the passed stamina value to the possessing player's current stamina |
     /// b_is_relative dictates with the action is relative (i.e. CurrentStamina += stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
     /// returns true if the player has no stamina left
@@ -123,6 +118,8 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	APlayerGhostController* GetCurrentPlayer() const;
+
+	
 	
 	// ===================
 	// ===== METHODS =====
@@ -140,7 +137,15 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		/// Function to deal damage
 		UFUNCTION(BlueprintCallable, Category="Damage")
 	    void Scare(float baseMultiplier = 1.0) const;
-	
+
+		/// Function to spawn a sub Pawn
+		UFUNCTION(BlueprintCallable, Category="Possessing")		
+		void SpawnSubPawn(TSubclassOf<APossessablePawn> pawn, FTransform pos) const;
+
+		/// Function to spawn a sub Pawn
+		UFUNCTION(BlueprintCallable, Category="Possessing")		
+		void SetNextExit(APossessablePawn* pawn) const;
+
 	// === Input Event Functions ===
 		/// An Event for the left face button (keyboard: left shift button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")

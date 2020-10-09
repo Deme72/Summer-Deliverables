@@ -199,9 +199,12 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		/// positive #s turning up, negative down
 		void LookUp(float Value);
 
-		/// An overlap function used to pickup stamina
+		/// An overlap function used to pickup stamina and highlight on
 		UFUNCTION()
 	    void OnBeginOverlap(class UPrimitiveComponent* HitComp, class AActor* OtherActor,
 	                       class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	                       bool bFromSweep, const FHitResult & SweepResult);
+		//An overlap function used to turn highlight off 
+		UFUNCTION()
+		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

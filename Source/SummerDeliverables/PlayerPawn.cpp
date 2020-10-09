@@ -35,6 +35,7 @@ void APlayerPawn::BeginPlay()
 	Super::BeginPlay();
 
 	InteractBounds->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnBeginOverlap);
+	InteractBounds->OnComponentEndOverlap.AddDynamic(this, &APlayerPawn::OnOverlapEnd);
 }
 
 // Called every frame
@@ -228,7 +229,7 @@ void APlayerPawn::ScareButtonEnd()
 void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                                  int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	//TODO: Most of these have classes associated with them. The tags are unnecessary and this can be cleaned up
 	if(OtherActor->ActorHasTag("Stamina"))
 	{
 		APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
@@ -244,7 +245,38 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 		}
 		OtherActor->Destroy();
 	}
+	if(OtherActor->ActorHasTag("DynamicProp"))
+	{
+		APossessablePawn* dprop = Cast<APossessablePawn>(OtherActor);
+		dprop->Set_Outline(true,0);
+	}
+	if(OtherActor->ActorHasTag("StaticProp"))
+	{
+		APossessablePawn* sprop = Cast<APossessablePawn>(OtherActor);
+		sprop->Set_Outline(true,3);
+	}
+	if (OtherActor->ActorHasTag("ParanoiaProp"))
+	{
+		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor);
+		pprop->Set_Outline(true,2);
+	}
 }
+
+void APlayerPawn::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,int32 OtherBodyIndex)
+{
+	if (OtherActor->ActorHasTag("DynamicProp") || OtherActor->ActorHasTag("StaticProp"))
+	{
+		APossessablePawn* prop = Cast<APossessablePawn>(OtherActor);
+		prop->Set_Outline(false,0);
+	}
+	if (OtherActor->ActorHasTag("ParanoiaProp"))
+	{
+		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor);
+		pprop->Set_Outline(false,0);
+	}
+}
+
+#pragma region stamana
 
 float APlayerPawn::GetStamina() const
 {

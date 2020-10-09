@@ -62,6 +62,19 @@ void UPossesableComponent::Eject() const
     tmp->EndPossession();
 }
 
+
+void UPossesableComponent::SpawnSubPawn(TSubclassOf<APossessablePawn> pawn, FTransform pos) const
+{
+    APossessablePawn * tmp = Cast<APossessablePawn>(GetOwner());
+    tmp->SpawnSubPawn(pawn, pos);
+}
+
+void UPossesableComponent::SetNextExit(APossessablePawn * pawn) const
+{
+    APossessablePawn * tmp = Cast<APossessablePawn>(GetOwner());
+    tmp->SetNextExit(pawn);
+}
+
 void UPossesableComponent::Scare(float baseMultiplier) const
 {
     TArray<AActor *> EnemyCollisions;

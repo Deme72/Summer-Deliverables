@@ -93,7 +93,7 @@ class SUMMERDELIVERABLES_API UInteractableComponent : public UActorComponent
 	    void EndInteract();
 		
 		///this function is a default implementation and should never be called EndInteract should call it
-		virtual void EndInteract_Implementation(){}; 
+		virtual void EndInteract_Implementation(){};
 
 		
 };
