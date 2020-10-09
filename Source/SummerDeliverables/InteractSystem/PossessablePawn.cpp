@@ -104,8 +104,7 @@ void APossessablePawn::EndPossession()
 		{
 			PossessableComponent->EndInteractInternal();
 			ghost_controller->Possess(ExitPawn);
-			if(!ExitPawn->PossessableComponent->IsInUse())
-				ExitPawn->PossessableComponent->OnInteractInternal();
+			ExitPawn->PossessableComponent->OnInteractInternal();
 			
 			ExitPawn = nullptr;
 		}

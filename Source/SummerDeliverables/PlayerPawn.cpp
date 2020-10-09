@@ -169,7 +169,7 @@ void APlayerPawn::ScareButtonEnd()
 void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                                  int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	//TODO: Most of these have classes associated with them. The tags are unnecessary and this can be cleaned up
 	if(OtherActor->ActorHasTag("Stamina"))
 	{
 		
