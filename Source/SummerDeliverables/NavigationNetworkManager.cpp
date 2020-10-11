@@ -17,13 +17,6 @@ ANavigationNetworkManager::ANavigationNetworkManager()
 void ANavigationNetworkManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ANavigationNetworkManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
 	// draw debug lines to all connected nodes
 	if (bDebugNodes || bDebugEdges)
@@ -64,6 +57,14 @@ void ANavigationNetworkManager::Tick(float DeltaTime)
 			}
 		}
 	}
+}
+
+// Called every frame
+void ANavigationNetworkManager::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	
 }
 
 TArray<ANavigationNode*> ANavigationNetworkManager::GetNodeNeighbors(ANavigationNode* targetNode, ANavigationNode* prevNode, bool& isNew) const

@@ -30,11 +30,11 @@ void ANavigationNode::Tick(float DeltaTime)
 		// node
 		if (type == NavNodeType::HALLWAY)
 		{
-			DrawDebugPoint(GetWorld(), GetActorLocation(), 10, FColor::Cyan, true, -1, 1);
+			DrawDebugPoint(GetWorld(), GetActorLocation(), 10, FColor::Cyan, true, 1, 1);
 		}
 		else if (type == NavNodeType::ROOM)
 		{
-			DrawDebugPoint(GetWorld(), GetActorLocation(), 10, FColor::Red, true, -1, 1);
+			DrawDebugPoint(GetWorld(), GetActorLocation(), 10, FColor::Red, true, 1, 1);
 		}
 
 		// edges
@@ -42,15 +42,15 @@ void ANavigationNode::Tick(float DeltaTime)
 		{
 			if (type == NavNodeType::HALLWAY && connection->type == NavNodeType::HALLWAY)
 			{
-				DrawDebugLine(GetWorld(), GetActorLocation(), connection->GetActorLocation(), FColor::Blue, true, -1, 0, 10);
+				DrawDebugLine(GetWorld(), GetActorLocation(), connection->GetActorLocation(), FColor::Blue, true, 1, 1, 10);
 			}
 			else if (type == NavNodeType::ROOM && connection->type == NavNodeType::ROOM)
 			{
-				DrawDebugLine(GetWorld(), GetActorLocation(), connection->GetActorLocation(), FColor::Red, true, -1, 1, 10);
+				DrawDebugLine(GetWorld(), GetActorLocation(), connection->GetActorLocation(), FColor::Red, true, 1, 1, 10);
 			}
 			else
 			{
-				DrawDebugLine(GetWorld(), GetActorLocation(), connection->GetActorLocation(), FColor::Purple, true, -1, 1, 10);
+				DrawDebugLine(GetWorld(), GetActorLocation(), connection->GetActorLocation(), FColor::Purple, true, 1, 1, 10);
 			}
 		}
 	}
