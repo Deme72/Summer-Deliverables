@@ -37,6 +37,15 @@ void APossessablePawn::OnConstruction(const FTransform & Transform)
 		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
 		PossessableComponent->RegisterComponent();
 	}
+	//auto OutHit = FHitResult{};
+	//FVector Start{}, End{};
+	//FQuat Rotation{};
+	//auto TraceChannel = ECollisionChannel::ECC_Pawn;
+	//auto CollisionShape = FCollisionShape{};
+	//auto Params = FCollisionQueryParams{};
+	//auto ResponseParams = FCollisionResponseParams{};
+	//
+	//GetWorld()->SweepSingleByChannel(OutHit, Start, End, Rotation, TraceChannel, CollisionShape, &Params, ResponseParams);
 }
 
 void APossessablePawn::PostInitializeComponents()
@@ -75,6 +84,10 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("RightTrigger", IE_Released, PossessableComponent, &UPossesableComponent::RightTriggerRelease);
 	PlayerInputComponent->BindAction("LeftTrigger", IE_Pressed, PossessableComponent, &UPossesableComponent::LeftTrigger);
 	PlayerInputComponent->BindAction("LeftTrigger", IE_Released, PossessableComponent, &UPossesableComponent::LeftTriggerRelease);
+	PlayerInputComponent->BindAction("RightBumper", IE_Pressed, PossessableComponent, &UPossesableComponent::RightBumper);
+	PlayerInputComponent->BindAction("RightBumper", IE_Released, PossessableComponent, &UPossesableComponent::RightBumperRelease);
+	PlayerInputComponent->BindAction("LeftBumper", IE_Pressed, PossessableComponent, &UPossesableComponent::LeftBumper);
+	PlayerInputComponent->BindAction("LeftBumper", IE_Released, PossessableComponent, &UPossesableComponent::LeftBumperRelease);
 	PlayerInputComponent->BindAction("StartButton", IE_Pressed, PossessableComponent, &UPossesableComponent::StartButton);
 	PlayerInputComponent->BindAction("StartButton", IE_Released, PossessableComponent, &UPossesableComponent::StartButtonRelease);
 	PlayerInputComponent->BindAxis("MoveRight", PossessableComponent, &UPossesableComponent::MoveRightAxis);

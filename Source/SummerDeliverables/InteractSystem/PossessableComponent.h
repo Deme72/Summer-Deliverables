@@ -201,6 +201,20 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		/// UE4 facing function. Only override, never use
 		virtual void RightTriggerRelease_Implementation(){};
 
+		/// An Event for the right bumper button 
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void RightBumper();
+
+		/// UE4 facing function. Only override, never use
+		virtual void RightBumper_Implementation(){};
+
+		/// An Event for the release of the Right Bumper button
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void RightBumperRelease();
+
+		/// UE4 facing function. Only override, never use
+		virtual void RightBumperRelease_Implementation(){};
+	
 		/// An Event for the Left Trigger button (Left Mouse button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void LeftTrigger();
@@ -215,6 +229,20 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		/// UE4 facing function. Only override, never use
 		virtual void LeftTriggerRelease_Implementation(){};
 
+		/// An Event for the left bumper button 
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void LeftBumper();
+
+		/// UE4 facing function. Only override, never use
+		virtual void LeftBumper_Implementation(){};
+
+		/// An Event for the release of the Left Bumper button
+		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
+	    void LeftBumperRelease();
+
+		/// UE4 facing function. Only override, never use
+		virtual void LeftBumperRelease_Implementation(){};
+	
 		/// An axis event for the left thumbstick x-axis (keyboard: A, D buttons)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void MoveRightAxis(float Axis);
