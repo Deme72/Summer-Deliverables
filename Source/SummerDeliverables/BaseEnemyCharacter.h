@@ -28,6 +28,15 @@ enum TType
     Prop UMETA(DisplayName = "Prop"),
     Ghost UMETA(DisplayName = "Ghost")
 };
+/// The enum class for Enemy animations
+UENUM(BlueprintType)
+enum AnimType
+{
+	PickupTreasure,
+	DropTreasure,
+	InvestigatePOI,
+	None
+};
 
 UCLASS()
 class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
@@ -181,6 +190,15 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	AActor* treasureActor;
 
+	///The current special animation
+	AnimType currentAnim;
+	
+	/// Time remaining in the current animation
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	float currentAnimTime;
+
+	/// 
+	
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
@@ -263,6 +281,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category="Setters|Paranoia")
     void TakeParanoiaDamage(float ParanoiaDamage);
 
+	/// Sets the enemy's animation state
+	void SetAnimation(AnimType anim,float animTime);
+
 	// ===================
 	// ===== METHODS =====
 	// ===================
@@ -280,6 +301,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 
 	/// Handles the OnTick functionality related to Paranoia (A tidying function)
 	void ParanoiaTick(float DeltaTime);
+
+	/// Handles the OnTick functionality related to Animation
+	void AnimationTick(float DeltaTime);
 	
 	// ====== enemy class specific methods =====
 	/// Applies the treasure to the enemy skeletalmesh and modifies behavior

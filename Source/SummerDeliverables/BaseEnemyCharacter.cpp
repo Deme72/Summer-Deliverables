@@ -116,6 +116,14 @@ void ABaseEnemyCharacter::DropTreasure()
 	}
 }
 
+//Animation setting functionality
+void ABaseEnemyCharacter::SetAnimation(AnimType anim,float animTime)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Setting Animation"));
+	currentAnim = anim;
+	currentAnimTime = animTime;
+}
+
 // Called when the game starts or when spawned
 void ABaseEnemyCharacter::BeginPlay()
 {
@@ -141,6 +149,7 @@ void ABaseEnemyCharacter::Tick(float DeltaTime)
 	}
 
 	ParanoiaTick(DeltaTime);
+	AnimationTick(DeltaTime);
 
 	CurrentEStateTime += DeltaTime;
 	if (CurrentEState == EState::Running && CurrentEStateTime > CurrentRunningDuration)
@@ -199,3 +208,17 @@ void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
 	}
 }
 
+void ABaseEnemyCharacter::AnimationTick(float DeltaTime)
+{
+	//if current anim time is greater than zero
+	if (currentAnimTime > 0)
+	{
+		//reduce anim type
+		currentAnimTime = FMath::Max(currentAnimTime-DeltaTime,0.0f);
+		//exit the anim if time hits zero
+		if (currentAnimTime <= 0)
+		{
+			currentAnim = AnimType::None;
+		}
+	}
+}
