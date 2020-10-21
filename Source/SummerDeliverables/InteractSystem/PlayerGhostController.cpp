@@ -9,7 +9,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Chaos/ChaosPerfTest.h"
 #include "SummerDeliverables/DefinedDebugHelpers.h"
-
+#include "SummerDeliverables/GhostCameraManager.h"
 
 APlayerGhostController::APlayerGhostController() :APlayerController()
 {
@@ -22,6 +22,7 @@ APlayerGhostController::APlayerGhostController() :APlayerController()
     }
     StaminaRegen = 0.5f;
     LivingTime = 0.0f;
+    PlayerCameraManagerClass = AGhostCameraManager::StaticClass();
 }
 
 bool APlayerGhostController::SetStamina(float delta_stamina, bool b_is_relative)
