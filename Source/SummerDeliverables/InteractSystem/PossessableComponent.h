@@ -98,13 +98,13 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 	
 	UFUNCTION(BlueprintCallable, Category="Getters")
     /// Gets the player's current stamina
-    float GetStamina() const;
+    float GetStamina();
 	
 	UFUNCTION(BlueprintCallable, Category="Getters")
     /// Adds the passed stamina value to the possessing player's current stamina |
     /// b_is_relative dictates with the action is relative (i.e. CurrentStamina += stamina_drain) or is absolute (i.e. CurrentStamina = stamina_drain) |
     /// returns true if the player has no stamina left
-    bool SetStamina(float delta_stamina, bool b_is_relative = true) const;
+    bool SetStamina(float delta_stamina, bool b_is_relative = true);
 
 	/// Returns true if the current possessing player has enough stamina to afford the stamina_cost
 	UFUNCTION(BlueprintCallable, Category="Possession")
