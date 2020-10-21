@@ -17,7 +17,7 @@ UPossesableComponent::UPossesableComponent():UInteractableComponent()
     bIsDrainingStamina = true;
 }
 
-float UPossesableComponent::GetStamina() const
+float UPossesableComponent::GetStamina()
 {
 	TArray<AActor *> EnemyCollisions;
     APossessablePawn* owner = Cast<APossessablePawn>(GetOwner());
@@ -36,7 +36,7 @@ float UPossesableComponent::GetStamina() const
     return 0.0f;
 }
 
-bool UPossesableComponent::SetStamina(float delta_stamina, bool b_is_relative) const
+bool UPossesableComponent::SetStamina(float delta_stamina, bool b_is_relative)
 {
     if (Cast<APossessablePawn>(GetOwner())->IsPossessing())
     {
