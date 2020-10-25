@@ -31,13 +31,13 @@ void ANavigationNetworkManager::BeginPlay()
 				switch (node->type)
 				{
 				case HALLWAY:
-					c = FColor::Turquoise;
+					c = FColor::Blue;
 					break;
 				case ROOM:
 					c = FColor::Magenta;
 					break;
 				case POI:
-					c = FColor::Cyan;
+					c = FColor::Turquoise;
 					break;
 				case TREASURE:
 					c = FColor::Yellow;
@@ -69,6 +69,11 @@ void ANavigationNetworkManager::BeginPlay()
 					else if (node->type == NavNodeType::TREASURE || connection->type == NavNodeType::TREASURE)
 					{
 						c = FColor::Orange;
+					}
+					// POI or connected to POI
+					else if (node->type == NavNodeType::POI || connection->type == NavNodeType::POI)
+					{
+						c = FColor::Cyan;
 					}
 					// connected to exit
 					else if (connection->type == NavNodeType::EXIT)
@@ -128,12 +133,21 @@ TArray<ANavigationNode*> ANavigationNetworkManager::GetNodeNeighbors(ANavigation
 			}
 		}
 	}
+
+	// "new" nodes were only poi's (newNeighbors is empty)
+	if (newNeighbors.Num() == 0)
+	{
+		isNew = false;
+	}
+	else
+	{
+		isNew = true;
+	}
 	
-	isNew = true;
 	return newNeighbors;
 }
 
-TArray<ANavigationNode*> ANavigationNetworkManager::GetPoiNeighbors(ANavigationNode* targetNode, bool& hasPoi) const
+TArray<ANavigationNode*> ANavigationNetworkManager::GetPoiNeighbors(ANavigationNode* targetNode, bool& hasPoi, ANavigationNode* prevPoi) const
 {
 	TArray<ANavigationNode*> allNeighbors = targetNode->neighbors;
 	hasPoi = true;
@@ -142,7 +156,7 @@ TArray<ANavigationNode*> ANavigationNetworkManager::GetPoiNeighbors(ANavigationN
 	TArray<ANavigationNode*> poiNeighbors;
 	for (ANavigationNode* node : allNeighbors)
 	{
-		if (node->type == NavNodeType::POI)
+		if (node->type == NavNodeType::POI && node != prevPoi)
 		{
 			poiNeighbors.Add(node);
 		}
@@ -152,7 +166,6 @@ TArray<ANavigationNode*> ANavigationNetworkManager::GetPoiNeighbors(ANavigationN
 	if (poiNeighbors.Num() == 0)
 	{
 		hasPoi = false;
-		return poiNeighbors;
 	}
 
 	return poiNeighbors;
