@@ -23,6 +23,8 @@ APlayerGhostController::APlayerGhostController() :APlayerController()
     StaminaRegen = 0.5f;
     LivingTime = 0.0f;
     PlayerCameraManagerClass = AGhostCameraManager::StaticClass();
+
+    //PlayerStatistics = FPlayerGhostStatistics{};
 }
 
 bool APlayerGhostController::SetStamina(float delta_stamina, bool b_is_relative)

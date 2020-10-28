@@ -59,7 +59,7 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 			{
 				ABaseEnemyCharacter * enemy = Cast<ABaseEnemyCharacter>(collision);
 				if(enemy)
-					enemy->TakeParanoiaDamage(paranoiaAmount);
+					enemy->TakeParanoiaDamage(paranoiaAmount, GetOwner()->GetTransform().GetLocation());
 			}
 		}
 		active = false;
