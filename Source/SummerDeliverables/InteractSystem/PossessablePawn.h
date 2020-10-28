@@ -34,6 +34,15 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 
 		///Pawn to possess on exit
 		APossessablePawn * ExitPawn;
+
+		///Is the prop on the ground
+		bool bOnGround;
+
+		///Is the prop above the capsule
+		bool bAboveCapsule;
+
+		///The distance the prop is off of the ground
+		float GroundHeight;
 		
     	/// Reference to currently possessing player controller, used for un-possessing.
     	//class APlayerGhostController* CurrentPlayerController;
@@ -41,7 +50,7 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     public:
     	/// A scenecomponent for providing an exit location to spawn an unpossessing player
     	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-    	class USceneComponent* ExitPoint;
+		class USceneComponent* ExitPoint;
 
     	/// The attached component that allows this pawn to be a possessable
     	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -57,7 +66,11 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 
     	/// A pointer to attach a potential static mesh
     	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-    	class UStaticMeshComponent * StaticMeshComponent;
+		class UStaticMeshComponent * StaticMeshComponent;
+		
+		/// A capsule to block out any AI movement into this pawn.
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		class UCapsuleComponent* NavBlocker;
     	
     	// ======================================
     	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
@@ -95,8 +108,24 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 	
 		/// Returns true if the pawn is currently possessed by a player
 		UFUNCTION(BlueprintCallable, Category="Possession")
-		bool IsPossessing() const { if(GetOwner()==nullptr){	return false;	}	return true;}
-	
+		bool IsPossessing() const { return IsPlayerControlled();}
+
+		/// Returns true if the pawn is on the ground
+		UFUNCTION(BlueprintCallable, Category="Movement")
+	    bool IsOnGround() const {return bOnGround;}
+
+		/// Returns true if the pawn is above the capsule bounds
+		UFUNCTION(BlueprintCallable, Category="Movement")
+	    bool IsAboveCapsule() const {return bAboveCapsule;}
+
+		/// Returns the distance above the ground
+		UFUNCTION(BlueprintCallable, Category="Movement")
+	    float GetDistFromGround() const {return GroundHeight;}
+
+		/// Sets the mesh to be a certain distance from the ground
+		void SetDistFromGround(float f)
+		{StaticMeshComponent->AddLocalOffset({0, 0, f-GroundHeight}, true);}
+		
     	// ===================
     	// ===== METHODS =====
     	// ===================
