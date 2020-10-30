@@ -38,6 +38,17 @@ enum AnimType
 	None
 };
 
+/// enum class for the direction of the last scare
+UENUM(BlueprintType)
+enum ScareDirection
+{
+	Nondirectional,
+	Front,
+	Back,
+	Left,
+	Right
+};
+
 UCLASS()
 class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 {
@@ -191,16 +202,17 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 
 	/// Treasure that the enemy is holding
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	AActor* treasureActor;
+	AActor* TreasureActor;
 
-	///The current special animation
-	AnimType currentAnim;
+	///The current animation
+	AnimType CurrentAnim;
 	
 	/// Time remaining in the current animation
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	float currentAnimTime;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Animation")
+	float CurrentAnimTime;
 
-	/// 
+	/// The last scare direction
+	ScareDirection LastScareDirection;
 	
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
@@ -214,7 +226,10 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
+	
 	private:
+	/// Internal function for setting the last scare direction after paranoia/bravery damage
+	void SetLastScareDirection();
 	protected:
 	public:
 	/// Handles changing the enemy state to the new state
@@ -289,11 +304,14 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	FVector GetLastScareLocation() const { return LastScareLocation; }
+
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	ScareDirection GetLastScareDirection() const { return LastScareDirection; }
 	
 	// ===================
 	// ===== METHODS =====
 	// ===================
-	private:
+	
 	protected:
 	/// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

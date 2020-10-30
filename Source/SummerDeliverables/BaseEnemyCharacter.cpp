@@ -14,6 +14,36 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void ABaseEnemyCharacter::SetLastScareDirection()
+{
+	//if we're given the zero vector, set the scare direction to nondirectional
+	if (LastScareLocation.X == 0 && LastScareLocation.Y == 0 && LastScareLocation.Z == 0)
+	{    
+		LastScareDirection = Nondirectional;
+		return;
+	}
+	//calculate the angle
+	FVector forwardVector = GetCapsuleComponent()->GetForwardVector(); //forward vector of the unit
+	FVector scareVector = LastScareLocation-GetActorLocation();
+	forwardVector = forwardVector.GetSafeNormal2D();
+	scareVector = scareVector.GetSafeNormal2D();
+	float dotProduct = FVector::DotProduct(forwardVector,scareVector);
+	float angle = acos(dotProduct);
+	if (angle < PI/4) //coming from the front
+		LastScareDirection = Front;
+	else if (angle > 3*PI/4) //coming from behind
+		LastScareDirection = Back;
+	else //coming from either left or right
+	{
+		FVector crossProduct = FVector::CrossProduct(forwardVector,scareVector);
+		if (crossProduct.Z > 0)
+			LastScareDirection = Right;
+		else
+			LastScareDirection = Left;
+	}
+}
+
+
 void ABaseEnemyCharacter::SetEState(EState NewEState)
 {
 	if (NewEState != CurrentEState)
@@ -78,7 +108,8 @@ float ABaseEnemyCharacter::TakeBraveryDamage(float base_bravery_damage, FVector 
 		SetEState(EState::Dying);
 	}
 
-	LastScareLocation = prop_position;
+	LastScareLocation = prop_position;  
+	SetLastScareDirection();
 	return damage;
 }
 
@@ -97,6 +128,7 @@ float ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage, FVector prop
 	ParanoiaDecayTime = ParanoiaDecayDelay;
 
 	LastScareLocation = prop_position;
+	SetLastScareDirection();
 	return ParanoiaDamage;
 }
 
@@ -106,19 +138,19 @@ void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 	treasure->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(false);
 	treasure->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("RightHandSocket"));
 	treasure->SetActorEnableCollision(false);
-	treasureActor = treasure;
+	TreasureActor = treasure;
 	SetEState(EState::Stealing);
 }
 
 // Drop treasure functionality
 void ABaseEnemyCharacter::DropTreasure()
 {
-	if (treasureActor != nullptr)
+	if (TreasureActor != nullptr)
 	{
-		treasureActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		treasureActor->SetActorEnableCollision(true);	
-		treasureActor->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
-		treasureActor = nullptr;
+		TreasureActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		TreasureActor->SetActorEnableCollision(true);	
+		TreasureActor->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
+		TreasureActor = nullptr;
 	}
 }
 
@@ -126,8 +158,8 @@ void ABaseEnemyCharacter::DropTreasure()
 void ABaseEnemyCharacter::SetAnimation(AnimType anim,float animTime)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Setting Animation"));
-	currentAnim = anim;
-	currentAnimTime = animTime;
+	CurrentAnim = anim;
+	CurrentAnimTime = animTime;
 }
 
 // Called when the game starts or when spawned
@@ -217,14 +249,14 @@ void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
 void ABaseEnemyCharacter::AnimationTick(float DeltaTime)
 {
 	//if current anim time is greater than zero
-	if (currentAnimTime > 0)
+	if (CurrentAnimTime > 0)
 	{
 		//reduce anim type
-		currentAnimTime = FMath::Max(currentAnimTime-DeltaTime,0.0f);
+		CurrentAnimTime = FMath::Max(CurrentAnimTime-DeltaTime,0.0f);
 		//exit the anim if time hits zero
-		if (currentAnimTime <= 0)
+		if (CurrentAnimTime <= 0)
 		{
-			currentAnim = AnimType::None;
+			CurrentAnim = AnimType::None;
 		}
 	}
 }
