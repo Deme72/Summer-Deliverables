@@ -2,6 +2,9 @@
 
 
 #include "PossessableComponent.h"
+
+#include <string>
+
 #include "PlayerGhostController.h"
 #include "AIController.h"
 #include "SummerDeliverables/DefinedDebugHelpers.h"
@@ -17,7 +20,7 @@ UPossesableComponent::UPossesableComponent():UInteractableComponent()
     bIsDrainingStamina = true;
 }
 
-float UPossesableComponent::GetStamina() const
+float UPossesableComponent::GetStamina()
 {
 	TArray<AActor *> EnemyCollisions;
     APossessablePawn* owner = Cast<APossessablePawn>(GetOwner());
@@ -36,7 +39,7 @@ float UPossesableComponent::GetStamina() const
     return 0.0f;
 }
 
-bool UPossesableComponent::SetStamina(float delta_stamina, bool b_is_relative) const
+bool UPossesableComponent::SetStamina(float delta_stamina, bool b_is_relative)
 {
     if (Cast<APossessablePawn>(GetOwner())->IsPossessing())
     {
@@ -78,20 +81,40 @@ void UPossesableComponent::Scare(float baseMultiplier) const
 {
     TArray<AActor *> EnemyCollisions;
     DamageBounds->GetOverlappingActors(EnemyCollisions);
+    
+    FVector location = GetOwner()->GetTransform().GetLocation();
+    
+    //float tot_bravery_damage = 0.0f, tot_paranioa_damage = 0.0f; // For tracking player stats
     for(auto collision:EnemyCollisions)
     {
         ABaseEnemyCharacter * enemy = Cast<ABaseEnemyCharacter>(collision);
         if(enemy)
-            enemy->TakeBraveryDamage(DamageAmount*baseMultiplier);
+        {
+            //tot_bravery_damage += enemy->TakeBraveryDamage(DamageAmount*baseMultiplier, location);
+            enemy->TakeBraveryDamage(DamageAmount*baseMultiplier, location);
+        }
     }
     ParanoiaBounds->GetOverlappingActors(EnemyCollisions);
     for(auto collision:EnemyCollisions)
     {
         ABaseEnemyCharacter * enemy = Cast<ABaseEnemyCharacter>(collision);
         if(enemy)
-            enemy->TakeParanoiaDamage(ParanoiaAmount*baseMultiplier);
-        
+        {
+            //tot_paranioa_damage += enemy->TakeParanoiaDamage(ParanoiaAmount*baseMultiplier, location);
+            enemy->TakeParanoiaDamage(ParanoiaAmount*baseMultiplier, location);
+        }
     }
+
+    /*// Update Player Stats
+    FPlayerGhostStatistics &stats = GetCurrentPlayer()->GetStatisticsRef();
+    stats.BraveryDamageDealt += tot_bravery_damage;
+    stats.ParanoiaDamageDealt += tot_paranioa_damage;
+
+    // Debuging player stats
+    //std::string msg = "";
+    //msg += "Player braveryDmg = " + std::to_string(stats.BraveryDamageDealt) + " | paranoiaDmg = " + std::to_string(stats.ParanoiaDamageDealt);
+    //SCREENMSGT(msg.c_str(), 10.0f);
+    */
 }
 
 void UPossesableComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
