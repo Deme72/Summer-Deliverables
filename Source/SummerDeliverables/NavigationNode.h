@@ -12,6 +12,7 @@ UENUM(BlueprintType)
 enum NavNodeType
 {
 	HALLWAY,
+	TRANSITION,
 	ROOM,
 	POI,
 	TREASURE,

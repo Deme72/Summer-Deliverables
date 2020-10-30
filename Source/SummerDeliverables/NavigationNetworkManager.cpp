@@ -33,8 +33,11 @@ void ANavigationNetworkManager::BeginPlay()
 				case HALLWAY:
 					c = FColor::Blue;
 					break;
-				case ROOM:
+				case TRANSITION:
 					c = FColor::Magenta;
+					break;
+				case ROOM:
+					c = FColor::White;
 					break;
 				case POI:
 					c = FColor::Turquoise;
@@ -49,7 +52,7 @@ void ANavigationNetworkManager::BeginPlay()
 					c = FColor::Red;
 					break;
 				default:
-					c = FColor::White;
+					c = FColor::Black;
 				}
 				
 				DrawDebugPoint(GetWorld(), node->GetActorLocation(), 15, c, true, -1, 0);
@@ -60,13 +63,8 @@ void ANavigationNetworkManager::BeginPlay()
 			{
 				for (ANavigationNode* connection : node->neighbors)
 				{
-					// room to room
-					if (node->type == NavNodeType::ROOM && connection->type == NavNodeType::ROOM)
-					{
-						c = FColor::Purple;
-					}
 					// treasure or connected to treasure
-					else if (node->type == NavNodeType::TREASURE || connection->type == NavNodeType::TREASURE)
+					if (node->type == NavNodeType::TREASURE || connection->type == NavNodeType::TREASURE)
 					{
 						c = FColor::Orange;
 					}
@@ -74,6 +72,11 @@ void ANavigationNetworkManager::BeginPlay()
 					else if (node->type == NavNodeType::POI || connection->type == NavNodeType::POI)
 					{
 						c = FColor::Cyan;
+					}
+					// Room or connected to Room
+					else if (node->type == NavNodeType::ROOM || connection->type == NavNodeType::ROOM)
+					{
+						c = FColor::Purple;
 					}
 					// connected to exit
 					else if (connection->type == NavNodeType::EXIT)
@@ -127,7 +130,9 @@ TArray<ANavigationNode*> ANavigationNetworkManager::GetNodeNeighbors(ANavigation
 	{
 		if (node != prevNode)
 		{
-			if (node->type == NavNodeType::HALLWAY || node->type == NavNodeType::ROOM)
+			if (node->type == NavNodeType::HALLWAY ||
+				node->type == NavNodeType::TRANSITION ||
+				node->type == NavNodeType::ROOM)
 			{
 				newNeighbors.Add(node);
 			}

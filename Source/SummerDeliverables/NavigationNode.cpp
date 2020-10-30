@@ -37,8 +37,11 @@ void ANavigationNode::Tick(float DeltaTime)
 		case HALLWAY:
 			c = FColor::Blue;
 			break;
-		case ROOM:
+		case TRANSITION:
 			c = FColor::Magenta;
+			break;
+		case ROOM:
+			c = FColor::White;
 			break;
 		case POI:
 			c = FColor::Turquoise;
@@ -53,7 +56,7 @@ void ANavigationNode::Tick(float DeltaTime)
 			c = FColor::Red;
 			break;
 		default:
-			c = FColor::White;
+			c = FColor::Black;
 		}
 
 		DrawDebugPoint(GetWorld(), GetActorLocation(), 10, c, true, 1, 0);
@@ -61,13 +64,8 @@ void ANavigationNode::Tick(float DeltaTime)
 		// edges
 		for (ANavigationNode* connection : neighbors)
 		{
-			// room to room
-			if (type == NavNodeType::ROOM && connection->type == NavNodeType::ROOM)
-			{
-				c = FColor::Purple;
-			}
 			// treasure or connected to treasure
-			else if (type == NavNodeType::TREASURE || connection->type == NavNodeType::TREASURE)
+			if (type == NavNodeType::TREASURE || connection->type == NavNodeType::TREASURE)
 			{
 				c = FColor::Orange;
 			}
@@ -75,6 +73,11 @@ void ANavigationNode::Tick(float DeltaTime)
 			else if (type == NavNodeType::POI || connection->type == NavNodeType::POI)
 			{
 				c = FColor::Cyan;
+			}
+			// Room or connected to Room
+			else if (type == NavNodeType::ROOM || connection->type == NavNodeType::ROOM)
+			{
+				c = FColor::Purple;
 			}
 			// connected to exit
 			else if (connection->type == NavNodeType::EXIT)
