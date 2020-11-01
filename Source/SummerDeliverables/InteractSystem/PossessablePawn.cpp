@@ -88,6 +88,8 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("StartButton", IE_Released, PossessableComponent, &UPossesableComponent::StartButtonRelease);
 	PlayerInputComponent->BindAxis("MoveRight", PossessableComponent, &UPossesableComponent::MoveRightAxis);
 	PlayerInputComponent->BindAxis("MoveForward", PossessableComponent, &UPossesableComponent::MoveForwardAxis);
+	PlayerInputComponent->BindAxis("LookRight", PossessableComponent, &UPossesableComponent::LookRightAxis);
+	PlayerInputComponent->BindAxis("LookUp", PossessableComponent, &UPossesableComponent::LookUpAxis);
 }
 
 void APossessablePawn::Tick(float DeltaTime)
