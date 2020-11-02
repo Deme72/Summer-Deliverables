@@ -12,6 +12,7 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	bStateDirtyFlag = true;
 }
 
 void ABaseEnemyCharacter::SetEState(EState NewEState)
@@ -31,6 +32,8 @@ void ABaseEnemyCharacter::SetEState(EState NewEState)
 		{
 			CurrentRunningDuration = FMath::FRandRange(RunningDurationMin, RunningDurationMax);
 		}
+
+		bStateDirtyFlag = true;
 	}
 }
 
