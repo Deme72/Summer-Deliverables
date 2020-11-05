@@ -37,14 +37,36 @@ public:
 	// Sets default values for this actor's properties
 	AWaveManager();
 
-	/// The ABaseEnemyCharacter reference
-	/*
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ClassReferences")
-	class ABaseEnemyCharacter * CriminalTier1;
-	*/
-	/// An in-editor drop down to choose which subclass of ABaseEnemyCharacter to attach
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClassReferences")
+	/// Class to use for the tier 1 criminal enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
 	class TSubclassOf<ABaseEnemyCharacter> CriminalTier1Type;
+	/// Class to use for the tier 2 criminal enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
+	class TSubclassOf<ABaseEnemyCharacter> CriminalTier2Type;
+	/// Class to use for the tier 3 criminal enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
+	class TSubclassOf<ABaseEnemyCharacter> CriminalTier3Type;
+	/// Class to use for the follower/minion enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
+	class TSubclassOf<ABaseEnemyCharacter> MinionType;
+	/// Class to use for the tier 1 leader enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
+	class TSubclassOf<ABaseEnemyCharacter> LeaderTier1Type;
+	/// Class to use for the tier 2 leader enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
+	class TSubclassOf<ABaseEnemyCharacter> LeaderTier2Type;
+	/// Class to use for the tier 3 leader enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
+	class TSubclassOf<ABaseEnemyCharacter> LeaderTier3Type;
+	/// Class to use for the tier 1 ghost hunter enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
+	class TSubclassOf<ABaseEnemyCharacter> GhostHunterTier1Type;
+	/// Class to use for the tier 2 ghost hunter enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
+	class TSubclassOf<ABaseEnemyCharacter> GhostHunterTier2Type;
+	/// Class to use for the tier 3 ghost hunter enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
+	class TSubclassOf<ABaseEnemyCharacter> GhostHunterTier3Type;
 	/// All waves that will be spawned
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FWave> Waves;

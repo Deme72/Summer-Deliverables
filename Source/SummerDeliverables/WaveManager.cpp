@@ -59,12 +59,36 @@ bool AWaveManager::SpawnWave(int number)
 		//switch to get the appropriate enemy reference
 		switch(wave.SpawnedObjects[x])
 		{
-			case EEnemyType::CriminalTier1:
-				EnemyToSpawn = CriminalTier1Type;
-				break;
-			default:
-				UE_LOG(LogTemp, Warning, TEXT("Unsupported Enemy Spawned!"),5);
-				return false;
+		case EEnemyType::CriminalTier1:
+			EnemyToSpawn = CriminalTier1Type;
+			break;
+		case EEnemyType::CriminalTier2:
+			EnemyToSpawn = CriminalTier2Type;
+			break;
+		case EEnemyType::CriminalTier3:
+			EnemyToSpawn = CriminalTier3Type;
+			break;
+		case EEnemyType::LeaderTier1:
+			EnemyToSpawn = LeaderTier1Type;
+			break;
+		case EEnemyType::LeaderTier2:
+			EnemyToSpawn = LeaderTier2Type;
+			break;
+		case EEnemyType::LeaderTier3:
+			EnemyToSpawn = LeaderTier3Type;
+			break;
+		case EEnemyType::GhostHunterTier1:
+			EnemyToSpawn = GhostHunterTier1Type;
+			break;
+		case EEnemyType::GhostHunterTier2:
+			EnemyToSpawn = GhostHunterTier2Type;
+			break;
+		case EEnemyType::GhostHunterTier3:
+			EnemyToSpawn = GhostHunterTier3Type;
+			break;
+		default:
+			UE_LOG(LogTemp, Warning, TEXT("Unsupported Enemy Spawned!"),5);
+			return false;
 		}
 		if (SpawnEnemy(EnemyToSpawn,Entrance->GetActorLocation(),200,Entrance->GetActorRotation()) == nullptr)
 			UE_LOG(LogTemp, Warning, TEXT("Could not spawn enemy successfully!"),5);			
