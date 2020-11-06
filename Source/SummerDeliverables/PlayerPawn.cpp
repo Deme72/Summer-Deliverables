@@ -26,6 +26,8 @@ APlayerPawn::APlayerPawn()
 	CurrentBindings = nullptr;
 	OverlappingInteractables = {};
 
+	LastMovementNormal = {0,0,0};
+	
 	entering = exiting = false;
 }
 
@@ -36,6 +38,8 @@ void APlayerPawn::BeginPlay()
 
 	InteractBounds->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnBeginOverlap);
 	InteractBounds->OnComponentEndOverlap.AddDynamic(this, &APlayerPawn::OnOverlapEnd);
+	cam = Cast<UCameraComponent>(GetComponentByClass(UCameraComponent::StaticClass()));
+	playerMesh = Cast<USkeletalMeshComponent>(GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 }
 
 // Called every frame
@@ -114,7 +118,7 @@ void APlayerPawn::Tick(float DeltaTime)
 				}
 			}
 		}
-		AddActorWorldOffset(ConsumeMovementInputVector(), true);
+		AddMovementVector(ConsumeMovementInputVector(), DeltaTime);
 		SetActorRotation(GetControlRotation());
 	}
 }
@@ -224,7 +228,7 @@ void APlayerPawn::ScareButtonEnd()
 	
 }
 
-#pragma region stamana
+#pragma region Collisions
 
 void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                                  int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -275,6 +279,7 @@ void APlayerPawn::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 		pprop->Set_Outline(false,0);
 	}
 }
+#pragma endregion
 
 #pragma region stamana
 
@@ -305,35 +310,63 @@ bool APlayerPawn::CanAffordStaminaCost(const float stamina_cost) const
 
 #pragma region Movement
 
+void APlayerPawn::AddMovementVector(FVector in, float DeltaTime)
+{
+	if((abs(in.X) + abs(in.Y))/2 < Deadzone)
+		in = {0,0,0};
+	FVector inNorm = in;
+	inNorm.Normalize();
+	if(LastMovementNormal.Equals({0,0,0}) || FMath::RadiansToDegrees(acos(FVector::DotProduct(LastMovementNormal, inNorm))) > MovementLockAngle)
+	{
+		LastMovementNormal = inNorm;
+		LockedCameraForward = cam->GetForwardVector();
+		LockedCameraForward = {LockedCameraForward.X, LockedCameraForward.Y, 0};
+		LockedCameraForward.Normalize();
+		
+		LockedCameraRight = cam->GetRightVector();
+		LockedCameraRight = {LockedCameraRight.X, LockedCameraRight.Y, 0};
+		LockedCameraRight.Normalize();
+	}
+
+	float mag = ((abs(in.X) + abs(in.Y))/2 * MovementSpeed);
+	FVector wIn = mag * inNorm.X * LockedCameraForward + mag * inNorm.Y * LockedCameraRight;
+	FVector dist = wIn - CurrentSpeed;
+	float timeDiff = DeltaTime/MovementRamp;
+
+	CurrentSpeed += dist * timeDiff;
+	
+	if(CurrentSpeed.Size() > MovementSpeed)
+	{
+		CurrentSpeed.Normalize();
+		CurrentSpeed *= MovementSpeed;
+	}
+	UCapsuleComponent * cap = Cast<UCapsuleComponent>(GetComponentByClass(UCapsuleComponent::StaticClass()));
+	FHitResult groundHit;
+	GetWorld()->SweepSingleByChannel(groundHit,
+                                    cap->GetComponentLocation() + FVector{0,0,0},
+                                    cap->GetComponentLocation() - FVector{0,0, 100000000},
+                                    FQuat::Identity,
+                                    ECollisionChannel::ECC_GameTraceChannel4,
+                                    FCollisionShape::MakeBox({cap->GetUnscaledCapsuleRadius()/3 ,
+                                        cap->GetUnscaledCapsuleRadius()/3,1}));
+	
+	AddActorWorldOffset(CurrentSpeed,true);
+	AddActorWorldOffset(FVector{0,0, (FloatHeight - groundHit.Distance) * FloatSpeed * DeltaTime},true);
+	playerMesh->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation({0,0,0}, {CurrentSpeed.Y, -CurrentSpeed.X, 0}));
+}
+
 void APlayerPawn::MoveForward(float Value)
 {
 	if(!exiting && !entering)
 		if ((Controller != NULL) && (Value != 0.0f))
-		{
-			// find out which way is forward
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-			// get forward vector
-			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-			AddMovementInput(Direction, Value * MovementSpeed);
-		}
+			AddMovementInput({Value, 0,0});
 }
 
 void APlayerPawn::MoveRight(float Value)
 {
 	if(!exiting && !entering)
 		if ( (Controller != NULL) && (Value != 0.0f) )
-		{
-			// find out which way is right
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
-		
-			// get right vector 
-			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-			// add movement in that direction
-			AddMovementInput(Direction, Value * MovementSpeed);
-		}
+			AddMovementInput({0, Value,0});
 }
 
 
@@ -341,18 +374,14 @@ void APlayerPawn::LookRight(float Value)
 {
 	if(!exiting && !entering)
 		if ((Controller != NULL) && (Value != 0.0f))
-		{
 			AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-		}
 }
 
 void APlayerPawn::LookUp(float Value)
 {
 	if(!exiting && !entering)
 		if ((Controller != NULL) && (Value != 0.0f))
-		{
 			AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
-		}
 }
 
 //void APlayerPawn::TurnAtRate(float Rate)
