@@ -59,7 +59,7 @@ float ABaseEnemyCharacter::GetStateSpeed(EState State)
 }
 
 void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
-{
+{	
 	float damage = (ScareBonus * (Paranoia / ParanoiaMax) + 1) * BraveryBaseDamage;
 	damage += FMath::Max(Paranoia - ParanoiaMax, 0.0f) * ParanoiaOverflowDamage;
 	damage *= (ComboCounter+1);
@@ -77,6 +77,12 @@ void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
 	{
 		SetEState(EState::Dying);
 	}
+	
+	//Stamina Drops
+	FVector SpawnPosition = GetActorLocation();
+	FRotator SpawnRotation = GetActorRotation();
+
+	GetWorld()->SpawnActor(TeamStamina, &SpawnPosition, &SpawnRotation);
 }
 
 void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
@@ -92,6 +98,11 @@ void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
 	}
 
 	ParanoiaDecayTime = ParanoiaDecayDelay;
+
+	//Stamina Drops
+	FVector SpawnPosition = GetActorLocation();
+	FRotator SpawnRotation = GetActorRotation();
+	GetWorld()->SpawnActor(PlayerStamina, &SpawnPosition, &SpawnRotation);
 }
 
 // Pick up treasure functionality

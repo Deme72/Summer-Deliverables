@@ -2,6 +2,9 @@
 
 
 #include "PlayerPawn.h"
+
+#include <string>
+
 #include "Components/ShapeComponent.h"
 #include "InteractSystem/FlashlightComponent.h"
 #include "InteractSystem/PossessablePawn.h"
@@ -11,6 +14,7 @@
 #include "SummerDeliverables/DefinedDebugHelpers.h"
 #include "PlayerStamina.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Engine.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -29,6 +33,9 @@ APlayerPawn::APlayerPawn()
 	LastMovementNormal = {0,0,0};
 	
 	entering = exiting = false;
+
+	Cast<APlayerGhostController>(GetController())->PlayerCameraManager;
+	//Cast<APlayerGhostController>(GetController())->PlayerCameraManager->ViewPitchMin = -70.0f;
 }
 
 /// Called when the game starts or when spawned
@@ -40,6 +47,53 @@ void APlayerPawn::BeginPlay()
 	InteractBounds->OnComponentEndOverlap.AddDynamic(this, &APlayerPawn::OnOverlapEnd);
 	cam = Cast<UCameraComponent>(GetComponentByClass(UCameraComponent::StaticClass()));
 	playerMesh = Cast<USkeletalMeshComponent>(GetComponentByClass(USkeletalMeshComponent::StaticClass()));
+}
+
+void APlayerPawn::WhiskersRaycast()
+{
+	FHitResult* HitResult = new FHitResult();
+	FVector StartTrace = GetActorLocation();
+	FVector DirVector;
+	FVector EndTrace;
+	FCollisionQueryParams* TraceParams = new FCollisionQueryParams();
+	FRotator rot(0, 15, 0);
+	FRotator startRot(0, 45, 0);
+	//Right Side
+	for(int i=0; i < 4; i++)
+	{
+		FRotator tempRot = rot * i + startRot;
+		DirVector = tempRot.RotateVector(GetActorRightVector());
+		EndTrace = (DirVector * Cast<USpringArmComponent>(GetComponentByClass(USpringArmComponent::StaticClass()))->TargetArmLength) + StartTrace;
+		//DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), false, 0.25);
+		if(GetWorld()->LineTraceSingleByChannel(*HitResult, StartTrace, EndTrace, ECC_Visibility, *TraceParams))
+		{
+
+			DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), false, 0.25);
+			///Checks if the player is currently moving or has recently moved the camera
+			if(GetInputAxisValue("MoveRight") > 0 &&GetWorldTimerManager().GetTimerRemaining(LookTimer) < 0.0f)
+			{	
+				AddControllerYawInput( 0.5 * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+				//Cast<APlayerGhostController>(GetController())->PlayerCameraManager->
+			}
+		}
+	}
+	//Left Side
+	for(int i=0; i < 4; i++)
+	{
+		FRotator tempRot = rot * -i - startRot;
+		DirVector = tempRot.RotateVector(-GetActorRightVector());
+		EndTrace = (DirVector * Cast<USpringArmComponent>(GetComponentByClass(USpringArmComponent::StaticClass()))->TargetArmLength) + StartTrace;
+		//DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), false, 0.25);
+		if(GetWorld()->LineTraceSingleByChannel(*HitResult, StartTrace, EndTrace, ECC_Visibility, *TraceParams))
+		{
+			DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), false, 0.25);
+			///Checks if the player is currently moving or has recently moved the camera
+			if(GetInputAxisValue("MoveRight") < 0 && GetWorldTimerManager().GetTimerRemaining(LookTimer) < 0.0f)
+			{
+				AddControllerYawInput( -0.5 * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+			}
+		}
+	}
 }
 
 // Called every frame
@@ -121,6 +175,7 @@ void APlayerPawn::Tick(float DeltaTime)
 		AddMovementVector(ConsumeMovementInputVector(), DeltaTime);
 		SetActorRotation(GetControlRotation());
 	}
+	WhiskersRaycast();
 }
 
 
@@ -234,19 +289,21 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
                                  int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//TODO: Most of these have classes associated with them. The tags are unnecessary and this can be cleaned up
-	if(OtherActor->ActorHasTag("Stamina"))
+	if(OtherActor->ActorHasTag("Stamina") && GetController() != nullptr)
 	{
 		APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
 		Con->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
 		OtherActor->Destroy();
 	}
-	if(OtherActor->ActorHasTag("TeamStamina"))
+	if(OtherActor->ActorHasTag("TeamStamina") && GetController() != nullptr)
 	{
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, FoundActors);
 		for(int i=0; i< FoundActors.Num(); i++)
 		{
-			Cast<APlayerGhostController>(((APlayerPawn*)FoundActors[i])->GetController())->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
+			Cast<APlayerGhostController>(((APlayerPawn*)FoundActors[i])->GetController())->SetStamina(Cast<APlayerStamina>(OtherActor)->TeamStaminaVal);
 		}
+		APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
+		Con->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
 		OtherActor->Destroy();
 	}
 	if(OtherActor->ActorHasTag("DynamicProp"))
@@ -375,6 +432,9 @@ void APlayerPawn::LookRight(float Value)
 	if(!exiting && !entering)
 		if ((Controller != NULL) && (Value != 0.0f))
 			AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+		}
+	if(Value != 0)
+		GetWorldTimerManager().SetTimer(LookTimer,0.5f, false);
 }
 
 void APlayerPawn::LookUp(float Value)
@@ -382,6 +442,9 @@ void APlayerPawn::LookUp(float Value)
 	if(!exiting && !entering)
 		if ((Controller != NULL) && (Value != 0.0f))
 			AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
+		}
+	if(Value != 0)
+		GetWorldTimerManager().SetTimer(LookTimer,0.5f, false);
 }
 
 //void APlayerPawn::TurnAtRate(float Rate)

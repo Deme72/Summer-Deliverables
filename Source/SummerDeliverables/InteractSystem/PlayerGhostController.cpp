@@ -3,7 +3,6 @@
 #include "PlayerGhostController.h"
 
 #include <string>
-
 #include "PossessablePawn.h"
 #include "../PlayerPawn.h"
 #include "Blueprint/UserWidget.h"

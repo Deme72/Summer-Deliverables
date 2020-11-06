@@ -96,6 +96,9 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		/// The normal of the last movement input
 		FVector LastMovementNormal;
 		
+		
+		/// Timer for switching cam control back to code from player input
+		FTimerHandle LookTimer;
 	
 	protected:
 	public:
@@ -202,6 +205,9 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	protected:
 		/// Called when the game starts or when spawned
 		void BeginPlay();
+
+		/// Performs the "whisker" raycasts for the camera
+		void WhiskersRaycast();
 	public:
 		/// Called every frame, put collision related code in here
 		virtual void Tick(float DeltaTime) override;

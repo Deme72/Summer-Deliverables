@@ -181,6 +181,14 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	AActor* treasureActor;
 
+	/// A reference to the stamina pickup actor that only effects the player picking it up
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> PlayerStamina;
+
+	///A reference to the stamina pickup actor that effects all players
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> TeamStamina;
+
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================

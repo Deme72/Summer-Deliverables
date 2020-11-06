@@ -28,7 +28,7 @@ void ASummerDeliverablesGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SCREENMSG("BeginPlay intialized gamemode as SummerDeliverablesGameMode.cpp");
+	//SCREENMSG("BeginPlay intialized gamemode as SummerDeliverablesGameMode.cpp");
 	///This timer handles when to call SpawnStamina()
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASummerDeliverablesGameMode::SpawnStamina,
