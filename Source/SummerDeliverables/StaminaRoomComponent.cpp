@@ -115,6 +115,7 @@ void UStaminaRoomComponent::TickComponent(float DeltaTime, ELevelTick TickType,F
                 if (p)
                 {
                     p->SetStamina(101.0f);
+                    p->SetInvisibility(true);
                 }
             }
             Using= false;
