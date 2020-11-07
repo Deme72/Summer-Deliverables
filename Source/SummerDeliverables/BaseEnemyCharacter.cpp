@@ -211,6 +211,14 @@ void ABaseEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	
 }
 
+// Called before this enemy would be destroyed
+void ABaseEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	//Super::EndPlay();
+	if (IsValid(treasureActor))
+		treasureActor->Destroy();
+}
+
 void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
 {
 	if (ParanoiaDecayTime <= 0.0f)

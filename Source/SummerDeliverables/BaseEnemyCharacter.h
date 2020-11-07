@@ -315,6 +315,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	protected:
 	/// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	/// Called when destroyed
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 	public:
 	/// Called every frame
