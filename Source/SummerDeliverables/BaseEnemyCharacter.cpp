@@ -215,8 +215,8 @@ void ABaseEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 void ABaseEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	//Super::EndPlay();
-	if (IsValid(treasureActor))
-		treasureActor->Destroy();
+	if (IsValid(TreasureActor))
+		TreasureActor->Destroy();
 }
 
 void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
