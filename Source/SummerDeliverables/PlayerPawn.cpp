@@ -390,12 +390,13 @@ bool APlayerPawn::CanAffordStaminaCost(const float stamina_cost) const
 
 #pragma region Movement
 
-void APlayerPawn::AddMovementVector(FVector in, float DeltaTime)
-{
-	if((abs(in.X) + abs(in.Y))/2 < Deadzone)
+void APlayerPawn::AddMovementVector(FVector in, float DeltaTime){
+	static FRotator lastRotation = FRotator::ZeroRotator;
+	if(in.Size() < Deadzone)
 		in = {0,0,0};
-	FVector inNorm = in;
-	inNorm.Normalize();
+	else if(in.Size() > 1)
+		in.Normalize();
+	FVector inNorm = in.GetSafeNormal();
 	if(LastMovementNormal.Equals({0,0,0}) || FMath::RadiansToDegrees(acos(FVector::DotProduct(LastMovementNormal, inNorm))) > MovementLockAngle)
 	{
 		LastMovementNormal = inNorm;
@@ -408,7 +409,7 @@ void APlayerPawn::AddMovementVector(FVector in, float DeltaTime)
 		LockedCameraRight.Normalize();
 	}
 
-	float mag = ((abs(in.X) + abs(in.Y))/2 * MovementSpeed);
+	float mag = in.Size() * MovementSpeed;
 	FVector wIn = mag * inNorm.X * LockedCameraForward + mag * inNorm.Y * LockedCameraRight;
 	FVector dist = wIn - CurrentSpeed;
 	float timeDiff = DeltaTime/MovementRamp;
@@ -429,10 +430,30 @@ void APlayerPawn::AddMovementVector(FVector in, float DeltaTime)
                                     ECollisionChannel::ECC_GameTraceChannel4,
                                     FCollisionShape::MakeBox({cap->GetUnscaledCapsuleRadius()/3 ,
                                         cap->GetUnscaledCapsuleRadius()/3,1}));
+	FRotator rot;
+	if(CurrentSpeed.Size() < 0.1)
+	{
+		rot = lastRotation;
+	}
+	else
+	{
+		rot = UKismetMathLibrary::FindLookAtRotation({0,0,0}, {CurrentSpeed.Y, -CurrentSpeed.X, 0});
+		lastRotation = rot;
+	}
+	FHitResult moveHit;
 	
-	AddActorWorldOffset(CurrentSpeed,true);
+	AddActorWorldOffset(CurrentSpeed,true, &moveHit);
 	AddActorWorldOffset(FVector{0,0, (FloatHeight - groundHit.Distance) * FloatSpeed * DeltaTime},true);
-	playerMesh->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation({0,0,0}, {CurrentSpeed.Y, -CurrentSpeed.X, 0}));
+	
+	if(moveHit.bBlockingHit)
+	{
+		FVector backmove = CurrentSpeed.GetSafeNormal();
+		AddActorWorldOffset(backmove *.1,true);
+		FVector Normal = FVector::VectorPlaneProject(moveHit.Normal, {0,0,1}).GetSafeNormal();
+		FVector newMove = FVector::VectorPlaneProject(CurrentSpeed, Normal);
+		AddActorWorldOffset(newMove, true);
+	}
+	playerMesh->SetWorldRotation(rot);
 }
 
 void APlayerPawn::MoveForward(float Value)
