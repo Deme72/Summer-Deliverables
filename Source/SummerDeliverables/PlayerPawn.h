@@ -207,7 +207,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		void BeginPlay();
 
 		/// Performs the "whisker" raycasts for the camera
-		void WhiskersRaycast();
+		void WhiskersRaycast(float DeltaTime);
 	public:
 		/// Called every frame, put collision related code in here
 		virtual void Tick(float DeltaTime) override;

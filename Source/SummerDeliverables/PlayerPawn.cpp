@@ -49,7 +49,7 @@ void APlayerPawn::BeginPlay()
 	playerMesh = Cast<USkeletalMeshComponent>(GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 }
 
-void APlayerPawn::WhiskersRaycast()
+void APlayerPawn::WhiskersRaycast(float DeltaTime)
 {
 	FHitResult* HitResult = new FHitResult();
 	FVector StartTrace = GetActorLocation();
@@ -64,7 +64,6 @@ void APlayerPawn::WhiskersRaycast()
 		FRotator tempRot = rot * i + startRot;
 		DirVector = tempRot.RotateVector(GetActorRightVector());
 		EndTrace = (DirVector * Cast<USpringArmComponent>(GetComponentByClass(USpringArmComponent::StaticClass()))->TargetArmLength) + StartTrace;
-		//DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), false, 0.25);
 		if(GetWorld()->LineTraceSingleByChannel(*HitResult, StartTrace, EndTrace, ECC_Visibility, *TraceParams))
 		{
 
@@ -72,8 +71,7 @@ void APlayerPawn::WhiskersRaycast()
 			///Checks if the player is currently moving or has recently moved the camera
 			if(GetInputAxisValue("MoveRight") > 0 &&GetWorldTimerManager().GetTimerRemaining(LookTimer) < 0.0f)
 			{	
-				AddControllerYawInput( 0.5 * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-				//Cast<APlayerGhostController>(GetController())->PlayerCameraManager->
+				AddControllerYawInput(10 * CurrentSpeed.Size() * BaseTurnRate * DeltaTime);
 			}
 		}
 	}
@@ -90,7 +88,7 @@ void APlayerPawn::WhiskersRaycast()
 			///Checks if the player is currently moving or has recently moved the camera
 			if(GetInputAxisValue("MoveRight") < 0 && GetWorldTimerManager().GetTimerRemaining(LookTimer) < 0.0f)
 			{
-				AddControllerYawInput( -0.5 * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+				AddControllerYawInput(10 * CurrentSpeed.Size() * -BaseTurnRate * DeltaTime);
 			}
 		}
 	}
@@ -171,11 +169,36 @@ void APlayerPawn::Tick(float DeltaTime)
 					}
 				}
 			}
+		}		
+#pragma region CameraTick
+		WhiskersRaycast(DeltaTime);
+		FVector CameraForward = cam->GetForwardVector();
+		CameraForward = {CameraForward.X, CameraForward.Y, 0};
+		CameraForward.Normalize();
+		FVector pforward = playerMesh->GetForwardVector();
+		pforward = {pforward.X, pforward.Y, 0};
+		pforward.Normalize();
+		FVector pright = playerMesh->GetRightVector();
+		pright = {pright.X, pright.Y, 0};
+		pright.Normalize();
+		float rightdp = FVector::DotProduct(pright,CameraForward);
+		float forwarddp = FVector::DotProduct(pforward,CameraForward);
+		if(rightdp < 0.99 && GetWorldTimerManager().GetTimerRemaining(LookTimer) < 0.0f)
+		{
+			float yawAmount = 0.5 - pow(FMath::RadiansToDegrees(acos(rightdp)) - 180, 2)/64800;
+			if(forwarddp > 0)
+			{	
+				AddControllerYawInput( FMath::RadiansToDegrees(acos(rightdp) * yawAmount * DeltaTime));
+			}
+			else
+			{
+				AddControllerYawInput(-FMath::RadiansToDegrees(acos(rightdp) * yawAmount * DeltaTime));
+			}
 		}
+#pragma endregion
 		AddMovementVector(ConsumeMovementInputVector(), DeltaTime);
 		SetActorRotation(GetControlRotation());
 	}
-	WhiskersRaycast();
 }
 
 
@@ -338,7 +361,7 @@ void APlayerPawn::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 }
 #pragma endregion
 
-#pragma region stamana
+#pragma region stamina
 
 float APlayerPawn::GetStamina() const
 {
@@ -430,8 +453,8 @@ void APlayerPawn::MoveRight(float Value)
 void APlayerPawn::LookRight(float Value)
 {
 	if(!exiting && !entering)
-		if ((Controller != NULL) && (Value != 0.0f))
-			AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+		if ((Controller != NULL) && (Value != 0.0f)){
+			AddControllerYawInput(Value);
 		}
 	if(Value != 0)
 		GetWorldTimerManager().SetTimer(LookTimer,0.5f, false);
@@ -440,8 +463,8 @@ void APlayerPawn::LookRight(float Value)
 void APlayerPawn::LookUp(float Value)
 {
 	if(!exiting && !entering)
-		if ((Controller != NULL) && (Value != 0.0f))
-			AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
+		if ((Controller != NULL) && (Value != 0.0f)){
+			//AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
 		}
 	if(Value != 0)
 		GetWorldTimerManager().SetTimer(LookTimer,0.5f, false);
