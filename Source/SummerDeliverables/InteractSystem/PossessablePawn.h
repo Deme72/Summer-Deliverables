@@ -125,7 +125,8 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 		/// Sets the mesh to be a certain distance from the ground
 		void SetDistFromGround(float f)
 		{StaticMeshComponent->AddLocalOffset({0, 0, f-GroundHeight}, true);}
-		
+
+		///
     	// ===================
     	// ===== METHODS =====
     	// ===================
