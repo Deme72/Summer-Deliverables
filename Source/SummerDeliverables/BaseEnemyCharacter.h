@@ -197,12 +197,16 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	USkeletalMeshComponent* SkeletalMesh;
 
 	/// The socket in BaseEnemyCharacter::Mesh that holds the Flashlight object
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
-	USkeletalMeshComponent* FlashLightSocket;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
+	//USkeletalMeshComponent* FlashLightSocket;
 
 	/// The socket in BaseEnemyCharacter::Mesh that holds the Treasure object
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
-	USkeletalMeshComponent* TreasureSocket;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
+	//USkeletalMeshComponent* TreasureSocket;
+
+	/// Name of the treasure socket
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components|Sockets")
+	FName TreasureSocketName;
 
 	/// Treasure that the enemy is holding
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
@@ -286,20 +290,20 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	USkeletalMeshComponent* GetSkeletalmesh() const { return SkeletalMesh; };
 
 	/// Set the enemy's Flashlight Socket
-	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	void SetFlashlightSocket( USkeletalMeshComponent* new_flashlightsocket ) { FlashLightSocket = new_flashlightsocket; };
+	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	//void SetFlashlightSocket( USkeletalMeshComponent* new_flashlightsocket ) { FlashLightSocket = new_flashlightsocket; };
 
 	/// Get the enemy's FlashlightSocket
-	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	USkeletalMeshComponent* GetFlashlightSocket() const { return FlashLightSocket; };
+	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	//USkeletalMeshComponent* GetFlashlightSocket() const { return FlashLightSocket; };
 
 	/// Set the enemy's TreasureSocket
-	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	void SetTreasureSocket( USkeletalMeshComponent* new_treasuresocket ) { TreasureSocket = new_treasuresocket; };
+	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	//void SetTreasureSocket( USkeletalMeshComponent* new_treasuresocket ) { TreasureSocket = new_treasuresocket; };
 
 	/// Get the enemy's TreasureSocket
-	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	USkeletalMeshComponent* GetTreasureSocket() const { return TreasureSocket; };
+	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	//USkeletalMeshComponent* GetTreasureSocket() const { return TreasureSocket; };
 	
 	/// Takes a base bravery damage and applies the damage formula
 	/// (ScareBonus * (Paranoia / ParanoiaMax) + 1) * ScareDamage = TotalDamage

@@ -12,6 +12,8 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	SkeletalMesh 
 }
 
 void ABaseEnemyCharacter::SetLastScareDirection()
@@ -136,7 +138,9 @@ float ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage, FVector prop
 void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 {
 	treasure->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(false);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Setting Socket!"));
 	treasure->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("RightHandSocket"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Finishing Pickup!"));
 	treasure->SetActorEnableCollision(false);
 	TreasureActor = treasure;
 	SetEState(EState::Stealing);
@@ -272,12 +276,12 @@ void ABaseEnemyCharacter::AnimationTick(float DeltaTime)
 		//reduce anim type
 		CurrentAnimTime -= DeltaTime;
 		FString result = FString::SanitizeFloat(CurrentAnimTime);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, result);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, result);
 		//exit the anim if time hits zero
 		if (CurrentAnimTime <= 0)
 		{
 			SetAnimation(None,0);
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Ending Animation!"));
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Ending Animation!"));
 		}
 	}
 }
