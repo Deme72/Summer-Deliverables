@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UtilityPossessableComponent.h"
 #include <string>
+#include <set>
 #include <map>
 #include <list>
 #include "PaintingPossessableComponent.generated.h"
@@ -16,12 +17,14 @@ USTRUCT()
 struct FPaintingTransitionPackage
 {
 	GENERATED_BODY()
+	/// Is this Struct
+	bool Instantiated;
 	
 	/// The Painting this player entered the network through
 	class UPaintingPossessableComponent* RootPainting;
 	
 	/// The current path through the networks the player instantiated
-	std::list<UPaintingPossessableComponent*> Iterator;
+	std::set<UPaintingPossessableComponent*> Path;
 	
 	/// The remaining time this painting needs to be blinded (follows Player through network
 	float TimeBeingBlind;	
@@ -69,12 +72,11 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	FPaintingTransitionPackage PaintingDataPackage;
 
 	std::list<FString> ConnectedNetworks;
-	
-	protected:
-	public:
+
 	/// For Debugging purposes
 	FString PaintingName;
-	
+	protected:
+	public:
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
@@ -94,6 +96,9 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
     void SetCurrentExitPoint(USceneComponent* NewExitPoint);
 
 	void NewPaintingDataPackage();
+
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	FString GetPaintName() const { return PaintingName; }
 	
 	// ===================
 	// ===== METHODS =====
@@ -120,15 +125,16 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	virtual void LeftTriggerRelease_Implementation() override final;
 
 	virtual void EndInteract_Implementation() override final;
-	
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	/// FOR DEBUGGING
+	virtual void ButtonTopRelease_Implementation() override final;
+
+	virtual void ScareButton_Implementation() override;
+	
 
 };
-
-
-
-
-
 
 UCLASS(NotBlueprintable)
 class APaintingManager : public AActor
@@ -161,8 +167,7 @@ public:
 	/// *** Public for debugging purposes ***
 	/// The "Manager" i.e. the network names (fstring)
 	/// and all paintings connected to that network
-    //TMultiMap<FString, UPaintingPossessableComponent*> Networks;
-	std::multimap<FString, UPaintingPossessableComponent*> Network;
+	std::multimap<FString, UPaintingPossessableComponent*> Networks;
 	
 protected:
 public:
@@ -179,18 +184,16 @@ public:
 private:
 protected:
 public:
-	//TArray<UPaintingPossessableComponent*> GetPaintingIterator(TArray<FString> connected_networks, UPaintingPossessableComponent* painting);
-	std::list<UPaintingPossessableComponent*> GetPaintingPath(std::list<FString> connected_networks, UPaintingPossessableComponent* painting);
+	std::set<UPaintingPossessableComponent*> GetPaintingPath(std::list<FString> connected_networks, UPaintingPossessableComponent* painting);
 	// ===================
 	// ===== METHODS =====
 	// ===================
 private:
 protected:
 public:
-	/// To be called by the PaintingPossessiblePawn Editor Constructor
+	/// To be called by the PaintingPossessiblePawn BeginPlay()
     void AppendToConnectedNetworks(std::list<FString> connected_networks, UPaintingPossessableComponent* painting);
 	
-
 	/// FOR DEBUGGING NETWORKS DATA
 	UFUNCTION(BlueprintCallable)
     void PrintNetworks() const;

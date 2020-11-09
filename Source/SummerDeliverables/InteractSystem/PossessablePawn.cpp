@@ -143,7 +143,7 @@ void APossessablePawn::EndPossession()
 				new_pawn->setPlayer(ghost_controller);
 				new_pawn->SetActorRotation(GetActorRotation());
 				PossessableComponent->EndInteractInternal();
-				new_pawn->PlayPossessAnimation(false, ExitPoint->GetComponentTransform());
+				new_pawn->PlayPossessAnimation(false, ExitPoint->GetComponentTransform()); /** TODO: this crashes when you unpossess in paintings */
 			}
 		}
 		//CurrentPlayerController = nullptr;
