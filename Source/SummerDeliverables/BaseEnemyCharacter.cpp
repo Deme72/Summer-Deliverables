@@ -157,9 +157,19 @@ void ABaseEnemyCharacter::DropTreasure()
 //Animation setting functionality
 void ABaseEnemyCharacter::SetAnimation(AnimType anim,float animTime)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Setting Animation"));
 	CurrentAnim = anim;
 	CurrentAnimTime = animTime;
+	//halt movement if non-none animation, restore it if it is
+	if (CurrentAnim != None && !isMovementHalted)
+	{
+		isMovementHalted = true;
+		FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed *= .01;
+	}
+	if (CurrentAnim == None && isMovementHalted)
+	{
+		isMovementHalted = false;
+		FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed *= 100;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -260,11 +270,14 @@ void ABaseEnemyCharacter::AnimationTick(float DeltaTime)
 	if (CurrentAnimTime > 0)
 	{
 		//reduce anim type
-		CurrentAnimTime = FMath::Max(CurrentAnimTime-DeltaTime,0.0f);
-	}
-	//exit the anim if time hits zero
-	if (CurrentAnimTime <= 0)
-	{
-		CurrentAnim = AnimType::None;
+		CurrentAnimTime -= DeltaTime;
+		FString result = FString::SanitizeFloat(CurrentAnimTime);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, result);
+		//exit the anim if time hits zero
+		if (CurrentAnimTime <= 0)
+		{
+			SetAnimation(None,0);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Ending Animation!"));
+		}
 	}
 }

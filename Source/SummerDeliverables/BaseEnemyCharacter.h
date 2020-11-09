@@ -214,6 +214,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 
 	/// The last scare direction
 	ScareDirection LastScareDirection;
+
+	///Whether the enemy's movement is halted for an animation
+	bool isMovementHalted = false;
 	
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
