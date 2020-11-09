@@ -27,6 +27,14 @@ SCREENMSG("Have fun today!");
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 
+namespace std
+{
+	inline std::string to_string(const FString s)
+	{
+		return std::string(TCHAR_TO_UTF8(*s));
+	}
+}
+
 // ########################################################################################################
 //Current Class Name + Function Name where this is called!
 #define CUR_CLASS_FUNC (FString(__FUNCTION__))
