@@ -32,21 +32,22 @@ enum TType
 UENUM(BlueprintType)
 enum AnimType
 {
-	PickupTreasure,
-	DropTreasure,
-	InvestigatePOI,
-	None
+    None UMETA(DisplayName = "None"),
+	PickupTreasure UMETA(DisplayName = "Pick Up Treasure"),
+	DropTreasure UMETA(DisplayName = "Drop Treasure"),
+	InvestigatePOI UMETA(DisplayName = "Investigate POI"),
+	Scare UMETA(DisplayName = "Scare")
 };
 
 /// enum class for the direction of the last scare
 UENUM(BlueprintType)
 enum ScareDirection
 {
-	Nondirectional,
-	Front,
-	Back,
-	Left,
-	Right
+	Nondirectional UMETA(DisplayName = "Nondirectional"),
+	Front UMETA(DisplayName = "Front"),
+	Back UMETA(DisplayName = "Back"),
+	Left UMETA(DisplayName = "Left"),
+	Right UMETA(DisplayName = "Right")
 };
 
 UCLASS()
@@ -95,6 +96,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 
 	/// The current target type of this enemy
 	TType CurrentTType;
+	
+	///The current animation
+	AnimType CurrentAnim = AnimType::None;
 	
 	/// How much time the enemy has spent in this state
 	float CurrentEStateTime;
@@ -203,9 +207,6 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Treasure that the enemy is holding
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	AActor* TreasureActor;
-
-	///The current animation
-	AnimType CurrentAnim;
 	
 	/// Time remaining in the current animation
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Animation")
@@ -248,6 +249,14 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Handles changing the enemy state to the new state
 	UFUNCTION(BlueprintCallable, Category="Getters")
     TType GetTType() const { return CurrentTType; }
+
+	/// Handles getting the animation state
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	AnimType GetAnimation() const { return CurrentAnim; }
+
+	/// Sets the animation state
+	UFUNCTION(BlueprintCallable, Category="Setters")
+	void SetAnimation(AnimType newType, float animTime); //{CurrentAnim = newType; CurrentAnimTime = animTime; return CurrentAnim;}
 	
 	/// Returns the current Bravery (i.e health) of the Enemy
 	UFUNCTION(BlueprintCallable, Category="Getters|Bravery")
@@ -298,9 +307,6 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Applies Paranoia Damage to the enemy's Paranoia
 	UFUNCTION(BlueprintCallable, Category="Setters|Paranoia")
     float TakeParanoiaDamage(float paranoia_damage, FVector prop_position);
-
-	/// Sets the enemy's animation state
-	void SetAnimation(AnimType anim,float animTime);
 
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	FVector GetLastScareLocation() const { return LastScareLocation; }

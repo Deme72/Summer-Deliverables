@@ -261,10 +261,10 @@ void ABaseEnemyCharacter::AnimationTick(float DeltaTime)
 	{
 		//reduce anim type
 		CurrentAnimTime = FMath::Max(CurrentAnimTime-DeltaTime,0.0f);
-		//exit the anim if time hits zero
-		if (CurrentAnimTime <= 0)
-		{
-			CurrentAnim = AnimType::None;
-		}
+	}
+	//exit the anim if time hits zero
+	if (CurrentAnimTime <= 0)
+	{
+		CurrentAnim = AnimType::None;
 	}
 }
