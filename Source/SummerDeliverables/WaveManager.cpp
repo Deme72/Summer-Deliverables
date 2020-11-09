@@ -109,4 +109,18 @@ APawn* AWaveManager::SpawnEnemy(TSubclassOf<ABaseEnemyCharacter> EnemyToSpawn, F
 	return nullptr;
 }
 
+int AWaveManager::NumEnemies()
+{
+	if(Waves.Num() == 0)
+	{
+		return 0;
+	}
+	int count = 0;
+	for(int i=0; i < Waves.Num(); i++)
+	{
+		count += Waves[i].SpawnedObjects.Num();
+	}
+	return count;
+}
+
 

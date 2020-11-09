@@ -95,4 +95,7 @@ public:
 	virtual APawn* SpawnEnemy(TSubclassOf<ABaseEnemyCharacter> EnemyToSpawn, FVector TargetLocation, float LocationSpread, FRotator TargetRotation = FRotator::ZeroRotator);
 	/// Checks if there are waves remaining
 	bool AreWavesRemaining() {return CurrentWave < Waves.Num();}
+
+	///This function counts how many enemies exist for use by the game mode to check the win condition
+	int NumEnemies();
 };
