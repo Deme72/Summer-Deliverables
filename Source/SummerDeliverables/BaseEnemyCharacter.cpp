@@ -58,9 +58,9 @@ float ABaseEnemyCharacter::GetStateSpeed(EState State)
 	}
 }
 
-void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
-{	
-	float damage = (ScareBonus * (Paranoia / ParanoiaMax) + 1) * BraveryBaseDamage;
+float ABaseEnemyCharacter::TakeBraveryDamage(float base_bravery_damage, FVector prop_position)
+{
+	float damage = (ScareBonus * (Paranoia / ParanoiaMax) + 1) * base_bravery_damage;
 	damage += FMath::Max(Paranoia - ParanoiaMax, 0.0f) * ParanoiaOverflowDamage;
 	damage *= (ComboCounter+1);
 	Bravery = FMath::Max(Bravery - damage, 0.0f);
@@ -77,15 +77,12 @@ void ABaseEnemyCharacter::TakeBraveryDamage(float BraveryBaseDamage)
 	{
 		SetEState(EState::Dying);
 	}
-	
-	//Stamina Drops
-	FVector SpawnPosition = GetActorLocation();
-	FRotator SpawnRotation = GetActorRotation();
 
-	GetWorld()->SpawnActor(TeamStamina, &SpawnPosition, &SpawnRotation);
+	LastScareLocation = prop_position;
+	return damage;
 }
 
-void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
+float ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage, FVector prop_position)
 {
 	Paranoia = Paranoia + ParanoiaDamage; /// Paranoia max isn't a clamp - based on the fact that paranoia overflow damage exists
 	if (Paranoia >= ParanoiaRunningThreshold)
@@ -99,10 +96,8 @@ void ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage)
 
 	ParanoiaDecayTime = ParanoiaDecayDelay;
 
-	//Stamina Drops
-	FVector SpawnPosition = GetActorLocation();
-	FRotator SpawnRotation = GetActorRotation();
-	GetWorld()->SpawnActor(PlayerStamina, &SpawnPosition, &SpawnRotation);
+	LastScareLocation = prop_position;
+	return ParanoiaDamage;
 }
 
 // Pick up treasure functionality
