@@ -10,8 +10,6 @@
 #include "Components/ShapeComponent.h"
 #include "PossessableComponent.h"
 #include "PlayerGhostController.h"
-#include "../PlayerPawn.h"
-#include "Chaos/CollisionResolutionUtil.h"
 
 APossessablePawn::APossessablePawn():APawn()
 {
@@ -21,10 +19,13 @@ APossessablePawn::APossessablePawn():APawn()
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PossessableBaseMesh"));
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalBaseMesh"));
 	ExitPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Exit Point"));
+	NavBlocker = CreateDefaultSubobject<UCapsuleComponent>(TEXT("NavBlocker"));
+	NavBlocker->SetCapsuleSize(50, 200);
 	
 	RootComponent = StaticMeshComponent;
 	SkeletalMeshComponent->SetupAttachment(StaticMeshComponent);
 	ExitPoint->SetupAttachment(SkeletalMeshComponent);
+	NavBlocker->SetupAttachment(StaticMeshComponent);
     ExitPawn = nullptr;
 }
 
@@ -37,15 +38,10 @@ void APossessablePawn::OnConstruction(const FTransform & Transform)
 		PossessableComponent = NewObject<UPossesableComponent>(this , PossessableComponentType);
 		PossessableComponent->RegisterComponent();
 	}
-	//auto OutHit = FHitResult{};
-	//FVector Start{}, End{};
-	//FQuat Rotation{};
-	//auto TraceChannel = ECollisionChannel::ECC_Pawn;
-	//auto CollisionShape = FCollisionShape{};
-	//auto Params = FCollisionQueryParams{};
-	//auto ResponseParams = FCollisionResponseParams{};
-	//
-	//GetWorld()->SweepSingleByChannel(OutHit, Start, End, Rotation, TraceChannel, CollisionShape, &Params, ResponseParams);
+	NavBlocker->SetRelativeLocation({0,0,NavBlocker->GetUnscaledCapsuleHalfHeight()});
+	NavBlocker->SetUsingAbsoluteScale(true);
+	NavBlocker->SetUsingAbsoluteRotation(true);
+	NavBlocker->SetUsingAbsoluteLocation(true);
 }
 
 void APossessablePawn::PostInitializeComponents()
@@ -92,12 +88,27 @@ void APossessablePawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("StartButton", IE_Released, PossessableComponent, &UPossesableComponent::StartButtonRelease);
 	PlayerInputComponent->BindAxis("MoveRight", PossessableComponent, &UPossesableComponent::MoveRightAxis);
 	PlayerInputComponent->BindAxis("MoveForward", PossessableComponent, &UPossesableComponent::MoveForwardAxis);
+	PlayerInputComponent->BindAxis("LookRight", PossessableComponent, &UPossesableComponent::LookRightAxis);
+	PlayerInputComponent->BindAxis("LookUp", PossessableComponent, &UPossesableComponent::LookUpAxis);
 }
 
 void APossessablePawn::Tick(float DeltaTime)
 {
 	
 	Super::Tick(DeltaTime);
+	FHitResult groundHit;
+	GetWorld()->SweepSingleByChannel(groundHit,
+									StaticMeshComponent->GetComponentLocation() + FVector{0,0,0},
+									StaticMeshComponent->GetComponentLocation() - FVector{0,0, 100000000},
+									FQuat::Identity,
+									ECollisionChannel::ECC_GameTraceChannel4,
+									FCollisionShape::MakeBox({NavBlocker->GetUnscaledCapsuleRadius()/2,
+										NavBlocker->GetUnscaledCapsuleRadius()/2,1}));
+	GroundHeight = groundHit.Distance;
+	bOnGround = GroundHeight < 50;
+	bAboveCapsule = GroundHeight > 2*NavBlocker->GetUnscaledCapsuleHalfHeight();
+	NavBlocker->SetWorldLocation(StaticMeshComponent->GetComponentLocation() +
+								 FVector(0, 0, NavBlocker->GetUnscaledCapsuleHalfHeight() - GroundHeight - 1));
 	auto current_controller = Cast<APlayerGhostController>(GetController());
 	if (current_controller && PossessableComponent->GetIsActiveStaminaDrain() && PossessableComponent->IsInUse())
 	{
