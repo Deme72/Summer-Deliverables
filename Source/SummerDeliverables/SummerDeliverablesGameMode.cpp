@@ -4,6 +4,7 @@
 
 #include "DefinedDebugHelpers.h"
 #include "SummerDeliverablesCharacter.h"
+#include "WaveManager.h"
 #include "UObject/ConstructorHelpers.h"
 #include "InteractSystem/PlayerGhostController.h"
 
@@ -33,6 +34,14 @@ void ASummerDeliverablesGameMode::BeginPlay()
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASummerDeliverablesGameMode::SpawnStamina,
                                     FMath::RandRange(SpawnTimerMin, SpawnTimerMax), true);
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveManager::StaticClass(), FoundActors);
+	Enemies_Remaining = 0;
+	if(FoundActors.Num() != 0)
+		Enemies_Remaining = Cast<AWaveManager>(FoundActors[0])->NumEnemies();
+	TArray<AActor*> FoundTreasure;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), TreasureRef, FoundTreasure);
+	Treasure_Remaining = FoundTreasure.Num();
 }
 
 void ASummerDeliverablesGameMode::SpawnStamina()
@@ -52,4 +61,22 @@ void ASummerDeliverablesGameMode::SpawnStamina()
 		GetWorld()->SpawnActor(TeamStamina, &SpawnPosition, &SpawnRotation);
 	}
     
+}
+
+void ASummerDeliverablesGameMode::CheckWinCon(float value)
+{
+	Enemies_Remaining--;
+	Treasure_Remaining -= value;
+	V_LOGI("Enemies", Enemies_Remaining);
+	V_LOGI("Treasure", Treasure_Remaining);
+	if(Treasure_Remaining <= 0)
+	{
+		//Lose
+		V_LOG("You Lose!");
+	}
+	else if( Enemies_Remaining <= 0)
+	{
+		//Win
+		V_LOG("You Win!");
+	}
 }

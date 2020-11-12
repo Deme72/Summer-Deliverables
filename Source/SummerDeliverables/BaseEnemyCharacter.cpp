@@ -4,6 +4,7 @@
 #include "BaseEnemyCharacter.h"
 
 #include "DefinedDebugHelpers.h"
+#include "SummerDeliverablesGameMode.h"
 #include "GameFramework/Actor.h"
 
 
@@ -171,6 +172,21 @@ void ABaseEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	
+}
+
+// Called before this enemy would be destroyed
+void ABaseEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	//Super::EndPlay();
+	if (IsValid(treasureActor))
+	{
+		treasureActor->Destroy();
+		Cast<ASummerDeliverablesGameMode>(GetWorld()->GetAuthGameMode())->CheckWinCon(1);
+	}
+	else
+	{
+		Cast<ASummerDeliverablesGameMode>(GetWorld()->GetAuthGameMode())->CheckWinCon();
+	}
 }
 
 void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
