@@ -8,9 +8,15 @@
 #include "GameFramework/PlayerController.h"
 #include "PlayerGhostController.generated.h"
 
-/**
- * 
- */
+
+USTRUCT(BlueprintType)
+struct FPlayerGhostStatistics
+{
+	GENERATED_BODY()
+	
+};
+
+
 UCLASS()
 class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 {
@@ -41,6 +47,8 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	/// The empty uproperty is there so we can keep the ptr around and to make sure it's garbage collected properly.
 	UPROPERTY()
 	UUserWidget* PlayerHUD;
+
+	//struct FPlayerGhostStatistics PlayerStatistics;
 	
 	protected:
 	public:
@@ -58,6 +66,13 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	/// The player's stamina regen (in stamina/second)
 	UPROPERTY(EditAnywhere, Category="Stamina", meta=(clampMin=0.0))
 	float StaminaRegen;
+
+	///Tells the controller that the player cant lose stamina
+	UPROPERTY(EditAnywhere,Category="Stamina")
+	bool Invisibility;
+	///How long invisibility last for when active
+	UPROPERTY(EditAnywhere,Category="Stamina")
+	float InvisTimer;
 	
 	/// The type of APlayerPawn that Player Controller spawns when unpossessing a possessable
 	UPROPERTY(EditAnywhere, Category="Possession")
@@ -93,6 +108,15 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	/// Gets the percentage [0...1] of player stamina.
 	UFUNCTION(BlueprintPure)
 	float GetStaminaPercent() const;
+
+	/*
+	/// Returns a blueprint readable copy of the player statistics
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	struct FPlayerGhostStatistics GetStatistics() const { return PlayerStatistics; }
+
+	/// Returns a reference to the player's statistics. Should be only used in c++ (backend)
+	struct FPlayerGhostStatistics& GetStatisticsRef() { return PlayerStatistics; }
+	*/
 	
 	// ===================
 	// ===== METHODS =====
@@ -113,5 +137,7 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	virtual void BeginPlay() override;
 
 	virtual void OnUnPossess() override;
+	///Changes Invisibility to true when player activates the Stamina room ability
+	void SetInvisibility(bool value);
 };
 
