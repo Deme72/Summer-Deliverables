@@ -8,10 +8,11 @@
 #include "NavigationNode.generated.h"
 
 
-UENUM()
-enum class NavNodeType
+UENUM(BlueprintType)
+enum NavNodeType
 {
 	HALLWAY,
+	TRANSITION,
 	ROOM,
 	POI,
 	TREASURE,

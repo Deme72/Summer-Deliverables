@@ -21,19 +21,41 @@ void ANavigationNetworkManager::BeginPlay()
 	// draw debug lines to all connected nodes
 	if (bDebugNodes || bDebugEdges)
 	{
+		FColor c;
+		
 		for (ANavigationNode* node : navigationNetwork)
 		{
 			// nodes
 			if (bDebugNodes)
 			{
-				if (node->type == NavNodeType::HALLWAY)
+				switch (node->type)
 				{
-					DrawDebugPoint(GetWorld(), node->GetActorLocation(), 10, FColor::Cyan, true, -1, 1);
+				case HALLWAY:
+					c = FColor::Blue;
+					break;
+				case TRANSITION:
+					c = FColor::Magenta;
+					break;
+				case ROOM:
+					c = FColor::White;
+					break;
+				case POI:
+					c = FColor::Turquoise;
+					break;
+				case TREASURE:
+					c = FColor::Yellow;
+					break;
+				case ENTRANCE:
+					c = FColor::Green;
+					break;
+				case EXIT:
+					c = FColor::Red;
+					break;
+				default:
+					c = FColor::Black;
 				}
-				else if (node->type == NavNodeType::ROOM)
-				{
-					DrawDebugPoint(GetWorld(), node->GetActorLocation(), 10, FColor::Red, true, -1, 1);
-				}
+				
+				DrawDebugPoint(GetWorld(), node->GetActorLocation(), 15, c, true, -1, 0);
 			}
 
 			// edges
@@ -41,18 +63,37 @@ void ANavigationNetworkManager::BeginPlay()
 			{
 				for (ANavigationNode* connection : node->neighbors)
 				{
-					if (node->type == NavNodeType::HALLWAY && connection->type == NavNodeType::HALLWAY)
+					// treasure or connected to treasure
+					if (node->type == NavNodeType::TREASURE || connection->type == NavNodeType::TREASURE)
 					{
-						DrawDebugLine(GetWorld(), node->GetActorLocation(), connection->GetActorLocation(), FColor::Blue, true, -1, 0, 10);
+						c = FColor::Orange;
 					}
-					else if (node->type == NavNodeType::ROOM && connection->type == NavNodeType::ROOM)
+					// POI or connected to POI
+					else if (node->type == NavNodeType::POI || connection->type == NavNodeType::POI)
 					{
-						DrawDebugLine(GetWorld(), node->GetActorLocation(), connection->GetActorLocation(), FColor::Red, true, -1, 0, 10);
+						c = FColor::Cyan;
+					}
+					// Room or connected to Room
+					else if (node->type == NavNodeType::ROOM || connection->type == NavNodeType::ROOM)
+					{
+						c = FColor::Purple;
+					}
+					// connected to exit
+					else if (connection->type == NavNodeType::EXIT)
+					{
+						c = FColor::Red;
+					}
+					// entrance
+					else if (node->type == NavNodeType::ENTRANCE)
+					{
+						c = FColor::Emerald;
 					}
 					else
 					{
-						DrawDebugLine(GetWorld(), node->GetActorLocation(), connection->GetActorLocation(), FColor::Purple, true, -1, 0, 10);
+						c = FColor::Blue;
 					}
+
+					DrawDebugLine(GetWorld(), node->GetActorLocation(), connection->GetActorLocation(), c, true, -1, 0, 10);
 				}
 			}
 		}
@@ -71,29 +112,47 @@ TArray<ANavigationNode*> ANavigationNetworkManager::GetNodeNeighbors(ANavigation
 {
 	TArray<ANavigationNode*> allNeighbors = targetNode->neighbors;
 
-	// check if neighbors has another node other than prevNode
-	if (allNeighbors.Num() < 2)
+	// check if node has only one neighbor
+	if (allNeighbors.Num() == 1)
 	{
-		// only has prevNode
-		isNew = false;
-		return allNeighbors;
+		// check if only neighbor is new or old
+		if (allNeighbors[0] == prevNode)
+		{
+			// only has prevNode
+			isNew = false;
+			return allNeighbors;
+		}
 	}
 
 	// has new nodes
 	TArray<ANavigationNode*> newNeighbors;
 	for (ANavigationNode* node : allNeighbors)
 	{
-		if (prevNode != node)
+		if (node != prevNode)
 		{
-			newNeighbors.Add(node);
+			if (node->type == NavNodeType::HALLWAY ||
+				node->type == NavNodeType::TRANSITION ||
+				node->type == NavNodeType::ROOM)
+			{
+				newNeighbors.Add(node);
+			}
 		}
 	}
+
+	// "new" nodes were only poi's (newNeighbors is empty)
+	if (newNeighbors.Num() == 0)
+	{
+		isNew = false;
+	}
+	else
+	{
+		isNew = true;
+	}
 	
-	isNew = true;
 	return newNeighbors;
 }
 
-TArray<ANavigationNode*> ANavigationNetworkManager::GetPoiNeighbors(ANavigationNode* targetNode, bool& hasPoi) const
+TArray<ANavigationNode*> ANavigationNetworkManager::GetPoiNeighbors(ANavigationNode* targetNode, bool& hasPoi, ANavigationNode* prevPoi) const
 {
 	TArray<ANavigationNode*> allNeighbors = targetNode->neighbors;
 	hasPoi = true;
@@ -102,7 +161,7 @@ TArray<ANavigationNode*> ANavigationNetworkManager::GetPoiNeighbors(ANavigationN
 	TArray<ANavigationNode*> poiNeighbors;
 	for (ANavigationNode* node : allNeighbors)
 	{
-		if (node->type == NavNodeType::POI)
+		if (node->type == NavNodeType::POI && node != prevPoi)
 		{
 			poiNeighbors.Add(node);
 		}
@@ -112,7 +171,6 @@ TArray<ANavigationNode*> ANavigationNetworkManager::GetPoiNeighbors(ANavigationN
 	if (poiNeighbors.Num() == 0)
 	{
 		hasPoi = false;
-		return poiNeighbors;
 	}
 
 	return poiNeighbors;

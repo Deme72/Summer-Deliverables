@@ -43,7 +43,7 @@ public:
 	TArray<ANavigationNode*> GetNodeNeighbors(ANavigationNode* targetNode, ANavigationNode* prevNode, bool &isNew) const;
 
 	UFUNCTION(BlueprintCallable)
-	TArray<ANavigationNode*> GetPoiNeighbors(ANavigationNode* targetNode, bool& hasPoi) const;
+	TArray<ANavigationNode*> GetPoiNeighbors(ANavigationNode* targetNode, bool& hasPoi, ANavigationNode* prevPoi = nullptr) const;
 
 	UFUNCTION(BlueprintCallable)
 	ANavigationNode* GetNearestNode(FVector origin) const;

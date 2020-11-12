@@ -57,6 +57,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	// ===== ATTRIBUTES =====
 	// ======================
 	private:
+	/// Defines whether the current state of the enemy is newly changed
+	bool bStateDirtyFlag;
+	
 	protected:
 	/// The Enemy's current Bravery (i.e. health)
 	float Bravery;
@@ -274,8 +277,17 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category="Setters|Paranoia")
     float TakeParanoiaDamage(float paranoia_damage, FVector prop_position);
 
+	/// Returns an FVector of the location of the last prop that successfully scared this enemy when it was scared
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	FVector GetLastScareLocation() const { return LastScareLocation; }
+
+	/// Returns bStateDirtyFlag (i.e whether the current state of the enemy is new)
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	bool GetStateIsDirty() const { return bStateDirtyFlag; }
+
+	/// Sets the bStateDirtyFlag to false
+	UFUNCTION(BlueprintCallable, Category="Setters")
+	void SetStateFlagClean() { bStateDirtyFlag = false; }
 	
 	// ===================
 	// ===== METHODS =====
