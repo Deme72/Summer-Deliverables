@@ -86,6 +86,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// ; random > RunningDurationMin < RunningDurationMax
 	float CurrentRunningDuration;
 
+	/// The location of the last prop that scared this enemy (when it was scared)
+	FVector LastScareLocation;
+	
 	public:
 	/// The Enemy's max Bravery (i.e. health) | min=0.0
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design", meta=(ClampMin=0.0))
@@ -181,6 +184,14 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	AActor* treasureActor;
 
+	/// A reference to the stamina pickup actor that only effects the player picking it up
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> PlayerStamina;
+
+	///A reference to the stamina pickup actor that effects all players
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> TeamStamina;
+
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
@@ -257,12 +268,15 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// (ScareBonus * (Paranoia / ParanoiaMax) + 1) * ScareDamage = TotalDamage
 	/// before modifying enemy bravery (i.e health)
 	UFUNCTION(BlueprintCallable, Category="Setters|Bravery")
-    void TakeBraveryDamage(float BraveryBaseDamage);
+    float TakeBraveryDamage(float base_bravery_damage, FVector prop_position);
 
 	/// Applies Paranoia Damage to the enemy's Paranoia
 	UFUNCTION(BlueprintCallable, Category="Setters|Paranoia")
-    void TakeParanoiaDamage(float ParanoiaDamage);
+    float TakeParanoiaDamage(float paranoia_damage, FVector prop_position);
 
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	FVector GetLastScareLocation() const { return LastScareLocation; }
+	
 	// ===================
 	// ===== METHODS =====
 	// ===================

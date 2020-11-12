@@ -2,6 +2,9 @@
 
 
 #include "PlayerPawn.h"
+
+#include <string>
+
 #include "Components/ShapeComponent.h"
 #include "InteractSystem/FlashlightComponent.h"
 #include "InteractSystem/PossessablePawn.h"
@@ -11,6 +14,7 @@
 #include "SummerDeliverables/DefinedDebugHelpers.h"
 #include "PlayerStamina.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Engine.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -26,7 +30,12 @@ APlayerPawn::APlayerPawn()
 	CurrentBindings = nullptr;
 	OverlappingInteractables = {};
 
+	LastMovementNormal = {0,0,0};
+	
 	entering = exiting = false;
+
+	Cast<APlayerGhostController>(GetController())->PlayerCameraManager;
+	//Cast<APlayerGhostController>(GetController())->PlayerCameraManager->ViewPitchMin = -70.0f;
 }
 
 /// Called when the game starts or when spawned
@@ -36,6 +45,53 @@ void APlayerPawn::BeginPlay()
 
 	InteractBounds->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnBeginOverlap);
 	InteractBounds->OnComponentEndOverlap.AddDynamic(this, &APlayerPawn::OnOverlapEnd);
+	cam = Cast<UCameraComponent>(GetComponentByClass(UCameraComponent::StaticClass()));
+	playerMesh = Cast<USkeletalMeshComponent>(GetComponentByClass(USkeletalMeshComponent::StaticClass()));
+}
+
+void APlayerPawn::WhiskersRaycast(float DeltaTime)
+{
+	FHitResult* HitResult = new FHitResult();
+	FVector StartTrace = GetActorLocation();
+	FVector DirVector;
+	FVector EndTrace;
+	FCollisionQueryParams* TraceParams = new FCollisionQueryParams();
+	FRotator rot(0, 15, 0);
+	FRotator startRot(0, 45, 0);
+	//Right Side
+	for(int i=0; i < 4; i++)
+	{
+		FRotator tempRot = rot * i + startRot;
+		DirVector = tempRot.RotateVector(GetActorRightVector());
+		EndTrace = (DirVector * Cast<USpringArmComponent>(GetComponentByClass(USpringArmComponent::StaticClass()))->TargetArmLength) + StartTrace;
+		if(GetWorld()->LineTraceSingleByChannel(*HitResult, StartTrace, EndTrace, ECC_Visibility, *TraceParams))
+		{
+
+			DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), false, 0.25);
+			///Checks if the player is currently moving or has recently moved the camera
+			if(GetInputAxisValue("MoveRight") > 0 &&GetWorldTimerManager().GetTimerRemaining(LookTimer) < 0.0f)
+			{	
+				AddControllerYawInput(10 * CurrentSpeed.Size() * BaseTurnRate * DeltaTime);
+			}
+		}
+	}
+	//Left Side
+	for(int i=0; i < 4; i++)
+	{
+		FRotator tempRot = rot * -i - startRot;
+		DirVector = tempRot.RotateVector(-GetActorRightVector());
+		EndTrace = (DirVector * Cast<USpringArmComponent>(GetComponentByClass(USpringArmComponent::StaticClass()))->TargetArmLength) + StartTrace;
+		//DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), false, 0.25);
+		if(GetWorld()->LineTraceSingleByChannel(*HitResult, StartTrace, EndTrace, ECC_Visibility, *TraceParams))
+		{
+			DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), false, 0.25);
+			///Checks if the player is currently moving or has recently moved the camera
+			if(GetInputAxisValue("MoveRight") < 0 && GetWorldTimerManager().GetTimerRemaining(LookTimer) < 0.0f)
+			{
+				AddControllerYawInput(10 * CurrentSpeed.Size() * -BaseTurnRate * DeltaTime);
+			}
+		}
+	}
 }
 
 // Called every frame
@@ -113,8 +169,34 @@ void APlayerPawn::Tick(float DeltaTime)
 					}
 				}
 			}
+		}		
+#pragma region CameraTick
+		WhiskersRaycast(DeltaTime);
+		FVector CameraForward = cam->GetForwardVector();
+		CameraForward = {CameraForward.X, CameraForward.Y, 0};
+		CameraForward.Normalize();
+		FVector pforward = playerMesh->GetForwardVector();
+		pforward = {pforward.X, pforward.Y, 0};
+		pforward.Normalize();
+		FVector pright = playerMesh->GetRightVector();
+		pright = {pright.X, pright.Y, 0};
+		pright.Normalize();
+		float rightdp = FVector::DotProduct(pright,CameraForward);
+		float forwarddp = FVector::DotProduct(pforward,CameraForward);
+		if(rightdp < 0.99 && GetWorldTimerManager().GetTimerRemaining(LookTimer) < 0.0f)
+		{
+			float yawAmount = 0.5 - pow(FMath::RadiansToDegrees(acos(rightdp)) - 180, 2)/64800;
+			if(forwarddp > 0)
+			{	
+				AddControllerYawInput( FMath::RadiansToDegrees(acos(rightdp) * yawAmount * DeltaTime));
+			}
+			else
+			{
+				AddControllerYawInput(-FMath::RadiansToDegrees(acos(rightdp) * yawAmount * DeltaTime));
+			}
 		}
-		AddActorWorldOffset(ConsumeMovementInputVector(), true);
+#pragma endregion
+		AddMovementVector(ConsumeMovementInputVector(), DeltaTime);
 		SetActorRotation(GetControlRotation());
 	}
 }
@@ -224,25 +306,27 @@ void APlayerPawn::ScareButtonEnd()
 	
 }
 
-#pragma region stamana
+#pragma region Collisions
 
 void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                                  int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//TODO: Most of these have classes associated with them. The tags are unnecessary and this can be cleaned up
-	if(OtherActor->ActorHasTag("Stamina"))
+	if(OtherActor->ActorHasTag("Stamina") && GetController() != nullptr)
 	{
 		APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
 		Con->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
 		OtherActor->Destroy();
 	}
-	if(OtherActor->ActorHasTag("TeamStamina"))
+	if(OtherActor->ActorHasTag("TeamStamina") && GetController() != nullptr)
 	{
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, FoundActors);
 		for(int i=0; i< FoundActors.Num(); i++)
 		{
-			Cast<APlayerGhostController>(((APlayerPawn*)FoundActors[i])->GetController())->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
+			Cast<APlayerGhostController>(((APlayerPawn*)FoundActors[i])->GetController())->SetStamina(Cast<APlayerStamina>(OtherActor)->TeamStaminaVal);
 		}
+		APlayerGhostController* Con = Cast<APlayerGhostController>(GetController());
+		Con->SetStamina(Cast<APlayerStamina>(OtherActor)->StaminaVal);
 		OtherActor->Destroy();
 	}
 	if(OtherActor->ActorHasTag("DynamicProp"))
@@ -275,8 +359,9 @@ void APlayerPawn::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 		pprop->Set_Outline(false,0);
 	}
 }
+#pragma endregion
 
-#pragma region stamana
+#pragma region stamina
 
 float APlayerPawn::GetStamina() const
 {
@@ -305,54 +390,105 @@ bool APlayerPawn::CanAffordStaminaCost(const float stamina_cost) const
 
 #pragma region Movement
 
+void APlayerPawn::AddMovementVector(FVector in, float DeltaTime){
+	static FRotator lastRotation = FRotator::ZeroRotator;
+	if(in.Size() < Deadzone)
+		in = {0,0,0};
+	else if(in.Size() > 1)
+		in.Normalize();
+	FVector inNorm = in.GetSafeNormal();
+	if(LastMovementNormal.Equals({0,0,0}) || FMath::RadiansToDegrees(acos(FVector::DotProduct(LastMovementNormal, inNorm))) > MovementLockAngle)
+	{
+		LastMovementNormal = inNorm;
+		LockedCameraForward = cam->GetForwardVector();
+		LockedCameraForward = {LockedCameraForward.X, LockedCameraForward.Y, 0};
+		LockedCameraForward.Normalize();
+		
+		LockedCameraRight = cam->GetRightVector();
+		LockedCameraRight = {LockedCameraRight.X, LockedCameraRight.Y, 0};
+		LockedCameraRight.Normalize();
+	}
+
+	float mag = in.Size() * MovementSpeed;
+	FVector wIn = mag * inNorm.X * LockedCameraForward + mag * inNorm.Y * LockedCameraRight;
+	FVector dist = wIn - CurrentSpeed;
+	float timeDiff = DeltaTime/MovementRamp;
+
+	CurrentSpeed += dist * timeDiff;
+	
+	if(CurrentSpeed.Size() > MovementSpeed)
+	{
+		CurrentSpeed.Normalize();
+		CurrentSpeed *= MovementSpeed;
+	}
+	UCapsuleComponent * cap = Cast<UCapsuleComponent>(GetComponentByClass(UCapsuleComponent::StaticClass()));
+	FHitResult groundHit;
+	GetWorld()->SweepSingleByChannel(groundHit,
+                                    cap->GetComponentLocation() + FVector{0,0,0},
+                                    cap->GetComponentLocation() - FVector{0,0, 100000000},
+                                    FQuat::Identity,
+                                    ECollisionChannel::ECC_GameTraceChannel4,
+                                    FCollisionShape::MakeBox({cap->GetUnscaledCapsuleRadius()/3 ,
+                                        cap->GetUnscaledCapsuleRadius()/3,1}));
+	FRotator rot;
+	if(CurrentSpeed.Size() < 0.1)
+	{
+		rot = lastRotation;
+	}
+	else
+	{
+		rot = UKismetMathLibrary::FindLookAtRotation({0,0,0}, {CurrentSpeed.Y, -CurrentSpeed.X, 0});
+		lastRotation = rot;
+	}
+	FHitResult moveHit;
+	
+	AddActorWorldOffset(CurrentSpeed,true, &moveHit);
+	AddActorWorldOffset(FVector{0,0, (FloatHeight - groundHit.Distance) * FloatSpeed * DeltaTime},true);
+	
+	if(moveHit.bBlockingHit)
+	{
+		FVector backmove = CurrentSpeed.GetSafeNormal();
+		AddActorWorldOffset(backmove *.1,true);
+		FVector Normal = FVector::VectorPlaneProject(moveHit.Normal, {0,0,1}).GetSafeNormal();
+		FVector newMove = FVector::VectorPlaneProject(CurrentSpeed, Normal);
+		AddActorWorldOffset(newMove, true);
+	}
+	playerMesh->SetWorldRotation(rot);
+}
+
 void APlayerPawn::MoveForward(float Value)
 {
 	if(!exiting && !entering)
 		if ((Controller != NULL) && (Value != 0.0f))
-		{
-			// find out which way is forward
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-			// get forward vector
-			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-			AddMovementInput(Direction, Value * MovementSpeed);
-		}
+			AddMovementInput({Value, 0,0});
 }
 
 void APlayerPawn::MoveRight(float Value)
 {
 	if(!exiting && !entering)
 		if ( (Controller != NULL) && (Value != 0.0f) )
-		{
-			// find out which way is right
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
-		
-			// get right vector 
-			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-			// add movement in that direction
-			AddMovementInput(Direction, Value * MovementSpeed);
-		}
+			AddMovementInput({0, Value,0});
 }
 
 
 void APlayerPawn::LookRight(float Value)
 {
 	if(!exiting && !entering)
-		if ((Controller != NULL) && (Value != 0.0f))
-		{
-			AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+		if ((Controller != NULL) && (Value != 0.0f)){
+			AddControllerYawInput(Value);
 		}
+	if(Value != 0)
+		GetWorldTimerManager().SetTimer(LookTimer,0.5f, false);
 }
 
 void APlayerPawn::LookUp(float Value)
 {
 	if(!exiting && !entering)
-		if ((Controller != NULL) && (Value != 0.0f))
-		{
-			AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
+		if ((Controller != NULL) && (Value != 0.0f)){
+			//AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
 		}
+	if(Value != 0)
+		GetWorldTimerManager().SetTimer(LookTimer,0.5f, false);
 }
 
 //void APlayerPawn::TurnAtRate(float Rate)

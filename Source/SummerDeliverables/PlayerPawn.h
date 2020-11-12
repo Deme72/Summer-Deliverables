@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Camera/CameraComponent.h"
 #include "InteractSystem/InteractableComponent.h"
 #include "InteractSystem/ParanoiaComponent.h"
 #include "GameFramework/Pawn.h"
@@ -71,6 +73,32 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 
 		/// End position of the animation
 		FTransform animExitPos;
+
+		/// Reference to the camera attached to the player
+		/// Todo: after merging player controls with camera use whatever pointer it uses instead
+		UCameraComponent * cam;
+
+		/// The skeletalmesh for the player
+		/// Todo: clean up the unreal object structure for player
+		USkeletalMeshComponent * playerMesh;
+
+		/// The current player speed
+		FVector CurrentSpeed;
+		
+		/// The locked movement direction for the right axis
+		/// for when the camera is moving while input is happening
+		FVector LockedCameraForward;
+
+		/// The locked movement direction for the right axis
+		/// for when the camera is moving while input is happening
+		FVector LockedCameraRight;
+
+		/// The normal of the last movement input
+		FVector LastMovementNormal;
+		
+		
+		/// Timer for switching cam control back to code from player input
+		FTimerHandle LookTimer;
 	
 	protected:
 	public:
@@ -78,9 +106,30 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 		float BaseTurnRate;
 
-		/// The speed, in Unreal units, that the player pawn moves right and forward at
+		/// The max speed, in Unreal units, that the player pawn moves right and forward at
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 		float MovementSpeed;
+
+		/// The time it takes, in seconds, to get to max speed
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+		float MovementRamp;
+
+		/// The lowest input from 0-1 that counts as an actual stick input
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+		float Deadzone;
+
+		/// The angle in degrees at which an move input is considered different. Somewhere around 15 seems about right
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+		float MovementLockAngle;
+		
+		/// The height at which the character floats
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+		float FloatHeight;
+
+			
+		/// The speed at which the character lerps to the float height
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
+		float FloatSpeed;
 	
 		/// The speed, in Unreal units, that the player pawn moves right and forward at
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Stamina)
@@ -137,9 +186,17 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		/// Returns true if the current possessing player has enough stamina to afford the stamina_cost
 		UFUNCTION(BlueprintCallable, Category="Possession")
 	    bool CanAffordStaminaCost(const float stamina_cost) const;
+
+		/// Setter for CurrentPlayer pointer
+		void setPlayer(APlayerGhostController * p){CurrentPlayerController = p;}
+		
+		/// Resets the movement lock called by camera
+		void resetMoveLock(){LastMovementNormal = {0,0,0};};
+
 	
-	/// Setter for CurrentPlayer pointer
-	void setPlayer(APlayerGhostController * p){CurrentPlayerController = p;}
+		UFUNCTION(BlueprintCallable, Category="Getters")
+		///Returns the player speed
+		float getSpeed(){return CurrentSpeed.Size();};
 	
 	// ===================
 	// ===== METHODS =====
@@ -148,6 +205,9 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	protected:
 		/// Called when the game starts or when spawned
 		void BeginPlay();
+
+		/// Performs the "whisker" raycasts for the camera
+		void WhiskersRaycast(float DeltaTime);
 	public:
 		/// Called every frame, put collision related code in here
 		virtual void Tick(float DeltaTime) override;
@@ -182,7 +242,11 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		UFUNCTION()
 	    bool IsPossessing() const
 		{return CurrentBindings != nullptr;}
-		
+
+		/// The final step for movement
+		/// takes the movement vector and does some tweaks to make the controls tighter
+		void AddMovementVector(FVector in, float DeltaTime);
+	
 		/// Handles moving the player along their Z axis
 		/// positive #s move forward, negative backwards
 		void MoveForward(float Value);
