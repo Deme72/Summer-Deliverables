@@ -257,7 +257,7 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 	}
 	if (OtherActor->ActorHasTag("ParanoiaProp"))
 	{
-		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor);
+		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor->GetComponentByClass(UParanoiaComponent::StaticClass()));
 		pprop->Set_Outline(true,2);
 	}
 }
@@ -271,7 +271,7 @@ void APlayerPawn::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 	}
 	if (OtherActor->ActorHasTag("ParanoiaProp"))
 	{
-		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor);
+		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor->GetComponentByClass(UParanoiaComponent::StaticClass()));
 		pprop->Set_Outline(false,0);
 	}
 }

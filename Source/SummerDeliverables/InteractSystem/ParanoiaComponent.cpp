@@ -83,7 +83,7 @@ void UParanoiaComponent::EndInteractInternal() // Activate ParaProp
 
 void UParanoiaComponent::Set_Outline(bool OutLine_ON,int depthInt)
 {
-	UActorComponent* staticmesh = GetOwner()->GetOwner()->GetComponentByClass(UStaticMeshComponent::StaticClass());
+	UActorComponent* staticmesh = GetOwner()->GetComponentByClass(UStaticMeshComponent::StaticClass());
 	UStaticMeshComponent* staticmeshc = Cast<UStaticMeshComponent>(staticmesh);
 	if (staticmeshc)
 	{
