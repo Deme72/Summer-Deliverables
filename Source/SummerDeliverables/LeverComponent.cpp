@@ -77,7 +77,7 @@ void ULeverComponent::ScareButton_Implementation()
         }
         else
         {
-           Lever_ref->AddActorLocalRotation(FRotator(0.0,Deltatime*200.0,0.0));
+           Lever_ref->AddActorLocalRotation(FRotator(0.0,Deltatime*400.0,0.0));
            //GEngine->AddOnScreenDebugMessage(-1,15.0f,FColor::Cyan,FString::Printf(TEXT("%f"),Lever_ref->GetActorRotation().Yaw));
            //GEngine->AddOnScreenDebugMessage(-1,15.0f,FColor::Cyan,FString::Printf(TEXT("%f"),begin_rot+180.0));
         }

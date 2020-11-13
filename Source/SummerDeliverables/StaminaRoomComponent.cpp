@@ -27,7 +27,7 @@ UStaminaRoomComponent::UStaminaRoomComponent()
             {
                 Door = Cast<UStaticMeshComponent>(com);
                 Startpos = Door->GetRelativeLocation();
-                Endpos = Door->GetRelativeLocation()+ FVector(-160.0,0.0,0.0);  
+                Endpos = Door->GetRelativeLocation()+ FVector(-975.0,0.0,0.0);  
             }
             if (com->IsA(UBoxComponent::StaticClass()))
             {
