@@ -50,7 +50,17 @@ public:
 	///the y min boundary of the spawn location
 	UPROPERTY(EditAnywhere)
 	float Spawn_Y_Min;
+	
+	//Reference for Treasure
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> TreasureRef;
+	
+	///How many enemies are left to scare
+	int Enemies_Remaining;
 
+	///Keeps track of how much treasure is left
+	int Treasure_Remaining;
+	
 	// ===================
 	// ===== METHODS =====
 	// ===================
@@ -59,6 +69,9 @@ protected:
 public:
 	///This function spawns the stamina pickups
 	void SpawnStamina();
+
+	///The enemies will call this on death to decrement actors & Handles win condition
+	void CheckWinCon(float value = 0);
 };
 
 

@@ -3,7 +3,6 @@
 #include "PlayerGhostController.h"
 
 #include <string>
-
 #include "PossessablePawn.h"
 #include "../PlayerPawn.h"
 #include "Blueprint/UserWidget.h"
@@ -22,20 +21,26 @@ APlayerGhostController::APlayerGhostController() :APlayerController()
     }
     StaminaRegen = 0.5f;
     LivingTime = 0.0f;
-    PlayerCameraManagerClass = AGhostCameraManager::StaticClass();
+    //PlayerCameraManagerClass = AGhostCameraManager::StaticClass();
 
     //PlayerStatistics = FPlayerGhostStatistics{};
+
+    Invisibility = false;
+    InvisTimer = 20.0f;
 }
 
 bool APlayerGhostController::SetStamina(float delta_stamina, bool b_is_relative)
 {
-    if (b_is_relative)
+    if (Invisibility == false)
     {
-        CurrentStamina = FMath::Max( FMath::Min(CurrentStamina + delta_stamina, MaxStamina), 0.0f);
-    }
-    else
-    {
-        CurrentStamina = delta_stamina;
+        if (b_is_relative)
+        {
+            CurrentStamina = FMath::Max( FMath::Min(CurrentStamina + delta_stamina, MaxStamina), 0.0f);
+        }
+        else
+        {
+            CurrentStamina = delta_stamina;
+        }
     }
     if (CurrentStamina == 0.0f)
     {
@@ -58,6 +63,14 @@ void APlayerGhostController::Tick(float DeltaSeconds)
         //std::string msg = "PlayerStamina = " + std::to_string(CurrentStamina);
         //SCREENMSG(msg.c_str());
         LivingTime -= 2.0f;
+    }
+    if (Invisibility)
+    {
+        InvisTimer-=DeltaSeconds;
+        if (InvisTimer <= 0.0f)
+        {
+            Invisibility = false;
+        }
     }
     
 }
@@ -89,5 +102,11 @@ void APlayerGhostController::OnUnPossess()
 {
     LastPossessedPawn = Cast<APossessablePawn>(GetPawn());
 }
+
+void APlayerGhostController::SetInvisibility(bool value)
+{
+    Invisibility = value;
+}
+
 
 

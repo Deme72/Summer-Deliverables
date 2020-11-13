@@ -187,6 +187,14 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	AActor* treasureActor;
 
+	/// A reference to the stamina pickup actor that only effects the player picking it up
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> PlayerStamina;
+
+	///A reference to the stamina pickup actor that effects all players
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> TeamStamina;
+
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
@@ -288,6 +296,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	protected:
 	/// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	/// Called when destroyed
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 	public:
 	/// Called every frame
