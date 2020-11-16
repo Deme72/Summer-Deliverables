@@ -28,6 +28,27 @@ enum TType
     Prop UMETA(DisplayName = "Prop"),
     Ghost UMETA(DisplayName = "Ghost")
 };
+/// The enum class for Enemy animations
+UENUM(BlueprintType)
+enum AnimType
+{
+    None UMETA(DisplayName = "None"),
+	PickupTreasure UMETA(DisplayName = "Pick Up Treasure"),
+	DropTreasure UMETA(DisplayName = "Drop Treasure"),
+	InvestigatePOI UMETA(DisplayName = "Investigate POI"),
+	Scare UMETA(DisplayName = "Scare")
+};
+
+/// enum class for the direction of the last scare
+UENUM(BlueprintType)
+enum ScareDirection
+{
+	Nondirectional UMETA(DisplayName = "Nondirectional"),
+	Front UMETA(DisplayName = "Front"),
+	Back UMETA(DisplayName = "Back"),
+	Left UMETA(DisplayName = "Left"),
+	Right UMETA(DisplayName = "Right")
+};
 
 UCLASS()
 class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
@@ -78,6 +99,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 
 	/// The current target type of this enemy
 	TType CurrentTType;
+	
+	///The current animation
+	AnimType CurrentAnim = AnimType::None;
 	
 	/// How much time the enemy has spent in this state
 	float CurrentEStateTime;
@@ -176,16 +200,24 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	USkeletalMeshComponent* SkeletalMesh;
 
 	/// The socket in BaseEnemyCharacter::Mesh that holds the Flashlight object
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
-	USkeletalMeshComponent* FlashLightSocket;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
+	//USkeletalMeshComponent* FlashLightSocket;
 
 	/// The socket in BaseEnemyCharacter::Mesh that holds the Treasure object
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
-	USkeletalMeshComponent* TreasureSocket;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
+	//USkeletalMeshComponent* TreasureSocket;
+
+	/// Name of the treasure socket
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components|Sockets")
+	FName TreasureSocketName;
 
 	/// Treasure that the enemy is holding
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	AActor* treasureActor;
+	AActor* TreasureActor;
+	
+	/// Time remaining in the current animation
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Animation")
+	float CurrentAnimTime;
 
 	/// A reference to the stamina pickup actor that only effects the player picking it up
 	UPROPERTY(EditAnywhere)
@@ -195,6 +227,12 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> TeamStamina;
 
+	/// The last scare direction
+	ScareDirection LastScareDirection;
+
+	///Whether the enemy's movement is halted for an animation
+	bool isMovementHalted = false;
+	
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
@@ -207,7 +245,10 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
+	
 	private:
+	/// Internal function for setting the last scare direction after paranoia/bravery damage
+	void SetLastScareDirection();
 	protected:
 	public:
 	/// Handles changing the enemy state to the new state
@@ -226,6 +267,14 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Handles changing the enemy state to the new state
 	UFUNCTION(BlueprintCallable, Category="Getters")
     TType GetTType() const { return CurrentTType; }
+
+	/// Handles getting the animation state
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	AnimType GetAnimation() const { return CurrentAnim; }
+
+	/// Sets the animation state
+	UFUNCTION(BlueprintCallable, Category="Setters")
+	void SetAnimation(AnimType newType, float animTime); //{CurrentAnim = newType; CurrentAnimTime = animTime; return CurrentAnim;}
 	
 	/// Returns the current Bravery (i.e health) of the Enemy
 	UFUNCTION(BlueprintCallable, Category="Getters|Bravery")
@@ -252,20 +301,20 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	USkeletalMeshComponent* GetSkeletalmesh() const { return SkeletalMesh; };
 
 	/// Set the enemy's Flashlight Socket
-	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	void SetFlashlightSocket( USkeletalMeshComponent* new_flashlightsocket ) { FlashLightSocket = new_flashlightsocket; };
+	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	//void SetFlashlightSocket( USkeletalMeshComponent* new_flashlightsocket ) { FlashLightSocket = new_flashlightsocket; };
 
 	/// Get the enemy's FlashlightSocket
-	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	USkeletalMeshComponent* GetFlashlightSocket() const { return FlashLightSocket; };
+	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	//USkeletalMeshComponent* GetFlashlightSocket() const { return FlashLightSocket; };
 
 	/// Set the enemy's TreasureSocket
-	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	void SetTreasureSocket( USkeletalMeshComponent* new_treasuresocket ) { TreasureSocket = new_treasuresocket; };
+	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	//void SetTreasureSocket( USkeletalMeshComponent* new_treasuresocket ) { TreasureSocket = new_treasuresocket; };
 
 	/// Get the enemy's TreasureSocket
-	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	USkeletalMeshComponent* GetTreasureSocket() const { return TreasureSocket; };
+	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
+	//USkeletalMeshComponent* GetTreasureSocket() const { return TreasureSocket; };
 	
 	/// Takes a base bravery damage and applies the damage formula
 	/// (ScareBonus * (Paranoia / ParanoiaMax) + 1) * ScareDamage = TotalDamage
@@ -288,11 +337,14 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Sets the bStateDirtyFlag to false
 	UFUNCTION(BlueprintCallable, Category="Setters")
 	void SetStateFlagClean() { bStateDirtyFlag = false; }
+
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	ScareDirection GetLastScareDirection() const { return LastScareDirection; }
 	
 	// ===================
 	// ===== METHODS =====
 	// ===================
-	private:
+	
 	protected:
 	/// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -309,6 +361,9 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 
 	/// Handles the OnTick functionality related to Paranoia (A tidying function)
 	void ParanoiaTick(float DeltaTime);
+
+	/// Handles the OnTick functionality related to Animation
+	void AnimationTick(float DeltaTime);
 	
 	// ====== enemy class specific methods =====
 	/// Applies the treasure to the enemy skeletalmesh and modifies behavior

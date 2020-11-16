@@ -16,6 +16,36 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	bStateDirtyFlag = true;
 }
 
+void ABaseEnemyCharacter::SetLastScareDirection()
+{
+	//if we're given the zero vector, set the scare direction to nondirectional
+	if (LastScareLocation.X == 0 && LastScareLocation.Y == 0 && LastScareLocation.Z == 0)
+	{    
+		LastScareDirection = Nondirectional;
+		return;
+	}
+	//calculate the angle
+	FVector forwardVector = GetCapsuleComponent()->GetForwardVector(); //forward vector of the unit
+	FVector scareVector = LastScareLocation-GetActorLocation();
+	forwardVector = forwardVector.GetSafeNormal2D();
+	scareVector = scareVector.GetSafeNormal2D();
+	float dotProduct = FVector::DotProduct(forwardVector,scareVector);
+	float angle = acos(dotProduct);
+	if (angle < PI/4) //coming from the front
+		LastScareDirection = Front;
+	else if (angle > 3*PI/4) //coming from behind
+		LastScareDirection = Back;
+	else //coming from either left or right
+	{
+		FVector crossProduct = FVector::CrossProduct(forwardVector,scareVector);
+		if (crossProduct.Z > 0)
+			LastScareDirection = Right;
+		else
+			LastScareDirection = Left;
+	}
+}
+
+
 void ABaseEnemyCharacter::SetEState(EState NewEState)
 {
 	if (NewEState != CurrentEState)
@@ -82,7 +112,8 @@ float ABaseEnemyCharacter::TakeBraveryDamage(float base_bravery_damage, FVector 
 		SetEState(EState::Dying);
 	}
 
-	LastScareLocation = prop_position;
+	LastScareLocation = prop_position;  
+	SetLastScareDirection();
 	return damage;
 }
 
@@ -101,6 +132,7 @@ float ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage, FVector prop
 	ParanoiaDecayTime = ParanoiaDecayDelay;
 
 	LastScareLocation = prop_position;
+	SetLastScareDirection();
 	return ParanoiaDamage;
 }
 
@@ -108,21 +140,41 @@ float ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage, FVector prop
 void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 {
 	treasure->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(false);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Setting Socket!"));
 	treasure->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("RightHandSocket"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Finishing Pickup!"));
 	treasure->SetActorEnableCollision(false);
-	treasureActor = treasure;
+	TreasureActor = treasure;
 	SetEState(EState::Stealing);
 }
 
 // Drop treasure functionality
 void ABaseEnemyCharacter::DropTreasure()
 {
-	if (treasureActor != nullptr)
+	if (TreasureActor != nullptr)
 	{
-		treasureActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		treasureActor->SetActorEnableCollision(true);	
-		treasureActor->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
-		treasureActor = nullptr;
+		TreasureActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		TreasureActor->SetActorEnableCollision(true);	
+		TreasureActor->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
+		TreasureActor = nullptr;
+	}
+}
+
+//Animation setting functionality
+void ABaseEnemyCharacter::SetAnimation(AnimType anim,float animTime)
+{
+	CurrentAnim = anim;
+	CurrentAnimTime = animTime;
+	//halt movement if non-none animation, restore it if it is
+	if (CurrentAnim != None && !isMovementHalted)
+	{
+		isMovementHalted = true;
+		FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed *= .01;
+	}
+	if (CurrentAnim == None && isMovementHalted)
+	{
+		isMovementHalted = false;
+		FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed *= 100;
 	}
 }
 
@@ -151,6 +203,7 @@ void ABaseEnemyCharacter::Tick(float DeltaTime)
 	}
 
 	ParanoiaTick(DeltaTime);
+	AnimationTick(DeltaTime);
 
 	CurrentEStateTime += DeltaTime;
 	if (CurrentEState == EState::Running && CurrentEStateTime > CurrentRunningDuration)
@@ -224,3 +277,20 @@ void ABaseEnemyCharacter::ParanoiaTick(float DeltaTime)
 	}
 }
 
+void ABaseEnemyCharacter::AnimationTick(float DeltaTime)
+{
+	//if current anim time is greater than zero
+	if (CurrentAnimTime > 0)
+	{
+		//reduce anim type
+		CurrentAnimTime -= DeltaTime;
+		FString result = FString::SanitizeFloat(CurrentAnimTime);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, result);
+		//exit the anim if time hits zero
+		if (CurrentAnimTime <= 0)
+		{
+			SetAnimation(None,0);
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Ending Animation!"));
+		}
+	}
+}
