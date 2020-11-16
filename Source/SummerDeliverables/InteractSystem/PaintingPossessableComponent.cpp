@@ -6,12 +6,12 @@
 
 UPaintingPossessableComponent::UPaintingPossessableComponent()
 {
-    StamFrontCost=0.0f;
-    StamDrainRate=0.0f;
+    StamFrontCost = 0.0f;
+    StamDrainRate = 0.0f;
     ConnectedNetworks = std::list<FString>{};
     Manager = nullptr;
-    bIsRoot = false;
-    bIsNonRoot = false;
+    State = state::Inactive;
+    TimeTillUpdate = 0.0f;
 }
 
 void UPaintingPossessableComponent::SetCurrentExitPoint(USceneComponent* NewExitPoint)
@@ -21,11 +21,8 @@ void UPaintingPossessableComponent::SetCurrentExitPoint(USceneComponent* NewExit
 
 void UPaintingPossessableComponent::NewPaintingDataPackage()
 {
-    bIsRoot = true; // We're a root now
-
     // Create transferable struct of data for pathing in the painting network
     PaintingDataPackage = FPaintingTransitionPackage{};
-    //PaintingDataPackage.Path = std::list<UPaintingPossessableComponent*>{};
     PaintingDataPackage.Path = Manager->GetPaintingPath(ConnectedNetworks, this);
     PaintingDataPackage.RootPainting = this;
     PaintingDataPackage.TimeBeingBlind = 0.0f;
@@ -65,26 +62,18 @@ void UPaintingPossessableComponent::BlueprintConstructorInit(TArray<FString> con
     // -----
     
     Manager->AppendToConnectedNetworks(ConnectedNetworks, this);
-    Manager->PrintNetworks();
 }
 
 void UPaintingPossessableComponent::InternalPaintingPossession(UPaintingPossessableComponent* target_painting)
 {
+    
     // 'leave no trace'
     target_painting->PaintingDataPackage = PaintingDataPackage;
-    if (!target_painting->bIsRoot)
-        target_painting->bIsNonRoot = true;
-    bIsNonRoot = false;
+    PaintingDataPackage.Instantiated = false; // ear marks that we haven't left the network
     
     // -----
-    
     SetNextExit(Cast<APossessablePawn>(target_painting->GetOwner()));
     Eject();
-}
-
-void UPaintingPossessableComponent::EndInternalPaintingPossession()
-{
-    // unnecessary function?
 }
 
 void UPaintingPossessableComponent::RightTriggerRelease_Implementation()
@@ -107,7 +96,7 @@ void UPaintingPossessableComponent::RightTriggerRelease_Implementation()
         p = *iter; // something about this isn't right THE SECOND time. The first jump to another prop is fine
         valid = true;
         
-        if (p != PaintingDataPackage.RootPainting && p->bIsRoot) // Crashes here
+        if (p != PaintingDataPackage.RootPainting && p->State == state::Root) // Crashes here
         {
             valid = false;
             SCREENMSGT("Root Painting && non-owner Failure", 2.0f);
@@ -115,7 +104,7 @@ void UPaintingPossessableComponent::RightTriggerRelease_Implementation()
 
         auto owner = Cast<APossessablePawn>(p->GetOwner()); // crashes here when you comment
         if (owner)                                                            // the previous crash out
-            if (owner->IsPossessing())
+            if (p->IsInUse())
             {
                 valid = false;
                 SCREENMSGT("IsPossessing Failure", 2.0f);
@@ -130,6 +119,21 @@ void UPaintingPossessableComponent::RightTriggerRelease_Implementation()
         InternalPaintingPossession(p); // Move to next painting
     else
         SCREENMSGT("The Network is full, you cannot possess any aviable paintings", 5.0f);
+}
+
+void UPaintingPossessableComponent::OnInteract_Implementation()
+{
+    if (!PaintingDataPackage.Instantiated)
+    {
+        State = state::Root; // We're a root now
+        NewPaintingDataPackage();
+        std::string msg = std::to_string(PaintingName) + " has created a data package";
+        SCREENMSGT(msg.c_str(), 2.0f);
+    }
+    else if (State != state::Root)
+    {
+        State = state::NonRoot;
+    }
 }
 
 void UPaintingPossessableComponent::LeftTriggerRelease_Implementation()
@@ -153,36 +157,37 @@ void UPaintingPossessableComponent::TickComponent(float DeltaTime, ELevelTick Ti
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
     auto owner = Cast<APossessablePawn>(GetOwner());
     if (owner)
-        if (owner->IsPossessing())
+        if (IsInUse())
         {
-            if (!bIsNonRoot && !bIsRoot)
+            TimeTillUpdate -= DeltaTime;
+            if (TimeTillUpdate <= 0.0f && GetOwner())
             {
-                std::string msg = std::to_string(PaintingName) + " has created a data package";
-                SCREENMSGT(msg.c_str(), 5.0f);
-                NewPaintingDataPackage();
+                std::string msg = "\n" + std::to_string(PaintingName) + "'s update:";
+                msg += "\nState = " + std::to_string(State);
+
+                SCREENMSGT(msg.c_str(), INTERNAL_UPDATE);
+                TimeTillUpdate = INTERNAL_UPDATE;
             }
-            //std::string msg = "";
-            //msg += "CurrBIsRoot = " + std::to_string(bIsRoot);
-            //msg += "\nCurrBIsNonRoot = " + std::to_string(bIsNonRoot);
-            //SCREENMSGT(msg.c_str(), 1.0f);
-        } 
+        }
 }
 
-void APaintingManager::AppendToConnectedNetworks(std::list<FString> connected_networks,
-    UPaintingPossessableComponent* painting)
-{
-    for (FString network : connected_networks)
-    {
-        Networks.insert(std::pair<FString, UPaintingPossessableComponent*>{network, painting});
-    }
-}
+
 
 void UPaintingPossessableComponent::EndInteract_Implementation()
 {
-    SCREENMSGT("Leave Network", 5.0f); // crash here when unpossessing
-    bIsNonRoot = false;
-    PaintingDataPackage.RootPainting->bIsRoot = false;
-    PaintingDataPackage.Instantiated = false;
+    if (State == state::NonRoot)
+        State = state::Inactive;
+    
+    if (PaintingDataPackage.Instantiated)
+    {
+        // Handle leaving network
+        PaintingDataPackage.RootPainting->State = state::Inactive;
+        PaintingDataPackage.Instantiated = false;
+    }
+    else
+    {
+        // Possessing a new painting in network
+    }
 }
 
 void UPaintingPossessableComponent::ButtonTopRelease_Implementation()
@@ -202,6 +207,9 @@ void UPaintingPossessableComponent::ScareButton_Implementation()
 }
 
 
+
+/// Painting manager functions                                                                                                /// PAINTING MANAGER
+/// A "hidden" class that is handled entirely through the PaintingPossessibleComponent class
 std::set<UPaintingPossessableComponent*> APaintingManager::GetPaintingPath(std::list<FString> connected_networks,
                                                                             UPaintingPossessableComponent* painting)
 {
@@ -238,8 +246,16 @@ void APaintingManager::PrintNetworks() const
     SCREENMSGT(msg.c_str(), 10.0f);
 }
 
+void APaintingManager::AppendToConnectedNetworks(std::list<FString> connected_networks,
+    UPaintingPossessableComponent* painting)
+{
+    for (FString network : connected_networks)
+    {
+        Networks.insert(std::pair<FString, UPaintingPossessableComponent*>{network, painting});
+    }
+}
+
 void APaintingManager::BeginPlay()
 {
     Super::BeginPlay();
-    PrintNetworks();
 }

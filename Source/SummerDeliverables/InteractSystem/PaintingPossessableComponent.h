@@ -10,6 +10,7 @@
 #include <list>
 #include "PaintingPossessableComponent.generated.h"
 
+#define INTERNAL_UPDATE 3.0f
 /**
  * TODO: As is the same as all the utilities, this is incomplete
  */
@@ -30,8 +31,6 @@ struct FPaintingTransitionPackage
 	float TimeBeingBlind;	
 };
 
-
-
 UCLASS()
 class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPossessableComponent
 {
@@ -48,6 +47,13 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	// ===== ENUM_CLASSES =====
 	// ========================
 	private:
+	enum state
+	{
+		Inactive,
+        Root,
+        NonRoot
+    };
+	
 	protected:
 	public:
 	// ==========================
@@ -65,9 +71,7 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	class APaintingManager* Manager;
 	
 	/// Whether this isn't a painting that a player currently in the network entered through
-	bool bIsNonRoot;
-
-	bool bIsRoot;
+	state State;
 
 	FPaintingTransitionPackage PaintingDataPackage;
 
@@ -75,6 +79,10 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 
 	/// For Debugging purposes
 	FString PaintingName;
+
+	/// Debug timer for internal print-to-screens
+	float TimeTillUpdate;
+	
 	protected:
 	public:
 	// ======================================
@@ -122,6 +130,8 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	
 	virtual void RightTriggerRelease_Implementation() override final;
 
+	virtual void OnInteract_Implementation() override final;
+	
 	virtual void LeftTriggerRelease_Implementation() override final;
 
 	virtual void EndInteract_Implementation() override final;
