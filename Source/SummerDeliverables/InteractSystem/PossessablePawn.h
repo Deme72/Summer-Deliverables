@@ -103,8 +103,8 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 
 
 		/// Sets a pawn to exit to
-		UFUNCTION(BlueprintCallable, Category="Getters")
-	    void SetNextExit(APossessablePawn * pawn){ExitPawn  = pawn;};
+		UFUNCTION(BlueprintCallable, Category="Setters")
+	    void SetNextExit(APossessablePawn * pawn){ExitPawn = pawn;};
 	
 		/// Returns true if the pawn is currently possessed by a player
 		UFUNCTION(BlueprintCallable, Category="Possession")
