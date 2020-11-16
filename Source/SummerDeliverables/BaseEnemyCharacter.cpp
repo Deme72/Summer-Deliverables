@@ -231,9 +231,9 @@ void ABaseEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 void ABaseEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	//Super::EndPlay();
-	if (IsValid(treasureActor))
+	if (IsValid(TreasureActor))
 	{
-		treasureActor->Destroy();
+		TreasureActor->Destroy();
 		Cast<ASummerDeliverablesGameMode>(GetWorld()->GetAuthGameMode())->CheckWinCon(1);
 	}
 	else
