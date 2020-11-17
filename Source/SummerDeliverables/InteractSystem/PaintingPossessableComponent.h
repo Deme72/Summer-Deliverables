@@ -10,16 +10,15 @@
 #include <list>
 #include "PaintingPossessableComponent.generated.h"
 
-#define INTERNAL_UPDATE 3.0f
-/**
- * TODO: As is the same as all the utilities, this is incomplete
- */
-USTRUCT()
+#define INTERNAL_UPDATE 0.5f
+
+/// A package of data that passes from one UPaintingPossessableComponent to another while a player
+/// traverses the network
 struct FPaintingTransitionPackage
 {
-	GENERATED_BODY()
-	/// Is this Struct
-	bool Instantiated;
+	/// Is this Struct Initialized
+	/// Also doubles as an "bIsLeavingNetwork" at EndInteract_Internal time
+	bool bInit;
 	
 	/// The Painting this player entered the network through
 	class UPaintingPossessableComponent* RootPainting;
@@ -27,10 +26,18 @@ struct FPaintingTransitionPackage
 	/// The current path through the networks the player instantiated
 	std::set<UPaintingPossessableComponent*> Path;
 	
-	/// The remaining time this painting needs to be blinded (follows Player through network
-	float TimeBeingBlind;	
+	/// The remaining time this painting needs to be blinded
+	/// Acts as bIsBlinded if > 0.0f
+	float TimeBeingBlind;
+
+	/// The transform of the RootPainting's Pawn's ExitPoint
+	FTransform RootExitPoint;
+
+	/// Am I leaving the Network
+	bool bIsExitingNetwork;
 };
 
+/// The Painting Possessable Component, when put on a PaintingPossessablePawn creates the Painting Possessable
 UCLASS()
 class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPossessableComponent
 {
@@ -47,11 +54,13 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	// ===== ENUM_CLASSES =====
 	// ========================
 	private:
+	/// The current state of a given painting
+	/// (state is relative to possession and whether or not it's a painting used to enter the network)
 	enum state
 	{
-		Inactive,
-        Root,
-        NonRoot
+		Inactive, 	// Non-Root and unpossessed
+        Root,		// Is the painting that a player entered the network through
+        NonRoot 	// Non-Root but is possessed
     };
 	
 	protected:
@@ -66,15 +75,25 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	// ===== ATTRIBUTES =====
 	// ======================
 	private:
-	USceneComponent* currentExitPoint;
-
+	/// The manager for all Paintings in the Scene
 	class APaintingManager* Manager;
+
+	/// The transform of the owning APossessablePawn's Exitpoint at this time
+	FTransform TempExitPoint;
+
+	/// The transform of the owning APossessablePawn's Exitpoint at BeginPlay()
+	FTransform DefaultExitPoint;
 	
-	/// Whether this isn't a painting that a player currently in the network entered through
+	/// Identifies whether this painting is: 
+	/// | Inactive 
+	/// | NonRoot (Possessed but not Root) 
+	/// | Root (A Root Painting, whether or not it's possessed)
 	state State;
 
+	/// A collection of data that is passed from painting to painting as a player travels the network
 	FPaintingTransitionPackage PaintingDataPackage;
 
+	/// An internal (C++ friendly) copy of the editor APaintingPossessablePawn equivalent 
 	std::list<FString> ConnectedNetworks;
 
 	/// For Debugging purposes
@@ -85,6 +104,8 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	
 	protected:
 	public:
+
+	
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
@@ -100,11 +121,13 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	private:
 	protected:
 	public:
-	UFUNCTION(BlueprintCallable)
-    void SetCurrentExitPoint(USceneComponent* NewExitPoint);
+	// UFUNCTION(BlueprintCallable)
+    // void SetCurrentExitPoint(USceneComponent* NewExitPoint);
 
+	/// Generates a Painting Data Package
 	void NewPaintingDataPackage();
 
+	/// Purely for debugging Purposes; gives a user-created, not-necessarily-unique Painting Name 
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	FString GetPaintName() const { return PaintingName; }
 	
@@ -124,28 +147,38 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	UFUNCTION(BlueprintCallable)
 	void BlueprintConstructorInit(TArray<FString> connected_networks, FString painting_name);
 
+	/// Handles Possessions between Paintings
 	void InternalPaintingPossession(UPaintingPossessableComponent* target_painting);
 
-	void EndInternalPaintingPossession();
-	
+	/// Forward iteration through the Painting's path
 	virtual void RightTriggerRelease_Implementation() override final;
 
-	virtual void OnInteract_Implementation() override final;
-	
+	/// Backwards iteration through the Painting's path
 	virtual void LeftTriggerRelease_Implementation() override final;
 
+	/// On Interact Event
+	virtual void OnInteract_Implementation() override final;
+
+	/// On End Interact Event
 	virtual void EndInteract_Implementation() override final;
 
+	/// Update
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 	/// FOR DEBUGGING
 	virtual void ButtonTopRelease_Implementation() override final;
 
+	/// FOR DEBUGGING
 	virtual void ScareButton_Implementation() override;
-	
+
+	virtual void BeginningEndInteract() override final;
 
 };
 
+/// A user-hidden class that is handled by PaintingPossessableComponents existing in a Unreal Map
+/// Holds the list of networks and how all paintings are connected
+/// Generates Paths through the network whenever a painting calls for one
+/// (allows for changes to painting networks mid-game; with a bit more editing)
 UCLASS(NotBlueprintable)
 class APaintingManager : public AActor
 {
@@ -174,7 +207,6 @@ public:
 	// ===== ATTRIBUTES =====
 	// ======================
 	private:
-	/// *** Public for debugging purposes ***
 	/// The "Manager" i.e. the network names (fstring)
 	/// and all paintings connected to that network
 	std::multimap<FString, UPaintingPossessableComponent*> Networks;
@@ -194,6 +226,7 @@ public:
 private:
 protected:
 public:
+	/// Returns a path relative to a list of connected networks and a root painting
 	std::set<UPaintingPossessableComponent*> GetPaintingPath(std::list<FString> connected_networks, UPaintingPossessableComponent* painting);
 	// ===================
 	// ===== METHODS =====
@@ -202,12 +235,10 @@ private:
 protected:
 public:
 	/// To be called by the PaintingPossessiblePawn BeginPlay()
-    void AppendToConnectedNetworks(std::list<FString> connected_networks, UPaintingPossessableComponent* painting);
+	/// registers a painting with the painting manager
+    void AppendToNetworks(std::list<FString> connected_networks, UPaintingPossessableComponent* painting);
 	
 	/// FOR DEBUGGING NETWORKS DATA
 	UFUNCTION(BlueprintCallable)
     void PrintNetworks() const;
-	
-	virtual void BeginPlay() override;
-
 };
