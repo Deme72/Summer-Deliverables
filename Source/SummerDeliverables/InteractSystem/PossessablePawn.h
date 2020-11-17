@@ -31,7 +31,6 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     	// ======================
     private:
     protected:
-
 		///Pawn to possess on exit
 		APossessablePawn * ExitPawn;
 
@@ -126,7 +125,8 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 		void SetDistFromGround(float f)
 		{StaticMeshComponent->AddLocalOffset({0, 0, f-GroundHeight}, true);}
 
-		///
+		/// Get Exit point
+		
     	// ===================
     	// ===== METHODS =====
     	// ===================

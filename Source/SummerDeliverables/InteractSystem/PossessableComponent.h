@@ -45,6 +45,7 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 
 		/// Is per second stamina drain active
 		bool bIsDrainingStamina;
+	
 	public:
 		/// The rate, in stamina/sec, at which this prop drains the player's stamina
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stamina")
@@ -144,6 +145,10 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		UFUNCTION(BlueprintCallable, Category="Possessing")		
 		void SetNextExit(class APossessablePawn* pawn) const;
 
+		/// Called at the beginning of the EndInteract event within PossessablePawn
+		UFUNCTION(BlueprintCallable, Category="Unpossessing")
+		virtual void BeginningEndInteract() {};
+	
 	// === Input Event Functions ===
 		/// An Event for the left face button (keyboard: left shift button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
