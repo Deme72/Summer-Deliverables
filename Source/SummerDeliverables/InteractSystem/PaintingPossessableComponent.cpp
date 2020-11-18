@@ -8,7 +8,8 @@
 UPaintingPossessableComponent::UPaintingPossessableComponent()
 {
     StamFrontCost = 0.0f;
-    StamDrainRate = 0.0f;
+    StamDrainRate = 10.0f;
+    SetActiveStaminaDrain(false);
     ConnectedNetworks = std::list<FString>{};
     Manager = nullptr;
     State = state::Inactive;
@@ -46,12 +47,10 @@ UPaintingPossessableComponent* UPaintingPossessableComponent::FindValidPainting(
     return nullptr;
 }
 
-void UPaintingPossessableComponent::ApplyBlindEffect()
+void UPaintingPossessableComponent::ApplyBlindEffect(float time_remaining)
 {
-}
-
-void UPaintingPossessableComponent::ApplyStaminaDrain(float delta_time)
-{
+    // apply affect to camera
+    // blend based on time remaining (it wains as time passes)
 }
 
 void UPaintingPossessableComponent::RightTriggerRelease_Implementation()
@@ -108,25 +107,33 @@ void UPaintingPossessableComponent::TickComponent(float DeltaTime, ELevelTick Ti
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    TimeTillUpdate -= DeltaTime;
-    if (TimeTillUpdate < 0 && IsInUse())
+    if (IsInUse())
     {
-        std::string msg = "";
-        msg += std::to_string(PaintingName) + "'s Update:";
-        msg += "\nState = " + std::to_string(State);
-        msg += "\nIsLeaving = " + std::to_string(bLeaving);
-        msg += "\nbIsExitingNetwork = " + std::to_string(PaintingDataPackage.bIsExitingNetwork);
-        SCREENMSGT(msg.c_str(), INTERNAL_UPDATE);
-        TimeTillUpdate = INTERNAL_UPDATE;
-    }
+        TimeTillUpdate -= DeltaTime;
+        if (TimeTillUpdate < 0)
+        {
+            std::string msg = "";
+            msg += std::to_string(PaintingName) + "'s Update:";
+            msg += "\nState = " + std::to_string(State);
+            msg += "\nIsLeaving = " + std::to_string(bLeaving);
+            msg += "\nbIsExitingNetwork = " + std::to_string(PaintingDataPackage.bIsExitingNetwork);
+            SCREENMSGT(msg.c_str(), INTERNAL_UPDATE);
+            TimeTillUpdate = INTERNAL_UPDATE;
+        }
     
-    if (bLeaving)
-    {
-        std::string msg{};
-        msg += "Player in painting \"" + std::to_string(PaintingName) + "\" is leaving";
-        SCREENMSGT(msg.c_str(), 3.0f);
-        Eject();
-        bLeaving = false;
+        PaintingDataPackage.TimeBeingBlind = std::max(PaintingDataPackage.TimeBeingBlind - DeltaTime, 0.0f);
+        ApplyBlindEffect(0.0f);
+    
+        if (bLeaving)
+        {
+            std::string msg{};
+            msg += "Player in painting \"" + std::to_string(PaintingName) + "\" is leaving";
+            SCREENMSGT(msg.c_str(), 3.0f);
+            Eject();
+            bLeaving = false;
+        }
+    
+        SetActiveStaminaDrain(false);
     }
 }
 
@@ -169,6 +176,24 @@ void UPaintingPossessableComponent::InternalPaintingPossession(UPaintingPossessa
     
     SetNextExit(Cast<APossessablePawn>(target_painting->GetOwner()));
     Eject();
+}
+
+void UPaintingPossessableComponent::HitByFlashlight_Implementation()
+{
+    if (IsInUse())
+    {
+        std::string m = std::to_string(PaintingName) + " being hit";
+        SCREENMSGT(m.c_str(), 0.1f);
+        
+        if (State == state::Root)
+        {
+            SetActiveStaminaDrain(true);
+        }
+        else
+        {
+            PaintingDataPackage.TimeBeingBlind = 5.0f;
+        }
+    }
 }
 
 void UPaintingPossessableComponent::BeginningEndInteract()

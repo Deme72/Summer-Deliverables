@@ -142,6 +142,10 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     	/// Relocates the current player pawn to exit point and possesses it.
     	virtual void EndPossession();
 
+		/// An Event for when the Possessable Pawn is hit by a flashlight
+		UFUNCTION(BlueprintCallable, Category="GameplayEvents")
+	    void HitByFlashlight();
+	
 		/// Creates a sub pawn
 		UFUNCTION(BlueprintCallable, Category="Possession")
 		APossessablePawn* SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTransform const pos);
