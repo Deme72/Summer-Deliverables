@@ -154,7 +154,7 @@ void APossessablePawn::EndPossession()
 
 void APossessablePawn::HitByFlashlight()
 {
-	PossessableComponent->HitByFlashlight();
+	PossessableComponent->HitByFlashlight(); // new
 }
 
 void APossessablePawn::Set_Outline(bool OutLine_ON,int depthInt)

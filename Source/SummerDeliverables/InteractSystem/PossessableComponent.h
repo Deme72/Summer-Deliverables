@@ -152,10 +152,10 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 	// === Input Event Functions ===
 		/// An Event for when the Possessable Pawn is hit by a flashlight
 		UFUNCTION(BlueprintNativeEvent, Category="GameplayEvents")
-		void HitByFlashlight();
+		void HitByFlashlight(); // new
 
 		/// UE4 facing function. Only override, never use
-		virtual void HitByFlashlight_Implementation(){};
+		virtual void HitByFlashlight_Implementation(){}; // new
 	
 		/// An Event for the left face button (keyboard: left shift button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")

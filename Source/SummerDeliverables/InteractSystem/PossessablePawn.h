@@ -144,7 +144,7 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 
 		/// An Event for when the Possessable Pawn is hit by a flashlight
 		UFUNCTION(BlueprintCallable, Category="GameplayEvents")
-	    void HitByFlashlight();
+	    void HitByFlashlight(); // new
 	
 		/// Creates a sub pawn
 		UFUNCTION(BlueprintCallable, Category="Possession")
