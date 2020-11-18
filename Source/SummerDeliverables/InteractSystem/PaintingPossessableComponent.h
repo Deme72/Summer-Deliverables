@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UtilityPossessableComponent.h"
-#include <string>
 #include <set>
 #include <map>
 #include <list>
@@ -17,7 +16,6 @@
 struct FPaintingTransitionPackage
 {
 	/// Is this Struct Initialized
-	/// Also doubles as an "bIsLeavingNetwork" at EndInteract_Internal time
 	bool bInit;
 	
 	/// The Painting this player entered the network through
@@ -37,7 +35,7 @@ struct FPaintingTransitionPackage
 	bool bIsExitingNetwork;
 };
 
-/// The Painting Possessable Component, when put on a PaintingPossessablePawn creates the Painting Possessable
+/// A possessable that is used for reconnaissance rather than to scare enemies
 UCLASS()
 class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPossessableComponent
 {
@@ -55,7 +53,7 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	// ========================
 	private:
 	/// The current state of a given painting
-	/// (state is relative to possession and whether or not it's a painting used to enter the network)
+	/// (state is relative to IsInUse() and whether or not it's a painting used to enter the network)
 	enum state
 	{
 		Inactive, 	// Non-Root and unpossessed
@@ -101,6 +99,9 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 
 	/// Debug timer for internal print-to-screens
 	float TimeTillUpdate;
+
+	/// Whether the painting should ejected the player during tick
+	bool bLeaving;
 	
 	protected:
 	public:
@@ -135,6 +136,10 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	// ===== METHODS =====
 	// ===================
 	private:
+	/// Finds a valid PaintingPossessableComponent in the network and stores it in the passed reference
+	/// return true if there is a valid Painting accessable
+	UPaintingPossessableComponent* FindValidPainting(bool& b_valid, bool b_forward);
+	
 	protected:
 	public:
 	/// When the Player is caught in the flashlight of an enemy inside a painting that isn't root
