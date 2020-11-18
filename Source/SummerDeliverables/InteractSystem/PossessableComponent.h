@@ -148,8 +148,15 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 		/// Called at the beginning of the EndInteract event within PossessablePawn
 		UFUNCTION(BlueprintCallable, Category="Unpossessing")
 		virtual void BeginningEndInteract() {};
-	
+
 	// === Input Event Functions ===
+		/// An Event for when the Possessable Pawn is hit by a flashlight
+		UFUNCTION(BlueprintNativeEvent, Category="GameplayEvents")
+		void HitByFlashlight();
+
+		/// UE4 facing function. Only override, never use
+		virtual void HitByFlashlight_Implementation(){};
+	
 		/// An Event for the left face button (keyboard: left shift button)
 		UFUNCTION(BlueprintNativeEvent, Category="InputEvent")
 		void ScareButton();

@@ -152,6 +152,11 @@ void APossessablePawn::EndPossession()
 	}
 }
 
+void APossessablePawn::HitByFlashlight()
+{
+	PossessableComponent->HitByFlashlight();
+}
+
 void APossessablePawn::Set_Outline(bool OutLine_ON,int depthInt)
 {
 	StaticMeshComponent->SetRenderCustomDepth(OutLine_ON);

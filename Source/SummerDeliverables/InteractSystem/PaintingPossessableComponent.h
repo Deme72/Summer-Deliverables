@@ -143,10 +143,7 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	protected:
 	public:
 	/// When the Player is caught in the flashlight of an enemy inside a painting that isn't root
-	void ApplyBlindEffect();
-
-	/// When the Player is caught in the flashlight of an enemy inside a painting that is root
-	void ApplyStaminaDrain(float delta_time);
+	void ApplyBlindEffect(float time_remaining);
 
 	/// Initializes the Painting and PaintingManager systems
 	UFUNCTION(BlueprintCallable)
@@ -155,6 +152,9 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	/// Handles Possessions between Paintings
 	void InternalPaintingPossession(UPaintingPossessableComponent* target_painting);
 
+	/// Handles being hit by flashlight
+	virtual void HitByFlashlight_Implementation() override final;
+	
 	/// Forward iteration through the Painting's path
 	virtual void RightTriggerRelease_Implementation() override final;
 
