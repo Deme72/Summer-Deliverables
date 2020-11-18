@@ -59,8 +59,8 @@ void UPaintingPossessableComponent::RightTriggerRelease_Implementation()
     UPaintingPossessableComponent* p = FindValidPainting(valid, true);
     if (valid)
         InternalPaintingPossession(p); // Move to next painting
-    else
-        SCREENMSGT("The Network is full, you cannot possess any aviable paintings", 5.0f);
+    //else
+        //SCREENMSGT("The Network is full, you cannot possess any aviable paintings", 5.0f);
 }
 
 void UPaintingPossessableComponent::LeftTriggerRelease_Implementation()
@@ -69,8 +69,8 @@ void UPaintingPossessableComponent::LeftTriggerRelease_Implementation()
     UPaintingPossessableComponent* p = FindValidPainting(valid, false);
     if (valid)
         InternalPaintingPossession(p); // Move to next painting
-    else
-        SCREENMSGT("The Network is full, you cannot possess any aviable paintings", 5.0f);
+    //else
+        //SCREENMSGT("The Network is full, you cannot possess any aviable paintings", 5.0f);
 }
 
 void UPaintingPossessableComponent::BlueprintConstructorInit(TArray<FString> connected_networks, FString painting_name)
@@ -117,7 +117,7 @@ void UPaintingPossessableComponent::TickComponent(float DeltaTime, ELevelTick Ti
             msg += "\nState = " + std::to_string(State);
             msg += "\nIsLeaving = " + std::to_string(bLeaving);
             msg += "\nbIsExitingNetwork = " + std::to_string(PaintingDataPackage.bIsExitingNetwork);
-            SCREENMSGT(msg.c_str(), INTERNAL_UPDATE);
+            //SCREENMSGT(msg.c_str(), INTERNAL_UPDATE);
             TimeTillUpdate = INTERNAL_UPDATE;
         }
     
@@ -128,7 +128,7 @@ void UPaintingPossessableComponent::TickComponent(float DeltaTime, ELevelTick Ti
         {
             std::string msg{};
             msg += "Player in painting \"" + std::to_string(PaintingName) + "\" is leaving";
-            SCREENMSGT(msg.c_str(), 3.0f);
+            //SCREENMSGT(msg.c_str(), 3.0f);
             Eject();
             bLeaving = false;
         }
@@ -144,7 +144,7 @@ void UPaintingPossessableComponent::OnInteract_Implementation()
         State = state::Root; // We're a root now
         NewPaintingDataPackage();
         std::string msg = std::to_string(PaintingName) + " has created a data package";
-        SCREENMSGT(msg.c_str(), 2.0f);
+        //SCREENMSGT(msg.c_str(), 2.0f);
     }
     else if (State != state::Root)                                              // Entering Painting from inside Network
     {
@@ -183,7 +183,7 @@ void UPaintingPossessableComponent::HitByFlashlight_Implementation()
     if (IsInUse())
     {
         std::string m = std::to_string(PaintingName) + " being hit";
-        SCREENMSGT(m.c_str(), 0.1f);
+        //SCREENMSGT(m.c_str(), 0.1f);
         
         if (State == state::Root)
         {
@@ -222,7 +222,7 @@ void UPaintingPossessableComponent::ScareButton_Implementation()
     std::string msg = std::string{};
     msg += std::to_string(PaintingName) + "'s exit location is " +
         std::to_string(PaintingDataPackage.RootExitPoint.GetLocation());
-    SCREENMSGT(msg.c_str(), 5.0f);
+    //SCREENMSGT(msg.c_str(), 5.0f);
 }
 
 /// Painting manager functions                                                                      /// PAINTING MANAGER
@@ -262,7 +262,7 @@ void APaintingManager::PrintNetworks() const
                 std::to_string(pair.second->GetPaintName()) + " }\n";
     }
     msg += " }";
-    SCREENMSGT(msg.c_str(), 10.0f);
+    //SCREENMSGT(msg.c_str(), 10.0f);
 }
 
 void APaintingManager::AppendToNetworks(std::list<FString> connected_networks,
