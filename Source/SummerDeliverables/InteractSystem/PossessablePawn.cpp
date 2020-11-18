@@ -125,10 +125,11 @@ void APossessablePawn::EndPossession()
 	auto ghost_controller = Cast<APlayerGhostController>(GetController());
 	if (ghost_controller)
 	{
+		PossessableComponent->BeginningEndInteract();
 		if(ExitPawn)
 		{
-			PossessableComponent->EndInteractInternal();
 			ghost_controller->Possess(ExitPawn);
+			PossessableComponent->EndInteractInternal();
 			ExitPawn->PossessableComponent->OnInteractInternal();
 			
 			ExitPawn = nullptr;
@@ -137,17 +138,23 @@ void APossessablePawn::EndPossession()
 		{
 			// move player pawn to the exit point and repossess
 			APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(GetActorLocation());
+			//APlayerPawn* new_pawn = ghost_controller->CreatePlayerPawn(ExitPoint->GetComponentLocation());
 			if (new_pawn)
 			{
 				ghost_controller->Possess(new_pawn);
 				new_pawn->setPlayer(ghost_controller);
 				new_pawn->SetActorRotation(GetActorRotation());
-				PossessableComponent->EndInteractInternal();
 				new_pawn->PlayPossessAnimation(false, ExitPoint->GetComponentTransform());
+				PossessableComponent->EndInteractInternal();
 			}
 		}
 		//CurrentPlayerController = nullptr;
 	}
+}
+
+void APossessablePawn::HitByFlashlight()
+{
+	PossessableComponent->HitByFlashlight();
 }
 
 void APossessablePawn::Set_Outline(bool OutLine_ON,int depthInt)
