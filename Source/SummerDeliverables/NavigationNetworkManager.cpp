@@ -185,17 +185,18 @@ ANavigationNode* ANavigationNetworkManager::GetNearestNode(FVector origin) const
 	
 	for (ANavigationNode* testNode : navigationNetwork)
 	{
-		float testDist = FVector::Dist(origin, testNode->GetActorLocation());
-
-		//UE_LOG(LogTemp, Warning, TEXT("TestDist: %f with node: %p"), testDist, testNode);
-
-		if (closestDist < 0 || testDist < closestDist)
+		if (testNode->type != NavNodeType::POI)
 		{
-			closestDist = testDist;
-			closestNode = testNode;
+			float testDist = FVector::Dist(origin, testNode->GetActorLocation());
+
+			if (closestDist < 0 || testDist < closestDist)
+			{
+				closestDist = testDist;
+				closestNode = testNode;
+			}
 		}
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Get Nearest Node end"));
+	
 	return closestNode;
 }
 

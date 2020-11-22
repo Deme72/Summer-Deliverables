@@ -66,6 +66,13 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	/// The player's stamina regen (in stamina/second)
 	UPROPERTY(EditAnywhere, Category="Stamina", meta=(clampMin=0.0))
 	float StaminaRegen;
+
+	///Tells the controller that the player cant lose stamina
+	UPROPERTY(EditAnywhere,Category="Stamina")
+	bool Invisibility;
+	///How long invisibility last for when active
+	UPROPERTY(EditAnywhere,Category="Stamina")
+	float InvisTimer;
 	
 	/// The type of APlayerPawn that Player Controller spawns when unpossessing a possessable
 	UPROPERTY(EditAnywhere, Category="Possession")
@@ -130,5 +137,7 @@ class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
 	virtual void BeginPlay() override;
 
 	virtual void OnUnPossess() override;
+	///Changes Invisibility to true when player activates the Stamina room ability
+	void SetInvisibility(bool value);
 };
 
