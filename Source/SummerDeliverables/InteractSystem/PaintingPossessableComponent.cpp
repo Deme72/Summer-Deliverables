@@ -178,7 +178,7 @@ void UPaintingPossessableComponent::InternalPaintingPossession(UPaintingPossessa
     Eject();
 }
 
-void UPaintingPossessableComponent::HitByFlashlight_Implementation()
+void UPaintingPossessableComponent::HitByFlashLight_Implementation()
 {
     if (IsInUse())
     {

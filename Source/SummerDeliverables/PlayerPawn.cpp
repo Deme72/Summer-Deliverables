@@ -32,7 +32,7 @@ APlayerPawn::APlayerPawn()
 
 	LastMovementNormal = {0,0,0};
 	
-	entering = exiting = false;
+	bEntering = bExiting = false;
 
 	Cast<APlayerGhostController>(GetController())->PlayerCameraManager;
 	//Cast<APlayerGhostController>(GetController())->PlayerCameraManager->ViewPitchMin = -70.0f;
@@ -45,11 +45,11 @@ void APlayerPawn::BeginPlay()
 
 	InteractBounds->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnBeginOverlap);
 	InteractBounds->OnComponentEndOverlap.AddDynamic(this, &APlayerPawn::OnOverlapEnd);
-	cam = Cast<UCameraComponent>(GetComponentByClass(UCameraComponent::StaticClass()));
-	playerMesh = Cast<USkeletalMeshComponent>(GetComponentByClass(USkeletalMeshComponent::StaticClass()));
+	Cam = Cast<UCameraComponent>(GetComponentByClass(UCameraComponent::StaticClass()));
+	PlayerMesh = Cast<USkeletalMeshComponent>(GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 }
 
-void APlayerPawn::WhiskersRaycast(float DeltaTime)
+void APlayerPawn::WhiskersRayCast(float DeltaTime)
 {
 	FHitResult* HitResult = new FHitResult();
 	FVector StartTrace = GetActorLocation();
@@ -98,30 +98,30 @@ void APlayerPawn::WhiskersRaycast(float DeltaTime)
 void APlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if(entering||exiting)
+	if(bEntering||bExiting)
 	{
-		if(animTimer <= 0.0)
+		if(AnimTimer <= 0.0)
 		{
-			if(entering)
-				Possess(animPossess);
-			entering = exiting = false;
+			if(bEntering)
+				Possess(AnimPossess);
+			bEntering = bExiting = false;
 		}
 		else
 		{
 			float lerp;
-			if(entering)
+			if(bEntering)
 			{
-				lerp = 1 - animTimer/enterTime;
+				lerp = 1 - AnimTimer/EnterTime;
 			}
 			else
 			{
-				lerp = 1 - animTimer/exitTime;
+				lerp = 1 - AnimTimer/ExitTime;
 			}
 			
-			SetActorLocation(FMath::Lerp(animStartPos.GetLocation(), animExitPos.GetLocation(), lerp));
-			SetActorRotation(FMath::Lerp(animStartPos.GetRotation(), animExitPos.GetRotation(), lerp));
+			SetActorLocation(FMath::Lerp(AnimStartPos.GetLocation(), AnimExitPos.GetLocation(), lerp));
+			SetActorRotation(FMath::Lerp(AnimStartPos.GetRotation(), AnimExitPos.GetRotation(), lerp));
 			
-			animTimer-=DeltaTime;
+			AnimTimer-=DeltaTime;
 		}
 	}
 	else
@@ -146,7 +146,7 @@ void APlayerPawn::Tick(float DeltaTime)
 			}
 		
 			// PARANOIA
-			if(lookingForParaProps)
+			if(bLookingForParaProps)
 			{
 				UParanoiaComponent* paraProp = Cast<UParanoiaComponent>((*i)->FindComponentByClass(UParanoiaComponent::StaticClass()));
 				if(paraProp && !paraProp->IsInUse())
@@ -171,14 +171,14 @@ void APlayerPawn::Tick(float DeltaTime)
 			}
 		}		
 #pragma region CameraTick
-		WhiskersRaycast(DeltaTime);
-		FVector CameraForward = cam->GetForwardVector();
+		WhiskersRayCast(DeltaTime);
+		FVector CameraForward = Cam->GetForwardVector();
 		CameraForward = {CameraForward.X, CameraForward.Y, 0};
 		CameraForward.Normalize();
-		FVector pforward = playerMesh->GetForwardVector();
+		FVector pforward = PlayerMesh->GetForwardVector();
 		pforward = {pforward.X, pforward.Y, 0};
 		pforward.Normalize();
-		FVector pright = playerMesh->GetRightVector();
+		FVector pright = PlayerMesh->GetRightVector();
 		pright = {pright.X, pright.Y, 0};
 		pright.Normalize();
 		float rightdp = FVector::DotProduct(pright,CameraForward);
@@ -217,7 +217,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void APlayerPawn::Interact()
 {
-	if(!entering && !exiting){
+	if(!bEntering && !bExiting){
 		UInteractableComponent * target = nullptr;
 		for(auto interactable: OverlappingInteractables)
 		{
@@ -267,20 +267,20 @@ void APlayerPawn::Possess(class UPossesableComponent * comp)
 
 void APlayerPawn::PlayPossessAnimation(bool enter, FTransform lerpLoc, class UPossesableComponent * comp)
 {
-	entering = enter;
-	exiting = !enter;
-	animTimer = enter ? enterTime : exitTime;
-	animStartPos = GetTransform();
-	animExitPos = lerpLoc;
-	animPossess = comp;
+	bEntering = enter;
+	bExiting = !enter;
+	AnimTimer = enter ? EnterTime : ExitTime;
+	AnimStartPos = GetTransform();
+	AnimExitPos = lerpLoc;
+	AnimPossess = comp;
 	
 }
 
 
 void APlayerPawn::ScareButtonStart()
 {
-	if(!entering || !exiting)
-		lookingForParaProps = true;
+	if(!bEntering || !bExiting)
+		bLookingForParaProps = true;
 }
 
 
@@ -288,9 +288,9 @@ void APlayerPawn::ScareButtonEnd()
 {
 	
 #pragma region ParanoiaProps
-	if(lookingForParaProps)
+	if(bLookingForParaProps)
 	{
-		lookingForParaProps = false;
+		bLookingForParaProps = false;
 		for(auto& prop: SelectedProps)
 		{
 			if (GEngine)
@@ -332,17 +332,17 @@ void APlayerPawn::OnBeginOverlap(UPrimitiveComponent* HitComp, AActor* OtherActo
 	if(OtherActor->ActorHasTag("DynamicProp"))
 	{
 		APossessablePawn* dprop = Cast<APossessablePawn>(OtherActor);
-		dprop->Set_Outline(true,0);
+		dprop->SetOutline(true,0);
 	}
 	if(OtherActor->ActorHasTag("StaticProp"))
 	{
 		APossessablePawn* sprop = Cast<APossessablePawn>(OtherActor);
-		sprop->Set_Outline(true,3);
+		sprop->SetOutline(true,3);
 	}
 	if (OtherActor->ActorHasTag("ParanoiaProp"))
 	{
 		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor);
-		pprop->Set_Outline(true,2);
+		pprop->SetOutline(true,2);
 	}
 }
 
@@ -351,12 +351,12 @@ void APlayerPawn::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 	if (OtherActor->ActorHasTag("DynamicProp") || OtherActor->ActorHasTag("StaticProp"))
 	{
 		APossessablePawn* prop = Cast<APossessablePawn>(OtherActor);
-		prop->Set_Outline(false,0);
+		prop->SetOutline(false,0);
 	}
 	if (OtherActor->ActorHasTag("ParanoiaProp"))
 	{
 		UParanoiaComponent* pprop = Cast<UParanoiaComponent>(OtherActor);
-		pprop->Set_Outline(false,0);
+		pprop->SetOutline(false,0);
 	}
 }
 #pragma endregion
@@ -392,7 +392,7 @@ bool APlayerPawn::CanAffordStaminaCost(const float stamina_cost) const
 
 void APlayerPawn::AddMovementVector(FVector in, float DeltaTime){
 	static FRotator lastRotation = FRotator::ZeroRotator;
-	if(in.Size() < Deadzone)
+	if(in.Size() < DeadZone)
 		in = {0,0,0};
 	else if(in.Size() > 1)
 		in.Normalize();
@@ -400,11 +400,11 @@ void APlayerPawn::AddMovementVector(FVector in, float DeltaTime){
 	if(LastMovementNormal.Equals({0,0,0}) || FMath::RadiansToDegrees(acos(FVector::DotProduct(LastMovementNormal, inNorm))) > MovementLockAngle)
 	{
 		LastMovementNormal = inNorm;
-		LockedCameraForward = cam->GetForwardVector();
+		LockedCameraForward = Cam->GetForwardVector();
 		LockedCameraForward = {LockedCameraForward.X, LockedCameraForward.Y, 0};
 		LockedCameraForward.Normalize();
 		
-		LockedCameraRight = cam->GetRightVector();
+		LockedCameraRight = Cam->GetRightVector();
 		LockedCameraRight = {LockedCameraRight.X, LockedCameraRight.Y, 0};
 		LockedCameraRight.Normalize();
 	}
@@ -453,19 +453,19 @@ void APlayerPawn::AddMovementVector(FVector in, float DeltaTime){
 		FVector newMove = FVector::VectorPlaneProject(CurrentSpeed, Normal);
 		AddActorWorldOffset(newMove, true);
 	}
-	playerMesh->SetWorldRotation(rot);
+	PlayerMesh->SetWorldRotation(rot);
 }
 
 void APlayerPawn::MoveForward(float Value)
 {
-	if(!exiting && !entering)
+	if(!bExiting && !bEntering)
 		if ((Controller != NULL) && (Value != 0.0f))
 			AddMovementInput({Value, 0,0});
 }
 
 void APlayerPawn::MoveRight(float Value)
 {
-	if(!exiting && !entering)
+	if(!bExiting && !bEntering)
 		if ( (Controller != NULL) && (Value != 0.0f) )
 			AddMovementInput({0, Value,0});
 }
@@ -473,7 +473,7 @@ void APlayerPawn::MoveRight(float Value)
 
 void APlayerPawn::LookRight(float Value)
 {
-	if(!exiting && !entering)
+	if(!bExiting && !bEntering)
 		if ((Controller != NULL) && (Value != 0.0f)){
 			AddControllerYawInput(Value);
 		}
@@ -483,7 +483,7 @@ void APlayerPawn::LookRight(float Value)
 
 void APlayerPawn::LookUp(float Value)
 {
-	if(!exiting && !entering)
+	if(!bExiting && !bEntering)
 		if ((Controller != NULL) && (Value != 0.0f)){
 			//AddControllerPitchInput(Value * BaseTurnRate * 0.5 * GetWorld()->GetDeltaSeconds());
 		}

@@ -231,7 +231,7 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	ScareDirection LastScareDirection;
 
 	///Whether the enemy's movement is halted for an animation
-	bool isMovementHalted = false;
+	bool bIsMovementHalted = false;
 	
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
@@ -294,11 +294,11 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	
 	/// Set the enemy's SkeletalMesh
 	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	void SetSkeletalmesh( USkeletalMeshComponent* new_skeletalmesh ) { SkeletalMesh = new_skeletalmesh; };
+	void SetSkeletalMesh( USkeletalMeshComponent* new_skeletalmesh ) { SkeletalMesh = new_skeletalmesh; };
 
 	/// Get the enemy's SkeletalMesh
 	UFUNCTION(BlueprintCallable, Category="Setters|Components")
-	USkeletalMeshComponent* GetSkeletalmesh() const { return SkeletalMesh; };
+	USkeletalMeshComponent* GetSkeletalMesh() const { return SkeletalMesh; };
 
 	/// Set the enemy's Flashlight Socket
 	//UFUNCTION(BlueprintCallable, Category="Setters|Components")

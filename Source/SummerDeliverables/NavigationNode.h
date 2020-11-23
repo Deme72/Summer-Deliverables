@@ -31,11 +31,11 @@ class SUMMERDELIVERABLES_API ANavigationNode : public AActor
 protected:
 	// list of navigation nodes connected to this node (enemy can travel to these nodes)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<ANavigationNode*> neighbors;
+	TArray<ANavigationNode*> Neighbors;
 
 	// type of node (room, hallway)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<NavNodeType> type;
+	TEnumAsByte<NavNodeType> Type;
 
 	// true: shows this node
 	UPROPERTY(Category = "Debug", EditAnywhere, BlueprintReadWrite)
