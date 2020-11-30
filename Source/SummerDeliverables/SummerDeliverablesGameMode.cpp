@@ -4,6 +4,7 @@
 
 #include "DefinedDebugHelpers.h"
 #include "SummerDeliverablesCharacter.h"
+#include "WaveManager.h"
 #include "UObject/ConstructorHelpers.h"
 #include "InteractSystem/PlayerGhostController.h"
 
@@ -28,19 +29,27 @@ void ASummerDeliverablesGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SCREENMSG("BeginPlay intialized gamemode as SummerDeliverablesGameMode.cpp");
+	//SCREENMSG("BeginPlay intialized gamemode as SummerDeliverablesGameMode.cpp");
 	///This timer handles when to call SpawnStamina()
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASummerDeliverablesGameMode::SpawnStamina,
                                     FMath::RandRange(SpawnTimerMin, SpawnTimerMax), true);
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveManager::StaticClass(), FoundActors);
+	EnemiesRemaining = 0;
+	if(FoundActors.Num() != 0)
+		EnemiesRemaining = Cast<AWaveManager>(FoundActors[0])->NumEnemies();
+	TArray<AActor*> FoundTreasure;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), TreasureRef, FoundTreasure);
+	TreasureRemaining = FoundTreasure.Num();
 }
 
 void ASummerDeliverablesGameMode::SpawnStamina()
 {
-	float RandX = FMath::RandRange(Spawn_X_Min, Spawn_X_Max);
-	float RandY = FMath::RandRange(Spawn_Y_Min, Spawn_Y_Max);
+	float RandX = FMath::RandRange(SpawnXMin, SpawnXMax);
+	float RandY = FMath::RandRange(SpawnYMin, SpawnYMax);
 
-	FVector SpawnPosition = FVector(RandX, RandY, Spawn_Z);
+	FVector SpawnPosition = FVector(RandX, RandY, SpawnZ);
 	FRotator SpawnRotation = FRotator(0.0f, 0.0f, 0.0f);
 
 	if(FMath::RandBool())
@@ -52,4 +61,22 @@ void ASummerDeliverablesGameMode::SpawnStamina()
 		GetWorld()->SpawnActor(TeamStamina, &SpawnPosition, &SpawnRotation);
 	}
     
+}
+
+void ASummerDeliverablesGameMode::CheckWinCon(float value)
+{
+	EnemiesRemaining--;
+	TreasureRemaining -= value;
+	V_LOGI("Enemies", EnemiesRemaining);
+	V_LOGI("Treasure", TreasureRemaining);
+	if(TreasureRemaining <= 0)
+	{
+		//Lose
+		V_LOG("You Lose!");
+	}
+	else if( EnemiesRemaining <= 0)
+	{
+		//Win
+		V_LOG("You Win!");
+	}
 }

@@ -33,32 +33,45 @@ public:
 	float SpawnTimerMax = 2.5;
 
 	///The spawn height of the stamina pickups
-	float Spawn_Z = 500.0f;
+	float SpawnZ = 500.0f;
 
 	///The x max boundary of the spawn location
 	UPROPERTY(EditAnywhere)
-	float Spawn_X_Max;
+	float SpawnXMax;
 
 	///the x min boundary of the spawn location
 	UPROPERTY(EditAnywhere)
-	float Spawn_X_Min;
+	float SpawnXMin;
 
 	///the y max boundary of the spawn location
 	UPROPERTY(EditAnywhere)
-	float Spawn_Y_Max;
+	float SpawnYMax;
 
 	///the y min boundary of the spawn location
 	UPROPERTY(EditAnywhere)
-	float Spawn_Y_Min;
+	float SpawnYMin;
+	
+	//Reference for Treasure
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> TreasureRef;
+	
+	///How many enemies are left to scare
+	int EnemiesRemaining;
 
+	///Keeps track of how much treasure is left
+	int TreasureRemaining;
+	
 	// ===================
 	// ===== METHODS =====
-	// ===================
+	// =================== 
 private:
 protected:
 public:
 	///This function spawns the stamina pickups
 	void SpawnStamina();
+
+	///The enemies will call this on death to decrement actors & Handles win condition
+	void CheckWinCon(float value = 0);
 };
 
 

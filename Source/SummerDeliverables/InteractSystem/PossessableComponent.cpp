@@ -76,7 +76,7 @@ void UPossesableComponent::SetNextExit(APossessablePawn * pawn) const
     APossessablePawn * tmp = Cast<APossessablePawn>(GetOwner());
     tmp->SetNextExit(pawn);
 }
-
+ 
 void UPossesableComponent::Scare(float baseMultiplier) const
 {
     TArray<AActor *> EnemyCollisions;

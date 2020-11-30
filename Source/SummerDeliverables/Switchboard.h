@@ -20,8 +20,8 @@ public:
 	USwitchboard();
 
 protected:
-	int currRoomSelection;
-	int maxRooms;
+	int CurrRoomSelection;
+	int MaxRooms;
 	bool bIsNewInput;
 	
 public:

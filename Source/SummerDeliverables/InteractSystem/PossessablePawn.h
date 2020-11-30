@@ -31,7 +31,6 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     	// ======================
     private:
     protected:
-
 		///Pawn to possess on exit
 		APossessablePawn * ExitPawn;
 
@@ -95,7 +94,7 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 	public:
 		///Sets outline properties.
 		UFUNCTION(BlueprintCallable, Category="Outline")
-	    void Set_Outline(bool OutLine_ON,int depthInt);
+	    void SetOutline(bool OutLine_ON,int depthInt);
 		//depthInt A number which will tell the outline material when we set the depth on the mesh which color to use.
     	
     	/// Setter for CurrentPlayer pointer
@@ -103,8 +102,8 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 
 
 		/// Sets a pawn to exit to
-		UFUNCTION(BlueprintCallable, Category="Getters")
-	    void SetNextExit(APossessablePawn * pawn){ExitPawn  = pawn;};
+		UFUNCTION(BlueprintCallable, Category="Setters")
+	    void SetNextExit(APossessablePawn * pawn){ExitPawn = pawn;};
 	
 		/// Returns true if the pawn is currently possessed by a player
 		UFUNCTION(BlueprintCallable, Category="Possession")
@@ -125,6 +124,8 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 		/// Sets the mesh to be a certain distance from the ground
 		void SetDistFromGround(float f)
 		{StaticMeshComponent->AddLocalOffset({0, 0, f-GroundHeight}, true);}
+
+		/// Get Exit point
 		
     	// ===================
     	// ===== METHODS =====
@@ -141,6 +142,10 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
     	/// Relocates the current player pawn to exit point and possesses it.
     	virtual void EndPossession();
 
+		/// An Event for when the Possessable Pawn is hit by a flashlight
+		UFUNCTION(BlueprintCallable, Category="GameplayEvents")
+	    void HitByFlashlight(); // new
+	
 		/// Creates a sub pawn
 		UFUNCTION(BlueprintCallable, Category="Possession")
 		APossessablePawn* SpawnSubPawn(TSubclassOf<APossessablePawn> subclass, FTransform const pos);
