@@ -8,24 +8,24 @@
 
 USwitchboard::USwitchboard():UUtilityPossessableComponent()
 {
-    currRoomSelection = 0;
-    maxRooms = 3;
+    CurrRoomSelection = 0;
+    MaxRooms = 3;
     bIsNewInput = true;
 }
 
 void USwitchboard::IncrementCurrRoomSelection(float val)
 {
-    Cast<ASwitchboardPawn>(GetOwner())->RoomText[currRoomSelection]->SetTextRenderColor(FColor::Black);
-    currRoomSelection += copysign(1, val);
-    if(currRoomSelection > maxRooms-1)
+    Cast<ASwitchboardPawn>(GetOwner())->RoomText[CurrRoomSelection]->SetTextRenderColor(FColor::Black);
+    CurrRoomSelection += copysign(1, val);
+    if(CurrRoomSelection > MaxRooms-1)
     {
-        currRoomSelection = 0;
+        CurrRoomSelection = 0;
     }
-    else if(currRoomSelection < 0)
+    else if(CurrRoomSelection < 0)
     {
-        currRoomSelection = maxRooms-1;
+        CurrRoomSelection = MaxRooms-1;
     }
-    Cast<ASwitchboardPawn>(GetOwner())->RoomText[currRoomSelection]->SetTextRenderColor(FColor::Emerald);
+    Cast<ASwitchboardPawn>(GetOwner())->RoomText[CurrRoomSelection]->SetTextRenderColor(FColor::Emerald);
     bIsNewInput = false;
 }
 
@@ -44,8 +44,8 @@ void USwitchboard::MoveRightAxis_Implementation(float Axis)
 void USwitchboard::MoveButton_Implementation()
 {
     APlayerGhostController* PlayerConRef = GetCurrentPlayer();
-    if(PlayerConRef != nullptr && Network[currRoomSelection] != nullptr)
+    if(PlayerConRef != nullptr && Network[CurrRoomSelection] != nullptr)
     {
-        PlayerConRef->Possess(Network[currRoomSelection]);
+        PlayerConRef->Possess(Network[CurrRoomSelection]);
     }
 }

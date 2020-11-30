@@ -23,12 +23,12 @@ void ANavigationNetworkManager::BeginPlay()
 	{
 		FColor c;
 		
-		for (ANavigationNode* node : navigationNetwork)
+		for (ANavigationNode* node : NavigationNetwork)
 		{
 			// nodes
 			if (bDebugNodes)
 			{
-				switch (node->type)
+				switch (node->Type)
 				{
 				case HALLWAY:
 					c = FColor::Blue;
@@ -61,30 +61,30 @@ void ANavigationNetworkManager::BeginPlay()
 			// edges
 			if (bDebugEdges)
 			{
-				for (ANavigationNode* connection : node->neighbors)
+				for (ANavigationNode* connection : node->Neighbors)
 				{
 					// treasure or connected to treasure
-					if (node->type == NavNodeType::TREASURE || connection->type == NavNodeType::TREASURE)
+					if (node->Type == NavNodeType::TREASURE || connection->Type == NavNodeType::TREASURE)
 					{
 						c = FColor::Orange;
 					}
 					// POI or connected to POI
-					else if (node->type == NavNodeType::POI || connection->type == NavNodeType::POI)
+					else if (node->Type == NavNodeType::POI || connection->Type == NavNodeType::POI)
 					{
 						c = FColor::Cyan;
 					}
 					// Room or connected to Room
-					else if (node->type == NavNodeType::ROOM || connection->type == NavNodeType::ROOM)
+					else if (node->Type == NavNodeType::ROOM || connection->Type == NavNodeType::ROOM)
 					{
 						c = FColor::Purple;
 					}
 					// connected to exit
-					else if (connection->type == NavNodeType::EXIT)
+					else if (connection->Type == NavNodeType::EXIT)
 					{
 						c = FColor::Red;
 					}
 					// entrance
-					else if (node->type == NavNodeType::ENTRANCE)
+					else if (node->Type == NavNodeType::ENTRANCE)
 					{
 						c = FColor::Emerald;
 					}
@@ -110,7 +110,7 @@ void ANavigationNetworkManager::Tick(float DeltaTime)
 
 TArray<ANavigationNode*> ANavigationNetworkManager::GetNodeNeighbors(ANavigationNode* targetNode, ANavigationNode* prevNode, bool& isNew) const
 {
-	TArray<ANavigationNode*> allNeighbors = targetNode->neighbors;
+	TArray<ANavigationNode*> allNeighbors = targetNode->Neighbors;
 
 	// check if node has only one neighbor
 	if (allNeighbors.Num() == 1)
@@ -130,9 +130,9 @@ TArray<ANavigationNode*> ANavigationNetworkManager::GetNodeNeighbors(ANavigation
 	{
 		if (node != prevNode)
 		{
-			if (node->type == NavNodeType::HALLWAY ||
-				node->type == NavNodeType::TRANSITION ||
-				node->type == NavNodeType::ROOM)
+			if (node->Type == NavNodeType::HALLWAY ||
+				node->Type == NavNodeType::TRANSITION ||
+				node->Type == NavNodeType::ROOM)
 			{
 				newNeighbors.Add(node);
 			}
@@ -154,14 +154,14 @@ TArray<ANavigationNode*> ANavigationNetworkManager::GetNodeNeighbors(ANavigation
 
 TArray<ANavigationNode*> ANavigationNetworkManager::GetPoiNeighbors(ANavigationNode* targetNode, bool& hasPoi, ANavigationNode* prevPoi) const
 {
-	TArray<ANavigationNode*> allNeighbors = targetNode->neighbors;
+	TArray<ANavigationNode*> allNeighbors = targetNode->Neighbors;
 	hasPoi = true;
 
 	// get list of all points of interest attached to the target node
 	TArray<ANavigationNode*> poiNeighbors;
 	for (ANavigationNode* node : allNeighbors)
 	{
-		if (node->type == NavNodeType::POI && node != prevPoi)
+		if (node->Type == NavNodeType::POI && node != prevPoi)
 		{
 			poiNeighbors.Add(node);
 		}
@@ -183,19 +183,20 @@ ANavigationNode* ANavigationNetworkManager::GetNearestNode(FVector origin) const
 	float closestDist = -1.0;
 	ANavigationNode* closestNode = nullptr;
 	
-	for (ANavigationNode* testNode : navigationNetwork)
+	for (ANavigationNode* testNode : NavigationNetwork)
 	{
-		float testDist = FVector::Dist(origin, testNode->GetActorLocation());
-
-		//UE_LOG(LogTemp, Warning, TEXT("TestDist: %f with node: %p"), testDist, testNode);
-
-		if (closestDist < 0 || testDist < closestDist)
+		if (testNode->Type != NavNodeType::POI)
 		{
-			closestDist = testDist;
-			closestNode = testNode;
+			float testDist = FVector::Dist(origin, testNode->GetActorLocation());
+
+			if (closestDist < 0 || testDist < closestDist)
+			{
+				closestDist = testDist;
+				closestNode = testNode;
+			}
 		}
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Get Nearest Node end"));
+	
 	return closestNode;
 }
 

@@ -26,19 +26,19 @@ private:
     //Gets the box collider on the room
     UBoxComponent* Collider;
     //Doors starting position for closed
-    FVector Startpos;
+    FVector StartPos;
     //Doors end position for open
-    FVector Endpos;
+    FVector EndPos;
     //opens the door if set to true else closes it
-    bool open;
+    bool bOpen;
     //Creates a timeline for creating a smooth transitions of the door closing and opening
     //Door: https://unrealcpp.com/open-door-with-timeline/
     //TimeLines: https://www.youtube.com/watch?v=-QxrTZrceqw
     FTimeline TimeLineComponent;
     //Checks to see if stamania room collide is colliding with player
-    bool Using;
+    bool bUsing;
     //sees how long the player stands in the collider, no more than 3 secs, and then activates the stamania boost and whatever else
-    float Utimer;
+    float TimerTillActivate;
 public:
     ///Called at start of game
     void BeginPlay();
@@ -61,6 +61,6 @@ public:
     //gets the curve object we created for the timeline to use for a smooth time scale
     //EX: if max time on the curve is 1 and the current time is 0.5 then the value would be 0.5 so the door would be half opened.
     UPROPERTY(EditAnywhere,Category="DoorMovement")
-    class UCurveFloat* curve;
+    class UCurveFloat* Curve;
     
 };

@@ -16,7 +16,7 @@ class SUMMERDELIVERABLES_API ANavigationNetworkManager : public AActor
 protected:
 	// list of navigation nodes in the network
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<class ANavigationNode*> navigationNetwork;
+	TArray<class ANavigationNode*> NavigationNetwork;
 
 	// true: shows all nodes
 	UPROPERTY(Category = "Debug", EditAnywhere, BlueprintReadWrite)

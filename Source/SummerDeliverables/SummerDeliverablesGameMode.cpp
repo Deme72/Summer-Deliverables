@@ -36,20 +36,20 @@ void ASummerDeliverablesGameMode::BeginPlay()
                                     FMath::RandRange(SpawnTimerMin, SpawnTimerMax), true);
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveManager::StaticClass(), FoundActors);
-	Enemies_Remaining = 0;
+	EnemiesRemaining = 0;
 	if(FoundActors.Num() != 0)
-		Enemies_Remaining = Cast<AWaveManager>(FoundActors[0])->NumEnemies();
+		EnemiesRemaining = Cast<AWaveManager>(FoundActors[0])->NumEnemies();
 	TArray<AActor*> FoundTreasure;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), TreasureRef, FoundTreasure);
-	Treasure_Remaining = FoundTreasure.Num();
+	TreasureRemaining = FoundTreasure.Num();
 }
 
 void ASummerDeliverablesGameMode::SpawnStamina()
 {
-	float RandX = FMath::RandRange(Spawn_X_Min, Spawn_X_Max);
-	float RandY = FMath::RandRange(Spawn_Y_Min, Spawn_Y_Max);
+	float RandX = FMath::RandRange(SpawnXMin, SpawnXMax);
+	float RandY = FMath::RandRange(SpawnYMin, SpawnYMax);
 
-	FVector SpawnPosition = FVector(RandX, RandY, Spawn_Z);
+	FVector SpawnPosition = FVector(RandX, RandY, SpawnZ);
 	FRotator SpawnRotation = FRotator(0.0f, 0.0f, 0.0f);
 
 	if(FMath::RandBool())
@@ -65,16 +65,16 @@ void ASummerDeliverablesGameMode::SpawnStamina()
 
 void ASummerDeliverablesGameMode::CheckWinCon(float value)
 {
-	Enemies_Remaining--;
-	Treasure_Remaining -= value;
-	V_LOGI("Enemies", Enemies_Remaining);
-	V_LOGI("Treasure", Treasure_Remaining);
-	if(Treasure_Remaining <= 0)
+	EnemiesRemaining--;
+	TreasureRemaining -= value;
+	V_LOGI("Enemies", EnemiesRemaining);
+	V_LOGI("Treasure", TreasureRemaining);
+	if(TreasureRemaining <= 0)
 	{
 		//Lose
 		V_LOG("You Lose!");
 	}
-	else if( Enemies_Remaining <= 0)
+	else if( EnemiesRemaining <= 0)
 	{
 		//Win
 		V_LOG("You Win!");

@@ -12,13 +12,13 @@
 
 ULeverComponent::ULeverComponent()
 {
-    open = false;
-    Slide_Back = 0.0f;
-    begin_rot =0.0f;
-    timer = 0.0f;
-    controlling = false;
+    bOpen = false;
+    SlideBack = 0.0f;
+    BeginRot =0.0f;
+    TimerTillReset = 0.0f;
+    bControlling = false;
     Lever_ref = Cast<ALeverPawn>(GetOwner());
-    maxYaw = 0.0f;
+    MaxYaw = 0.0f;
 }
 
 void ULeverComponent::BeginPlay()
@@ -26,58 +26,58 @@ void ULeverComponent::BeginPlay()
     Super::BeginPlay();
     if (Lever_ref)
     {
-        Endline_pos1 = Lever_ref->EndLinepos1->GetComponentLocation();
-        Endline_pos2 = Lever_ref->EndLinepos2->GetComponentLocation();
-        begin_rot = Lever_ref->GetActorRotation().Yaw;
+        EndLinePos1 = Lever_ref->EndLinePos1->GetComponentLocation();
+        EndLinePos2 = Lever_ref->EndLinePos2->GetComponentLocation();
+        BeginRot = Lever_ref->GetActorRotation().Yaw;
     }
 }
 
 void ULeverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-    Deltatime = DeltaTime;
-    if (controlling)
+    MyDeltaTime = DeltaTime;
+    if (bControlling)
     {
-        DrawDebugLine(GetOwner()->GetWorld(),Endline_pos1,Endline_pos2,FColor::Red,false,0.0, 0, 5.0);
-        DrawDebugLine(GetOwner()->GetWorld(),Lever_ref->StartLinepos1->GetComponentLocation(),Lever_ref->StartLinepos2->GetComponentLocation(),FColor::Cyan,false,0.0,0,5.0);
+        DrawDebugLine(GetOwner()->GetWorld(),EndLinePos1,EndLinePos2,FColor::Red,false,0.0, 0, 5.0);
+        DrawDebugLine(GetOwner()->GetWorld(),Lever_ref->StartLinePos1->GetComponentLocation(),Lever_ref->StartLinePos2->GetComponentLocation(),FColor::Cyan,false,0.0,0,5.0);
     }
-    if (begin_rot >= Lever_ref->GetActorRotation().Yaw)
+    if (BeginRot >= Lever_ref->GetActorRotation().Yaw)
     {
-        Slide_Back = 0.0;
+        SlideBack = 0.0;
     }
     else
     {
-        Lever_ref->AddActorLocalRotation(FRotator(0.0,Slide_Back*Deltatime,0.0));
+        Lever_ref->AddActorLocalRotation(FRotator(0.0,SlideBack*MyDeltaTime,0.0));
     }
-    if (open)
+    if (bOpen)
     {
-        if (timer <= 0.0)
+        if (TimerTillReset <= 0.0)
         {
-            open = false;
-            timer =0.0f;
-            Slide_Back = -10.0f;
+            bOpen = false;
+            TimerTillReset =0.0f;
+            SlideBack = -10.0f;
         }
         else
         {
-            timer = timer - (Deltatime*timescale);
+            TimerTillReset = TimerTillReset - (MyDeltaTime*TimeScale);
         }
     }
 }
 
 void ULeverComponent::ScareButton_Implementation()
 {
-    if (open == false)
+    if (bOpen == false)
     {
-        Slide_Back = 0.0f;
-        if (Lever_ref->GetActorRotation().Yaw >= begin_rot+180.0)
+        SlideBack = 0.0f;
+        if (Lever_ref->GetActorRotation().Yaw >= BeginRot+180.0)
         {
-            Lever_ref->SetActorRotation(FRotator(0.0,begin_rot+180.0,0.0));
-            open = true;
-            timer = 7.0f;
-            timescale = 1.0f;
+            Lever_ref->SetActorRotation(FRotator(0.0,BeginRot+180.0,0.0));
+            bOpen = true;
+            TimerTillReset = 7.0f;
+            TimeScale = 1.0f;
         }
         else
         {
-           Lever_ref->AddActorLocalRotation(FRotator(0.0,Deltatime*200.0,0.0));
+           Lever_ref->AddActorLocalRotation(FRotator(0.0,MyDeltaTime*200.0,0.0));
            //GEngine->AddOnScreenDebugMessage(-1,15.0f,FColor::Cyan,FString::Printf(TEXT("%f"),Lever_ref->GetActorRotation().Yaw));
            //GEngine->AddOnScreenDebugMessage(-1,15.0f,FColor::Cyan,FString::Printf(TEXT("%f"),begin_rot+180.0));
         }
@@ -86,30 +86,30 @@ void ULeverComponent::ScareButton_Implementation()
 
 void ULeverComponent::ScareButtonRelease_Implementation()
 {
-    if (open == false)
+    if (bOpen == false)
     {
-        Slide_Back = -10.0f;
+        SlideBack = -10.0f;
     }
 }
 
 void ULeverComponent::OnInteract_Implementation()
 {
-    controlling = true;
+    bControlling = true;
 }
 
 void ULeverComponent::EndInteract_Implementation()
 {
-    controlling = false;
+    bControlling = false;
 }
 
-bool ULeverComponent::get_open()
+bool ULeverComponent::GetOpen()
 {
-    return open;
+    return bOpen;
 }
 
-void ULeverComponent::set_timerscale(float value)
+void ULeverComponent::SetTimerScale(float value)
 {
-    timescale = value;
+    TimeScale = value;
 }
 
 
