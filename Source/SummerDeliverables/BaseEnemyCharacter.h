@@ -36,7 +36,8 @@ enum AnimType
 	PickupTreasure UMETA(DisplayName = "Pick Up Treasure"),
 	DropTreasure UMETA(DisplayName = "Drop Treasure"),
 	InvestigatePOI UMETA(DisplayName = "Investigate POI"),
-	Scare UMETA(DisplayName = "Scare")
+	Scare UMETA(DisplayName = "Scare"),
+	InstantEscape UMETA(DisplayName = "InstantEscape")
 };
 
 /// enum class for the direction of the last scare
