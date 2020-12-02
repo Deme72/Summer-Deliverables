@@ -9,7 +9,10 @@
 #include "GameFramework/Character.h"
 #include "BaseEnemyCharacter.generated.h"
 
+/***************************************************************************//**
 /// The enum class for Enemy States
+/// @param BlueprintType
+******************************************************************************/
 UENUM(BlueprintType)
 enum EState
 {
@@ -20,6 +23,7 @@ enum EState
     Dying UMETA(DisplayName = "Dying")
 };
 
+/// @param BlueprintType
 /// The enum class for Enemy Targets
 UENUM(BlueprintType)
 enum TType 
@@ -27,6 +31,7 @@ enum TType
 	Treasure UMETA(DisplayName = "Treasure"),
     Prop UMETA(DisplayName = "Prop"),
     Ghost UMETA(DisplayName = "Ghost")
+/// @param BlueprintType
 };
 /// The enum class for Enemy animations
 UENUM(BlueprintType)
@@ -37,6 +42,7 @@ enum AnimType
 	DropTreasure UMETA(DisplayName = "Drop Treasure"),
 	InvestigatePOI UMETA(DisplayName = "Investigate POI"),
 	Scare UMETA(DisplayName = "Scare")
+/// @param BlueprintType
 };
 
 /// enum class for the direction of the last scare
@@ -199,11 +205,11 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	USkeletalMeshComponent* SkeletalMesh;
 
-	/// The socket in BaseEnemyCharacter::Mesh that holds the Flashlight object
+	// The socket in BaseEnemyCharacter::Mesh that holds the Flashlight object
 	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
 	//USkeletalMeshComponent* FlashLightSocket;
 
-	/// The socket in BaseEnemyCharacter::Mesh that holds the Treasure object
+	// The socket in BaseEnemyCharacter::Mesh that holds the Treasure object
 	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components|Sockets")
 	//USkeletalMeshComponent* TreasureSocket;
 
@@ -239,7 +245,7 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	private:
 	protected:
 	public:
-	// Sets default values for this character's properties
+	/// Sets default values for this character's properties
 	ABaseEnemyCharacter();
 	
 	// =============================
@@ -300,19 +306,19 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category="Setters|Components")
 	USkeletalMeshComponent* GetSkeletalMesh() const { return SkeletalMesh; };
 
-	/// Set the enemy's Flashlight Socket
+	// Set the enemy's Flashlight Socket
 	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
 	//void SetFlashlightSocket( USkeletalMeshComponent* new_flashlightsocket ) { FlashLightSocket = new_flashlightsocket; };
 
-	/// Get the enemy's FlashlightSocket
+	// Get the enemy's FlashlightSocket
 	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
 	//USkeletalMeshComponent* GetFlashlightSocket() const { return FlashLightSocket; };
 
-	/// Set the enemy's TreasureSocket
+	// Set the enemy's TreasureSocket
 	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
 	//void SetTreasureSocket( USkeletalMeshComponent* new_treasuresocket ) { TreasureSocket = new_treasuresocket; };
 
-	/// Get the enemy's TreasureSocket
+	// Get the enemy's TreasureSocket
 	//UFUNCTION(BlueprintCallable, Category="Setters|Components")
 	//USkeletalMeshComponent* GetTreasureSocket() const { return TreasureSocket; };
 	

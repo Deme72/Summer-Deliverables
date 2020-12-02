@@ -43,7 +43,7 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 		///The distance the prop is off of the ground
 		float GroundHeight;
 		
-    	/// Reference to currently possessing player controller, used for un-possessing.
+    	// Reference to currently possessing player controller, used for un-possessing.
     	//class APlayerGhostController* CurrentPlayerController;
 	
     public:
@@ -97,7 +97,7 @@ class SUMMERDELIVERABLES_API APossessablePawn : public APawn
 	    void SetOutline(bool OutLine_ON,int depthInt);
 		//depthInt A number which will tell the outline material when we set the depth on the mesh which color to use.
     	
-    	/// Setter for CurrentPlayer pointer
+    	// Setter for CurrentPlayer pointer
     	// void SetPlayerController(APlayerGhostController * pc){CurrentPlayerController = pc;}
 
 

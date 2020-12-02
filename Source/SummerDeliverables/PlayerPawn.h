@@ -102,7 +102,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	
 	protected:
 	public:
-		/** Base turn rate, in deg/sec. Other scaling may affect final turn rate.*/
+		/// Base turn rate, in deg/sec. Other scaling may affect final turn rate.
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 		float BaseTurnRate;
 
@@ -139,7 +139,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)
 		UShapeComponent * InteractBounds;
 
-		//For Team Stamina
+		///For Team Stamina
 		UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> ClassToFind; // Needs to be populated somehow (e.g. by exposing to blueprints as uproperty and setting it there
 
@@ -268,7 +268,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	    void OnBeginOverlap(class UPrimitiveComponent* HitComp, class AActor* OtherActor,
 	                       class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	                       bool bFromSweep, const FHitResult & SweepResult);
-		//An overlap function used to turn highlight off 
+		///An overlap function used to turn highlight off 
 		UFUNCTION()
 		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

@@ -19,6 +19,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	float TeamStaminaVal;
 	
-	// Sets default values for this actor's properties
+	/// Sets default values for this actor's properties
 	APlayerStamina();
 };

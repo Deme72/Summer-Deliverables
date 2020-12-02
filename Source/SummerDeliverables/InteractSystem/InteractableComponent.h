@@ -54,8 +54,8 @@ class SUMMERDELIVERABLES_API UInteractableComponent : public UActorComponent
 	private:
 	protected:
 	public:
-		// constructor and destructor:
-		// Sets default values for this component's properties
+		/// constructor and destructor:
+		/// Sets default values for this component's properties
 		UInteractableComponent();
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
@@ -74,7 +74,7 @@ class SUMMERDELIVERABLES_API UInteractableComponent : public UActorComponent
 	protected:
 	public:
 		//Public methods
-		//virtual void BluePrintInit(){}; //not needed for now
+		///virtual void BluePrintInit(){}; //not needed for now
 
 		///The playerPawn should call this c++ function which then calls the overwritten Blueprint OnInteract function
 		virtual void OnInteractInternal();
@@ -82,8 +82,9 @@ class SUMMERDELIVERABLES_API UInteractableComponent : public UActorComponent
 		///This function should not be called from other c++ files
 		UFUNCTION(BlueprintNativeEvent, Category="Event")
 	    void OnInteract();
-		
-		virtual void OnInteract_Implementation(){}; //this function is a default implementation and should never be called OnInteract should call it
+
+		///this function is a default implementation and should never be called OnInteract should call it
+		virtual void OnInteract_Implementation(){};
 
 		///The playerPawn should call this c++ function which then calls EndInteract, other c++ files can call this
 		virtual void EndInteractInternal();

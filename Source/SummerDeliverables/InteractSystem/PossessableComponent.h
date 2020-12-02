@@ -81,7 +81,7 @@ class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponen
 	private:
 	protected:
 	public:
-	// Default constructor.
+	/// Default constructor.
     UPossesableComponent();
 	
 	// =============================
