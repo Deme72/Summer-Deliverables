@@ -13,10 +13,10 @@ UParanoiaComponent::UParanoiaComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 	bWantsInitializeComponent = true;
 	
-	uses=0; 			
-	usesCooldownTime = 0;
-	useCooldown = 0;
-	active = false;
+	Uses=0; 			
+	UsesCooldownTime = 0;
+	UseCooldown = 0;
+	bActive = false;
 }
 
 void UParanoiaComponent::InitializeComponent()
@@ -38,18 +38,18 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if(uses > 0)
+	if(Uses > 0)
 	{
-		usesCooldownTime += DeltaTime;
-		if(usesCooldownTime > useCooldown)
+		UsesCooldownTime += DeltaTime;
+		if(UsesCooldownTime > UseCooldown)
 		{
-			uses--;
-			usesCooldownTime -= useCooldown;
+			Uses--;
+			UsesCooldownTime -= UseCooldown;
 		}
 	}
 
 	
-	if(active)
+	if(bActive)
 	{
 		if(ParanoiaBounds)
 		{
@@ -59,10 +59,10 @@ void UParanoiaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 			{
 				ABaseEnemyCharacter * enemy = Cast<ABaseEnemyCharacter>(collision);
 				if(enemy)
-					enemy->TakeParanoiaDamage(paranoiaAmount, GetOwner()->GetTransform().GetLocation());
+					enemy->TakeParanoiaDamage(ParanoiaAmount, GetOwner()->GetTransform().GetLocation());
 			}
 		}
-		active = false;
+		bActive = false;
 	}
 
 }
@@ -76,12 +76,12 @@ void UParanoiaComponent::OnInteractInternal() // When Selected
 
 void UParanoiaComponent::EndInteractInternal() // Activate ParaProp
 {
-	active = true;
-	uses++;
+	bActive = true;
+	Uses++;
 	Super::EndInteractInternal();
 }
 
-void UParanoiaComponent::Set_Outline(bool OutLine_ON,int depthInt)
+void UParanoiaComponent::SetOutline(bool OutLine_ON,int depthInt)
 {
 	UActorComponent* staticmesh = GetOwner()->GetOwner()->GetComponentByClass(UStaticMeshComponent::StaticClass());
 	UStaticMeshComponent* staticmeshc = Cast<UStaticMeshComponent>(staticmesh);

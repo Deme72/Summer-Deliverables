@@ -153,7 +153,7 @@ class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPoss
 	void InternalPaintingPossession(UPaintingPossessableComponent* target_painting);
 
 	/// Handles being hit by flashlight
-	virtual void HitByFlashlight_Implementation() override final;
+	virtual void HitByFlashLight_Implementation() override final;
 	
 	/// Forward iteration through the Painting's path
 	virtual void RightTriggerRelease_Implementation() override final;

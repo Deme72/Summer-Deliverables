@@ -44,11 +44,11 @@ class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
 	protected:
 		/// How many times this paranoia component has been activated.
 		/// Affects the amount of paranoia damage caused by this prop's use (negative paranoia damage to uses correlation)
-		int uses;
+		int Uses;
 
 		/// The current time in between uses of this prop
 		/// if greater than useCooldown then the uses variable will decrement
-		float usesCooldownTime;
+		float UsesCooldownTime;
 	
 	public:
 		/// A bounding object that defines the area in which this object must collide with enemies to cause paranoia damage to them 
@@ -57,15 +57,15 @@ class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
 
 		/// The amount of Paranoia damage inflicted on enemies within the ParanoiaBounds
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
-		float paranoiaAmount;
+		float ParanoiaAmount;
 
 		/// The length of time a player must wait in between using this prop
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
-		float useCooldown;
+		float UseCooldown;
 
 		/// Triggers the damage dealing call in Tick
 		UPROPERTY(VisibleAnywhere, Category="Debug")
-		bool active;
+		bool bActive;
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
@@ -99,7 +99,7 @@ class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
 
 		///Sets outline properties.
 		UFUNCTION(BlueprintCallable, Category="Outline")
-	    void Set_Outline(bool OutLine_ON,int depthInt);
+	    void SetOutline(bool OutLine_ON,int depthInt);
 		//depthInt A number which will tell the outline material when we set the depth on the mesh which color to use.
 	
 	

@@ -57,30 +57,30 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		TArray<UParanoiaComponent *> SelectedProps;
 
 		/// A boolean value; true if the player is currently checking for collisions with paranoia props
-		bool lookingForParaProps = false;
+		bool bLookingForParaProps = false;
 
 		/// A TArray for holding the other found players to give them team stamina
 		TArray<AActor*> FoundActors;
 
 		/// The possessable component to possess after entering
-		class UPossesableComponent * animPossess;
+		class UPossesableComponent * AnimPossess;
 
 		/// Current animation progress
-		float animTimer;
+		float AnimTimer;
 
 		/// Start position of the animation
-		FTransform animStartPos;
+		FTransform AnimStartPos;
 
 		/// End position of the animation
-		FTransform animExitPos;
+		FTransform AnimExitPos;
 
 		/// Reference to the camera attached to the player
 		/// Todo: after merging player controls with camera use whatever pointer it uses instead
-		UCameraComponent * cam;
+		UCameraComponent * Cam;
 
 		/// The skeletalmesh for the player
 		/// Todo: clean up the unreal object structure for player
-		USkeletalMeshComponent * playerMesh;
+		USkeletalMeshComponent * PlayerMesh;
 
 		/// The current player speed
 		FVector CurrentSpeed;
@@ -102,7 +102,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	
 	protected:
 	public:
-		/** Base turn rate, in deg/sec. Other scaling may affect final turn rate.*/
+		/// Base turn rate, in deg/sec. Other scaling may affect final turn rate.
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
 		float BaseTurnRate;
 
@@ -116,7 +116,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 
 		/// The lowest input from 0-1 that counts as an actual stick input
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
-		float Deadzone;
+		float DeadZone;
 
 		/// The angle in degrees at which an move input is considered different. Somewhere around 15 seems about right
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement)
@@ -139,25 +139,25 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Collision)
 		UShapeComponent * InteractBounds;
 
-		//For Team Stamina
+		///For Team Stamina
 		UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> ClassToFind; // Needs to be populated somehow (e.g. by exposing to blueprints as uproperty and setting it there
 
 		/// Time to enter a prop
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animation)
-		float enterTime;
+		float EnterTime;
 
 		/// Time to exit a prop
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animation)
-		float exitTime;
+		float ExitTime;
 		
 		/// If this is in the exiting animation
 		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Animation)
-		bool exiting;
+		bool bExiting;
 
 		/// If this is in the entering animation
 		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Animation)
-		bool entering;
+		bool bEntering;
 		
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
@@ -188,15 +188,15 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	    bool CanAffordStaminaCost(const float stamina_cost) const;
 
 		/// Setter for CurrentPlayer pointer
-		void setPlayer(APlayerGhostController * p){CurrentPlayerController = p;}
+		void SetPlayer(APlayerGhostController * p){CurrentPlayerController = p;}
 		
 		/// Resets the movement lock called by camera
-		void resetMoveLock(){LastMovementNormal = {0,0,0};};
+		void ResetMoveLock(){LastMovementNormal = {0,0,0};};
 
 	
 		UFUNCTION(BlueprintCallable, Category="Getters")
 		///Returns the player speed
-		float getSpeed(){return CurrentSpeed.Size();};
+		float GetSpeed(){return CurrentSpeed.Size();};
 	
 	// ===================
 	// ===== METHODS =====
@@ -207,7 +207,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 		void BeginPlay();
 
 		/// Performs the "whisker" raycasts for the camera
-		void WhiskersRaycast(float DeltaTime);
+		void WhiskersRayCast(float DeltaTime);
 	public:
 		/// Called every frame, put collision related code in here
 		virtual void Tick(float DeltaTime) override;
@@ -268,7 +268,7 @@ class SUMMERDELIVERABLES_API APlayerPawn : public APawn
 	    void OnBeginOverlap(class UPrimitiveComponent* HitComp, class AActor* OtherActor,
 	                       class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	                       bool bFromSweep, const FHitResult & SweepResult);
-		//An overlap function used to turn highlight off 
+		///An overlap function used to turn highlight off 
 		UFUNCTION()
 		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

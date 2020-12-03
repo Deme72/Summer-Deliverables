@@ -166,14 +166,14 @@ void ABaseEnemyCharacter::SetAnimation(AnimType anim,float animTime)
 	CurrentAnim = anim;
 	CurrentAnimTime = animTime;
 	//halt movement if non-none animation, restore it if it is
-	if (CurrentAnim != None && !isMovementHalted)
+	if (CurrentAnim != None && !bIsMovementHalted)
 	{
-		isMovementHalted = true;
+		bIsMovementHalted = true;
 		FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed *= .01;
 	}
-	if (CurrentAnim == None && isMovementHalted)
+	if (CurrentAnim == None && bIsMovementHalted)
 	{
-		isMovementHalted = false;
+		bIsMovementHalted = false;
 		FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed *= 100;
 	}
 }

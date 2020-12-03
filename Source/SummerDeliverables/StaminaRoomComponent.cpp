@@ -12,7 +12,7 @@ UStaminaRoomComponent::UStaminaRoomComponent()
 {
     PrimaryComponentTick.bCanEverTick = true;
     //set the room to closed at start
-    open = false;
+    bOpen = false;
     TInlineComponentArray<UActorComponent*> tempa;
     //get the room actor this component is attached to
     APossessablePawn* room = Cast<APossessablePawn>(GetOwner());
@@ -26,8 +26,8 @@ UStaminaRoomComponent::UStaminaRoomComponent()
             if (com->ComponentHasTag(TEXT("Door")))
             {
                 Door = Cast<UStaticMeshComponent>(com);
-                Startpos = Door->GetRelativeLocation();
-                Endpos = Door->GetRelativeLocation()+ FVector(-160.0,0.0,0.0);  
+                StartPos = Door->GetRelativeLocation();
+                EndPos = Door->GetRelativeLocation()+ FVector(-160.0,0.0,0.0);  
             }
             if (com->IsA(UBoxComponent::StaticClass()))
             {
@@ -35,14 +35,14 @@ UStaminaRoomComponent::UStaminaRoomComponent()
             }
         }
     }
-    Using = false;
-    Utimer = 3.0f;
+    bUsing = false;
+    TimerTillActivate = 3.0f;
 }
 
 void UStaminaRoomComponent::BeginPlay()
 {
     Super::BeginPlay();
-    if (curve)
+    if (Curve)
     {
         //start and end functions for binding to timeline
         FOnTimelineFloat Timelinecallback;
@@ -52,7 +52,7 @@ void UStaminaRoomComponent::BeginPlay()
         Timelinecallback.BindUFunction(this,FName("OpenDoor"));
         Timelinefinishedcallback.BindUFunction(this,FName("CloseDoor"));
         //add the bindings to the timelinecomponent
-        TimeLineComponent.AddInterpFloat(curve,Timelinecallback);
+        TimeLineComponent.AddInterpFloat(Curve,Timelinecallback);
         TimeLineComponent.SetTimelineFinishedFunc(Timelinefinishedcallback);
 
         //set looping to false so it doesnt repeativily play start
@@ -76,19 +76,19 @@ void UStaminaRoomComponent::TickComponent(float DeltaTime, ELevelTick TickType,F
             ULeverComponent* Levercom = Cast<ULeverComponent>(temp_lever->PossessableComponent);
             if (Levercom)
             {
-                if (Levercom->get_open())
+                if (Levercom->GetOpen())
                 {
-                    open = true;
+                    bOpen = true;
                 }
                 else
                 {
-                    open = false;
+                    bOpen = false;
                     break;
                 }
             }
         }
     }
-    if (open)
+    if (bOpen)
     {
         TimeLineComponent.Play();
         for (auto& lever: Network)
@@ -99,16 +99,16 @@ void UStaminaRoomComponent::TickComponent(float DeltaTime, ELevelTick TickType,F
                 ULeverComponent* Levercom = Cast<ULeverComponent>(temp_lever->PossessableComponent);
                 if (Levercom)
                 {
-                    Levercom->set_timerscale(0.0f);
+                    Levercom->SetTimerScale(0.0f);
                 }
             }
         }
     }
-    if (Using)
+    if (bUsing)
     {
-        if (Utimer <=0.0f)
+        if (TimerTillActivate <=0.0f)
         {
-            Utimer = 0.0f;
+            TimerTillActivate = 0.0f;
             for (FConstPlayerControllerIterator player = GetWorld()->GetPlayerControllerIterator(); player;++player)
             {
                 APlayerGhostController* p = Cast<APlayerGhostController>(player->Get());
@@ -118,11 +118,11 @@ void UStaminaRoomComponent::TickComponent(float DeltaTime, ELevelTick TickType,F
                     p->SetInvisibility(true);
                 }
             }
-            Using= false;
+            bUsing= false;
         }
         else
         {
-            Utimer-=DeltaTime;
+            TimerTillActivate-=DeltaTime;
         }
     }
 }
@@ -132,9 +132,9 @@ void UStaminaRoomComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, 
     //check to see if players are inside so when the room closes we know which players get kicked out
     APlayerPawn* temp_p;
     temp_p = Cast<APlayerPawn>(OtherActor);
-    if (temp_p && Using == false && Utimer > 0.0f)
+    if (temp_p && bUsing == false && TimerTillActivate > 0.0f)
     {
-        Using = true;
+        bUsing = true;
     }
 }
 
@@ -143,10 +143,10 @@ void UStaminaRoomComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AA
     //removes player from the list of being inside so we dont kick them later
     APlayerPawn* temp_p;
     temp_p = Cast<APlayerPawn>(OtherActor);
-    if (temp_p && Utimer > 0.0f)
+    if (temp_p && TimerTillActivate > 0.0f)
     {
-        Using = false;
-        Utimer = 3.0f;
+        bUsing = false;
+        TimerTillActivate = 3.0f;
     }
 }
 
@@ -155,7 +155,7 @@ void UStaminaRoomComponent::OpenDoor(float Curveamount)
 {
     if (Door)
     {
-        Door->SetRelativeLocation(FMath::Lerp(Startpos,Endpos,Curveamount));
+        Door->SetRelativeLocation(FMath::Lerp(StartPos,EndPos,Curveamount));
     }
 }
 

@@ -20,40 +20,37 @@ class SUMMERDELIVERABLES_API ULeverComponent : public UUtilityPossessableCompone
 protected:
 	///sets the start pos of the end line
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-	FVector Endline_pos1;
+	FVector EndLinePos1;
 	///sets the end pos of the end line
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-    FVector Endline_pos2;
+    FVector EndLinePos2;
 	///how much the lever moves back to its orginal rotation
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-	float Slide_Back;
+	float SlideBack;
 	///what the starting rotation is depending on which axis the rotation is happening on
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-	float begin_rot;
-	///how long until the lever can be used again
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-    float utimer;
+	float BeginRot;
 	///Checkes to see if we are controlling the lever or not
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-	bool controlling;
+	bool bControlling;
 	///World time
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-	float Deltatime;
+	float MyDeltaTime;
 	///Sets the max rotation for when the object is set to open
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-	float maxYaw;
+	float MaxYaw;
 	///Tells the secret room that the lever this component is attached has been switched on or off
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category="Lever")
-    bool open;
+    bool bOpen;
 	///Gets a ref to the thing we are attached to
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
     class ALeverPawn* Lever_ref;
 	//Tells the lever that the room is open andd to not start reseting and closing the door until the players use the rooms ability
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-    float timescale;
+    float TimeScale;
 	///how long until the lever resets this will be between 1 to 3 secs
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Lever")
-    float timer;
+    float TimerTillReset;
 
 public:
 
@@ -69,7 +66,7 @@ public:
 
 	virtual void EndInteract_Implementation() override;
 
-	bool get_open();
+	bool GetOpen();
 
-	void set_timerscale(float value);
+	void SetTimerScale(float value);
 };

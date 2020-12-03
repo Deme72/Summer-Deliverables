@@ -20,11 +20,11 @@ public:
 
     ///Positions of where the debug lines start and end (pos1 = start and pos2 = end)
     UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Components")
-    USceneComponent* StartLinepos1;
+    USceneComponent* StartLinePos1;
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Components")
-    USceneComponent* StartLinepos2;
+    USceneComponent* StartLinePos2;
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Components")
-    USceneComponent* EndLinepos1;
+    USceneComponent* EndLinePos1;
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Components")
-    USceneComponent* EndLinepos2;
+    USceneComponent* EndLinePos2;
 };

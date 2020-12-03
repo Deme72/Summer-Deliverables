@@ -142,7 +142,7 @@ void APossessablePawn::EndPossession()
 			if (new_pawn)
 			{
 				ghost_controller->Possess(new_pawn);
-				new_pawn->setPlayer(ghost_controller);
+				new_pawn->SetPlayer(ghost_controller);
 				new_pawn->SetActorRotation(GetActorRotation());
 				new_pawn->PlayPossessAnimation(false, ExitPoint->GetComponentTransform());
 				PossessableComponent->EndInteractInternal();
@@ -154,10 +154,10 @@ void APossessablePawn::EndPossession()
 
 void APossessablePawn::HitByFlashlight()
 {
-	PossessableComponent->HitByFlashlight(); // new
+	PossessableComponent->HitByFlashLight(); // new
 }
 
-void APossessablePawn::Set_Outline(bool OutLine_ON,int depthInt)
+void APossessablePawn::SetOutline(bool OutLine_ON,int depthInt)
 {
 	StaticMeshComponent->SetRenderCustomDepth(OutLine_ON);
 	StaticMeshComponent->SetCustomDepthStencilValue(depthInt);

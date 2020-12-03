@@ -29,28 +29,28 @@ class SUMMERDELIVERABLES_API ANavigationNode : public AActor
 	friend class ANavigationNetworkManager;
 
 protected:
-	// list of navigation nodes connected to this node (enemy can travel to these nodes)
+	/// list of navigation nodes connected to this node (enemy can travel to these nodes)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<ANavigationNode*> neighbors;
+	TArray<ANavigationNode*> Neighbors;
 
-	// type of node (room, hallway)
+	/// type of node (room, hallway)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<NavNodeType> type;
+	TEnumAsByte<NavNodeType> Type;
 
-	// true: shows this node
+	/// true: shows this node
 	UPROPERTY(Category = "Debug", EditAnywhere, BlueprintReadWrite)
 	bool bDebug;
 
 public:	
-	// Sets default values for this actor's properties
+	/// Sets default values for this actor's properties
 	ANavigationNode();
 
 protected:
-	// Called when the game starts or when spawned
+	/// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
+	/// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 };
