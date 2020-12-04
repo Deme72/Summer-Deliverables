@@ -97,7 +97,7 @@ float ABaseEnemyCharacter::TakeBraveryDamage(float base_bravery_damage, FVector 
 	float damage = (ScareBonus * (Paranoia / ParanoiaMax) + 1) * base_bravery_damage;
 	damage += FMath::Max(Paranoia - ParanoiaMax, 0.0f) * ParanoiaOverflowDamage;
 	damage *= (ComboCounter+1);
-	Bravery = FMath::Max(Bravery - damage, 0.0f);
+	Bravery = Bravery-damage;//FMath::Max(Bravery - damage, 0.0f);
 
 	ComboCounter += 1;
 	ComboTimer = ScareComboInteraval;
