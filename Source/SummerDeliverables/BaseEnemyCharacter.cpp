@@ -162,13 +162,8 @@ void ABaseEnemyCharacter::DropTreasure()
 //removes the object from existence
 void ABaseEnemyCharacter::PickUpOther(AActor* target)
 {
-	UStaticMeshComponent* mesh = target->FindComponentByClass<UStaticMeshComponent>();
-	if (mesh == nullptr)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Prop has no mesh!"));
-		return;
-	}
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Stealing prop!"));
+	//target->SetHidden(true);
 	target->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(false);
 	target->FindComponentByClass<UStaticMeshComponent>()[0].SetVisibility(false);
 	target->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
@@ -182,6 +177,7 @@ void ABaseEnemyCharacter::DropObjects()
 	for (int x = 0; x < OtherStolenObjects.Num(); x++)
 	{
 		AActor* object = OtherStolenObjects[x];
+		//object->SetHidden(false);
 		object->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
 		object->FindComponentByClass<UStaticMeshComponent>()[0].SetVisibility(true);
 		object->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
