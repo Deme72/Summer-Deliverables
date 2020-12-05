@@ -140,9 +140,9 @@ float ABaseEnemyCharacter::TakeParanoiaDamage(float ParanoiaDamage, FVector prop
 void ABaseEnemyCharacter::PickUpTreasure(AActor* treasure)
 {
 	treasure->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(false);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Setting Socket!"));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Setting Socket!"));
 	treasure->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale,FName("RightHandSocket"));
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Finishing Pickup!"));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Finishing Pickup!"));
 	treasure->SetActorEnableCollision(false);
 	TreasureActor = treasure;
 	SetEState(EState::Stealing);
@@ -159,6 +159,38 @@ void ABaseEnemyCharacter::DropTreasure()
 		TreasureActor = nullptr;
 	}
 }
+//removes the object from existence
+void ABaseEnemyCharacter::PickUpOther(AActor* target)
+{
+	UStaticMeshComponent* mesh = target->FindComponentByClass<UStaticMeshComponent>();
+	if (mesh == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Prop has no mesh!"));
+		return;
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Stealing prop!"));
+	target->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(false);
+	target->FindComponentByClass<UStaticMeshComponent>()[0].SetVisibility(false);
+	target->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	target->SetActorEnableCollision(false);
+	OtherStolenObjects.Add(target);
+}
+//rematerialize the object
+void ABaseEnemyCharacter::DropObjects()
+{
+	DropTreasure();
+	for (int x = 0; x < OtherStolenObjects.Num(); x++)
+	{
+		AActor* object = OtherStolenObjects[x];
+		object->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
+		object->FindComponentByClass<UStaticMeshComponent>()[0].SetVisibility(true);
+		object->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Dropping prop!"));
+		object->SetActorEnableCollision(true);
+	}
+}
+
+
 
 //Animation setting functionality
 void ABaseEnemyCharacter::SetAnimation(AnimType anim,float animTime)
