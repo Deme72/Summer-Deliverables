@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 
 //#include "EdGraphSchema_K2.h"
+#include "EdGraphSchema_K2.h"
 #include "GameFramework/Character.h"
 #include "BaseEnemyCharacter.generated.h"
 
@@ -41,8 +42,8 @@ enum AnimType
 	PickupTreasure UMETA(DisplayName = "Pick Up Treasure"),
 	DropTreasure UMETA(DisplayName = "Drop Treasure"),
 	InvestigatePOI UMETA(DisplayName = "Investigate POI"),
-	Scare UMETA(DisplayName = "Scare")
-/// @param BlueprintType
+	Scare UMETA(DisplayName = "Scare"),
+	InstantEscape UMETA(DisplayName = "InstantEscape")
 };
 
 /// enum class for the direction of the last scare
@@ -220,6 +221,10 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	/// Treasure that the enemy is holding
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	AActor* TreasureActor;
+
+	/// Stolen props
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	TArray<AActor*> OtherStolenObjects;
 	
 	/// Time remaining in the current animation
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Animation")
@@ -373,12 +378,19 @@ class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
 	
 	// ====== enemy class specific methods =====
 	/// Applies the treasure to the enemy skeletalmesh and modifies behavior
-	UFUNCTION(BlueprintCallable, Category="States")
+	UFUNCTION(BlueprintCallable, Category="Function")
     virtual void PickUpTreasure(AActor* treasure);
 
 	/// Removes a treasure from the enemy skeletalmesh and modifies behavior
 	/// ; else throws a debug message
-	UFUNCTION(BlueprintCallable, Category="States")
+	UFUNCTION(BlueprintCallable, Category="Functions")
     virtual void DropTreasure();
+
+	/// Adds a prop (or ghost?) to the enemy's bag
+	UFUNCTION(BlueprintCallable, Category="Functions")
+	virtual void PickUpOther(AActor* target);
 	
+	/// Removes all props from the enemy's bag
+	UFUNCTION(BlueprintCallable, Category="Functions")
+	virtual void DropObjects();
 };
