@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 
-#include "PossessablePawn.h"
 #include "GameFramework/PlayerController.h"
 #include "PlayerGhostController.generated.h"
 

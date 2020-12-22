@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "LeverComponent.h"
-#include "SummerDeliverables/InteractSystem/PossessablePawn.h"
+#include "Polterheist/Interactable/Interactable.h"
 
 #include <corecrt_io.h>
 

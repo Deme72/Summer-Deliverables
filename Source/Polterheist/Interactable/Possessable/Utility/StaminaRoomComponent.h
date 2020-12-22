@@ -3,10 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerPawn.h"
 #include "Components/BoxComponent.h"
 #include "Components/TimelineComponent.h"
-#include "InteractSystem/UtilityPossessableComponent.h"
+#include "Polterheist/Interactable/Core/UtilityPossessableComponent.h"
 #include "StaminaRoomComponent.generated.h"
 
 /**

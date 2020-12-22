@@ -2,13 +2,8 @@
 
 #include "PlayerGhostController.h"
 
-#include <string>
-#include "PossessablePawn.h"
-#include "../PlayerPawn.h"
+#include "Polterheist/Interactable/Interactable.h"
 #include "Blueprint/UserWidget.h"
-#include "Chaos/ChaosPerfTest.h"
-#include "SummerDeliverables/DefinedDebugHelpers.h"
-#include "SummerDeliverables/GhostCameraManager.h"
 
 APlayerGhostController::APlayerGhostController() :APlayerController()
 {

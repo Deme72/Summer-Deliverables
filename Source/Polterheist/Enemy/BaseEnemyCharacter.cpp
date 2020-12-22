@@ -3,9 +3,9 @@
 //#include <activation.h>
 #include "BaseEnemyCharacter.h"
 
-#include "DefinedDebugHelpers.h"
-#include "SummerDeliverablesGameMode.h"
+#include "Polterheist/External/External.h"
 #include "GameFramework/Actor.h"
+#include "Polterheist/Core/Core.h"
 
 
 // Sets default values
@@ -262,11 +262,11 @@ void ABaseEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	if (IsValid(TreasureActor))
 	{
 		TreasureActor->Destroy();
-		Cast<ASummerDeliverablesGameMode>(GetWorld()->GetAuthGameMode())->CheckWinCon(1);
+		Cast<APolterheistGameModeBase>(GetWorld()->GetAuthGameMode())->CheckWinCon(1);
 	}
 	else
 	{
-		Cast<ASummerDeliverablesGameMode>(GetWorld()->GetAuthGameMode())->CheckWinCon();
+		Cast<APolterheistGameModeBase>(GetWorld()->GetAuthGameMode())->CheckWinCon();
 	}
 }
 

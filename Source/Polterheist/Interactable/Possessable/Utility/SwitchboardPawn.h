@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/TextRenderComponent.h"
-#include "InteractSystem/PossessablePawn.h"
+#include "Polterheist/Interactable/Core/PossessablePawn.h"
 #include "SwitchboardPawn.generated.h"
 
 /**

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractSystem/PossessablePawn.h"
+#include "Polterheist/Interactable/Core/PossessablePawn.h"
 #include "LeverPawn.generated.h"
 
 /**

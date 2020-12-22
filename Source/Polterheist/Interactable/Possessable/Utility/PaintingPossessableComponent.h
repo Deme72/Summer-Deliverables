@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UtilityPossessableComponent.h"
+#include "Polterheist/Interactable/Core/UtilityPossessableComponent.h"
+//Todo: convert these to unreal's versions, move to the cpp and use the class classname varname declaration for any vars
 #include <set>
 #include <map>
 #include <list>

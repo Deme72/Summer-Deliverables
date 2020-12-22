@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 
 
-#include "InteractSystem/UtilityPossessableComponent.h"
+#include "Polterheist/Interactable/Core/UtilityPossessableComponent.h"
 #include "Switchboard.generated.h"
 
 /**

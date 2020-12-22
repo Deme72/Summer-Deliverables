@@ -3,14 +3,11 @@
 
 #include "PossessableComponent.h"
 
-#include <string>
-
-#include "PlayerGhostController.h"
+#include "Polterheist/External/External.h"
+#include "Polterheist/Enemy/Enemy.h"
+#include "Polterheist/Movement/Movement.h"
 #include "AIController.h"
-#include "SummerDeliverables/DefinedDebugHelpers.h"
-#include "SummerDeliverables/PlayerPawn.h"
 #include "PossessablePawn.h"
-#include "SummerDeliverables/BaseEnemyCharacter.h"
 
 UPossesableComponent::UPossesableComponent():UInteractableComponent()
 {

@@ -2,9 +2,8 @@
 
 
 #include "Switchboard.h"
-#include "math.h"
 #include "SwitchboardPawn.h"
-#include "InteractSystem/PlayerGhostController.h"
+#include "Polterheist/Interactable/Interactable.h"
 
 USwitchboard::USwitchboard():UUtilityPossessableComponent()
 {

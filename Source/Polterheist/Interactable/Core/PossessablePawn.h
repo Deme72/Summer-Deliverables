@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Controller.h"
-#include "SummerDeliverables/PlayerPawn.h"
 
 #include "PossessablePawn.generated.h"
 

@@ -2,14 +2,14 @@
 
 #include "PossessablePawn.h"
 #include "GameFramework/Actor.h"
-#include "SummerDeliverables/PlayerPawn.h"
-#include "SummerDeliverables/DefinedDebugHelpers.h"
+#include "Polterheist/Core/Core.h"
+#include "Polterheist/Movement/Movement.h"
+#include "Polterheist/External/External.h"
+#include "Polterheist/Interactable/Interactable.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/ShapeComponent.h"
-#include "PossessableComponent.h"
-#include "PlayerGhostController.h"
 
 APossessablePawn::APossessablePawn():APawn()
 {

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SwitchboardPawn.h"
-#include "InteractSystem/PlayerGhostController.h"
+#include "Polterheist/Interactable/Interactable.h"
 
 ASwitchboardPawn::ASwitchboardPawn():APossessablePawn()
 {

@@ -1,9 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PaintingPossessableComponent.h"
-#include "SummerDeliverables/DefinedDebugHelpers.h"
-#include "PossessablePawn.h"
-#include "../DebugToolsSTDStringModifiers.h"
+#include "Polterheist/Interactable/Interactable.h"
+#include "Polterheist/External/External.h"
 
 UPaintingPossessableComponent::UPaintingPossessableComponent()
 {

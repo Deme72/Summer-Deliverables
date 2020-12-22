@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-#include "DynamicPossessableComponent.h"
 #include "PossessableComponent.h"
 #include "StaticPossessableComponent.generated.h"
 

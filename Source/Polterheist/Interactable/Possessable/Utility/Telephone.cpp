@@ -2,7 +2,8 @@
 
 
 #include "Telephone.h"
-#include "InteractSystem/PlayerGhostController.h"
+#include "Polterheist/Interactable/Interactable.h"
+#include "Polterheist/Movement/Movement.h"
 
 UTelephone::UTelephone():UUtilityPossessableComponent()
 {

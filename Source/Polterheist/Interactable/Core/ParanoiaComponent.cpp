@@ -3,8 +3,8 @@
 
 #include "ParanoiaComponent.h"
 #include "Components/ShapeComponent.h"
-#include "SummerDeliverables/BaseEnemyCharacter.h"
-#include "SummerDeliverables/DefinedDebugHelpers.h"
+#include "Polterheist/Enemy/Enemy.h"
+#include "Polterheist/External/External.h"
 
 
 /// Sets default values for this component's properties

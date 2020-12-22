@@ -6,7 +6,7 @@
 #include "LeverComponent.h"
 #include "LeverPawn.h"
 #include "Components/TimelineComponent.h"
-#include "InteractSystem/PlayerGhostController.h"
+#include "Polterheist/Interactable/Interactable.h"
 
 UStaminaRoomComponent::UStaminaRoomComponent()
 {
