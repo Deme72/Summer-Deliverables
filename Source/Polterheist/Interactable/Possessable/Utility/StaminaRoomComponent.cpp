@@ -7,6 +7,8 @@
 #include "LeverPawn.h"
 #include "Components/TimelineComponent.h"
 #include "Polterheist/Interactable/Interactable.h"
+#include "Polterheist/Core/Core.h"
+#include "Polterheist/Movement/Movement.h"
 
 UStaminaRoomComponent::UStaminaRoomComponent()
 {

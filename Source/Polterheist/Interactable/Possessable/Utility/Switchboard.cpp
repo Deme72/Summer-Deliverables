@@ -4,6 +4,7 @@
 #include "Switchboard.h"
 #include "SwitchboardPawn.h"
 #include "Polterheist/Interactable/Interactable.h"
+#include "Polterheist/Movement/Movement.h"
 
 USwitchboard::USwitchboard():UUtilityPossessableComponent()
 {

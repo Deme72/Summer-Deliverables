@@ -2,6 +2,7 @@
 
 #include "SwitchboardPawn.h"
 #include "Polterheist/Interactable/Interactable.h"
+#include "Polterheist/Movement/Movement.h"
 
 ASwitchboardPawn::ASwitchboardPawn():APossessablePawn()
 {

@@ -8,6 +8,7 @@
 #include "Polterheist/Interactable/Core/InteractableComponent.h"
 #include "Polterheist/Interactable/Core/ParanoiaComponent.h"
 #include "Polterheist/Interactable/Core/PossessableComponent.h"
+#include "Polterheist/Interactable/Core/PossessablePawn.h"
 
 #include "Polterheist/Enemy/FlashlightComponent.h"
 #include "Polterheist/Movement/PlayerGhostController.h"

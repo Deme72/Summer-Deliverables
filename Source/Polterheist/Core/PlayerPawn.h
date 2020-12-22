@@ -47,10 +47,10 @@ class POLTERHEIST_API APlayerPawn : public APawn
 		class UPossesableComponent * CurrentBindings;
 
 		/// An array of all interactable props within the bounding area of InteractBounds 
-		TArray<UInteractableComponent *> OverlappingInteractables;
+		TArray<class UInteractableComponent *> OverlappingInteractables;
 
 		/// An array of all props currently being selected from
-		TArray<UParanoiaComponent *> SelectedProps;
+		TArray<class UParanoiaComponent *> SelectedProps;
 
 		/// A boolean value; true if the player is currently checking for collisions with paranoia props
 		bool bLookingForParaProps = false;

@@ -3,6 +3,7 @@
 #include "PlayerGhostController.h"
 
 #include "Polterheist/Interactable/Interactable.h"
+#include "Polterheist/Core/Core.h"
 #include "Blueprint/UserWidget.h"
 
 APlayerGhostController::APlayerGhostController() :APlayerController()

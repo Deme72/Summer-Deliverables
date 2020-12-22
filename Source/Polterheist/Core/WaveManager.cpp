@@ -54,7 +54,7 @@ bool AWaveManager::SpawnWave(int number)
 	if (number >= Waves.Num())
 		return false;
 	FWave wave = Waves[number];
-	class TSubclassOf<ABaseEnemyCharacter> EnemyToSpawn;
+	class TSubclassOf<class ABaseEnemyCharacter> EnemyToSpawn;
 	for (int x = 0; x < wave.SpawnedObjects.Num(); x++)
 	{
 		//switch to get the appropriate enemy reference
