@@ -2,5 +2,5 @@
 
 #pragma once
 
-#include "Enemy/BaseEnemyCharacter.h"
-#include "Enemy/FlashlightComponent.h"
+#include "Polterheist/Enemy/BaseEnemyCharacter.h"
+#include "Polterheist/Enemy/FlashlightComponent.h"

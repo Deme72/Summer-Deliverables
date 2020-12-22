@@ -2,6 +2,6 @@
 
 #pragma once
 
-#include "Core/PlayerPawn.h"
-#include "Core/PlayerStamina.h"
-#include "Core/WaveManager.h"
+#include "Polterheist/Core/PlayerPawn.h"
+#include "Polterheist/Core/PlayerStamina.h"
+#include "Polterheist/Core/WaveManager.h"

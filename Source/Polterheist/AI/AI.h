@@ -2,5 +2,5 @@
 
 #pragma once
 
-#include "AI/NavigationNode.h"
-#include "AI/NavigationNetworkManager.h"
+#include "Polterheist/AI/NavigationNode.h"
+#include "Polterheist/AI/NavigationNetworkManager.h"

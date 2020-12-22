@@ -2,5 +2,5 @@
 
 #pragma once
 
-#include "External/DebugToolsSTDStringModifiers.h"
-#include "External/DefinedDebugHelpers.h"
+#include "Polterheist/External/DebugToolsSTDStringModifiers.h"
+#include "Polterheist/External/DefinedDebugHelpers.h"

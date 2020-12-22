@@ -2,5 +2,5 @@
 
 #pragma once
 
-#include "Camera/GhostCameraManager.h"
-#include "Camera/SFadeObjectsComponent.h"
+#include "Polterheist/Camera/GhostCameraManager.h"
+#include "Polterheist/Camera/SFadeObjectsComponent.h"
