@@ -1,0 +1,1 @@
+Contains all raw exported files to be imported (.fbx, etc.)

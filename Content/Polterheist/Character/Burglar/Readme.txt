@@ -1,0 +1,1 @@
+Contains all animations files for the burglar

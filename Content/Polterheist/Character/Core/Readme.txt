@@ -1,0 +1,1 @@
+Contains all essential animation files for characters (graphs, blendspaces, etc.)
