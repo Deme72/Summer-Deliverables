@@ -8,7 +8,7 @@
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable )
-class SUMMERDELIVERABLES_API UFlashlightComponent : public UActorComponent
+class POLTERHEIST_API UFlashlightComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

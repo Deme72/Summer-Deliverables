@@ -13,7 +13,7 @@
 **/
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class SUMMERDELIVERABLES_API UParanoiaComponent : public UInteractableComponent
+class POLTERHEIST_API UParanoiaComponent : public UInteractableComponent
 {
 	GENERATED_BODY()
 

@@ -18,7 +18,7 @@ struct FPlayerGhostStatistics
 
 
 UCLASS()
-class SUMMERDELIVERABLES_API APlayerGhostController : public APlayerController
+class POLTERHEIST_API APlayerGhostController : public APlayerController
 {
 	GENERATED_BODY()
 	// ========================

@@ -12,7 +12,7 @@
  * 
  */
 UCLASS()
-class SUMMERDELIVERABLES_API USwitchboard : public UUtilityPossessableComponent
+class POLTERHEIST_API USwitchboard : public UUtilityPossessableComponent
 {
 	GENERATED_BODY()
 

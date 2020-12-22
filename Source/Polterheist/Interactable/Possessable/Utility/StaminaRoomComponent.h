@@ -13,7 +13,7 @@
  * 
  */
 UCLASS()
-class SUMMERDELIVERABLES_API UStaminaRoomComponent : public UUtilityPossessableComponent
+class POLTERHEIST_API UStaminaRoomComponent : public UUtilityPossessableComponent
 {
 	GENERATED_BODY()
 

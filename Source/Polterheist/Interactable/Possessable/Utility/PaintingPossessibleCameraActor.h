@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class SUMMERDELIVERABLES_API APaintingPossessibleCameraActor : public ACameraActor
+class POLTERHEIST_API APaintingPossessibleCameraActor : public ACameraActor
 {
 	GENERATED_BODY()
 	

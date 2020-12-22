@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 
-#include "BaseEnemyCharacter.h"
 #include "GameFramework/Actor.h"
 #include "WaveManager.generated.h"
+
 UENUM(BlueprintType)
 enum EEnemyType
 {
@@ -30,7 +30,7 @@ struct FWave {
 };
 
 UCLASS()
-class SUMMERDELIVERABLES_API AWaveManager : public AActor
+class POLTERHEIST_API AWaveManager : public AActor
 {
 	GENERATED_BODY()
 public:	
@@ -39,34 +39,34 @@ public:
 
 	/// Class to use for the tier 1 criminal enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> CriminalTier1Type;
+	class TSubclassOf<class ABaseEnemyCharacter> CriminalTier1Type;
 	/// Class to use for the tier 2 criminal enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> CriminalTier2Type;
+	class TSubclassOf<class ABaseEnemyCharacter> CriminalTier2Type;
 	/// Class to use for the tier 3 criminal enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> CriminalTier3Type;
+	class TSubclassOf<class ABaseEnemyCharacter> CriminalTier3Type;
 	/// Class to use for the follower/minion enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> MinionType;
+	class TSubclassOf<class ABaseEnemyCharacter> MinionType;
 	/// Class to use for the tier 1 leader enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> LeaderTier1Type;
+	class TSubclassOf<class ABaseEnemyCharacter> LeaderTier1Type;
 	/// Class to use for the tier 2 leader enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> LeaderTier2Type;
+	class TSubclassOf<class ABaseEnemyCharacter> LeaderTier2Type;
 	/// Class to use for the tier 3 leader enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> LeaderTier3Type;
+	class TSubclassOf<class ABaseEnemyCharacter> LeaderTier3Type;
 	/// Class to use for the tier 1 ghost hunter enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> GhostHunterTier1Type;
+	class TSubclassOf<class ABaseEnemyCharacter> GhostHunterTier1Type;
 	/// Class to use for the tier 2 ghost hunter enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> GhostHunterTier2Type;
+	class TSubclassOf<class ABaseEnemyCharacter> GhostHunterTier2Type;
 	/// Class to use for the tier 3 ghost hunter enemy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyClassReferences")
-	class TSubclassOf<ABaseEnemyCharacter> GhostHunterTier3Type;
+	class TSubclassOf<class ABaseEnemyCharacter> GhostHunterTier3Type;
 	/// All waves that will be spawned
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FWave> Waves;
@@ -92,7 +92,7 @@ public:
 	/// Spawns this wave, returns true if the wave was successfully spawned, otherwise returns false
 	virtual bool SpawnWave(int number);
 	/// Attempts to spawn an enemy at the target location, returns true if they were successfully spawned
-	virtual APawn* SpawnEnemy(TSubclassOf<ABaseEnemyCharacter> EnemyToSpawn, FVector TargetLocation, float LocationSpread, FRotator TargetRotation = FRotator::ZeroRotator);
+	virtual APawn* SpawnEnemy(TSubclassOf<class ABaseEnemyCharacter> EnemyToSpawn, FVector TargetLocation, float LocationSpread, FRotator TargetRotation = FRotator::ZeroRotator);
 	/// Checks if there are waves remaining
 	bool AreWavesRemaining() {return CurrentWave < Waves.Num();}
 

@@ -11,7 +11,7 @@
  * Blueprint extensions change the visuals of the prop to match its functionality
 **/
 UCLASS()
-class SUMMERDELIVERABLES_API APossessablePawn : public APawn
+class POLTERHEIST_API APossessablePawn : public APawn
 {
     GENERATED_BODY()
     	// ========================

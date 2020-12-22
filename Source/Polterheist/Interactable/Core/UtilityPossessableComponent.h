@@ -11,7 +11,7 @@
 **/
 
 UCLASS()
-class SUMMERDELIVERABLES_API UUtilityPossessableComponent : public UPossesableComponent
+class POLTERHEIST_API UUtilityPossessableComponent : public UPossesableComponent
 {
 	GENERATED_BODY()
 	public:

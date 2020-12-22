@@ -3,17 +3,19 @@
 
 #include "PlayerPawn.h"
 
-#include <string>
-
 #include "Components/ShapeComponent.h"
-#include "InteractSystem/FlashlightComponent.h"
-#include "InteractSystem/PossessablePawn.h"
-#include "InteractSystem/ParanoiaComponent.h"
-#include "InteractSystem/PlayerGhostController.h"
-#include "Kismet/GameplayStatics.h"
-#include "SummerDeliverables/DefinedDebugHelpers.h"
-#include "PlayerStamina.h"
+
+#include "Polterheist/Interactable/Core/InteractableComponent.h"
+#include "Polterheist/Interactable/Core/ParanoiaComponent.h"
+#include "Polterheist/Interactable/Core/PossessableComponent.h"
+
+#include "Polterheist/Enemy/FlashlightComponent.h"
+#include "Polterheist/Movement/PlayerGhostController.h"
+#include "Polterheist/External/External.h"
+#include "Polterheist/Core/PlayerStamina.h"
+
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "Engine.h"
 
 // Sets default values

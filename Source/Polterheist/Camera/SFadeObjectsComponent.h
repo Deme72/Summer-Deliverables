@@ -7,9 +7,6 @@
 
 // My includes
 #include "Materials/MaterialInterface.h"
-#include "Materials/Material.h"
-#include "TimerManager.h"
-#include "CollisionQueryParams.h"
 #include "Engine/Engine.h"
 #include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -78,7 +75,7 @@ struct FFadeObjStruct
 */
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class SUMMERDELIVERABLES_API USFadeObjectsComponent : public UActorComponent
+class POLTERHEIST_API USFadeObjectsComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

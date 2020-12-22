@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PlayerStamina.h"
+#include "Polterheist/Core/PlayerStamina.h"
 
 // Sets default values
 APlayerStamina::APlayerStamina()

@@ -14,7 +14,7 @@
  * TODO: add any functionality that is specific only to Static Possessables
 **/
 UCLASS()
-class SUMMERDELIVERABLES_API UStaticPossessableComponent : public UPossesableComponent
+class POLTERHEIST_API UStaticPossessableComponent : public UPossesableComponent
 {
 	GENERATED_BODY()
 	

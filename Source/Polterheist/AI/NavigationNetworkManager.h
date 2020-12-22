@@ -9,7 +9,7 @@
 
 
 UCLASS(Blueprintable, BlueprintType)
-class SUMMERDELIVERABLES_API ANavigationNetworkManager : public AActor
+class POLTERHEIST_API ANavigationNetworkManager : public AActor
 {
 	GENERATED_BODY()
 

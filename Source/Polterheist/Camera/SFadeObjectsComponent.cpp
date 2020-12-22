@@ -5,7 +5,7 @@
 
 #include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
-#include "SummerDeliverables/PlayerPawn.h"
+#include "Polterheist/Core/PlayerPawn.h"
 
 USFadeObjectsComponent::USFadeObjectsComponent()
 {

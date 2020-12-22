@@ -12,7 +12,7 @@
  * 
  */
 UCLASS()
-class SUMMERDELIVERABLES_API UPossesableComponent : public UInteractableComponent
+class POLTERHEIST_API UPossesableComponent : public UInteractableComponent
 {
 	GENERATED_BODY()
 	

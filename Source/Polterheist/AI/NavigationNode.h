@@ -22,7 +22,7 @@ enum NavNodeType
  
 
 UCLASS(Blueprintable, BlueprintType)
-class SUMMERDELIVERABLES_API ANavigationNode : public AActor
+class POLTERHEIST_API ANavigationNode : public AActor
 {
 	GENERATED_BODY()
 

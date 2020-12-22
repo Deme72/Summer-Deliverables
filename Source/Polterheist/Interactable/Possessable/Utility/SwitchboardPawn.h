@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class SUMMERDELIVERABLES_API ASwitchboardPawn : public APossessablePawn
+class POLTERHEIST_API ASwitchboardPawn : public APossessablePawn
 {
 	GENERATED_BODY()
 

@@ -12,7 +12,7 @@
  * TODO: add any functionality that is specific only to Dynamic Possessables
  */
 UCLASS()
-class SUMMERDELIVERABLES_API UDynamicPossessableComponent : public UPossesableComponent
+class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
 {
 	GENERATED_BODY()
 	// ==============================

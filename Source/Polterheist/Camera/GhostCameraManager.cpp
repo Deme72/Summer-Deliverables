@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GhostCameraManager.h"
+#include "Polterheist/Camera/GhostCameraManager.h"
 
 AGhostCameraManager::AGhostCameraManager() : APlayerCameraManager()
 {

@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "WaveManager.h"
+#include "Polterheist/Core/WaveManager.h"
+#include "Polterheist/Enemy/BaseEnemyCharacter.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
 // Sets default values

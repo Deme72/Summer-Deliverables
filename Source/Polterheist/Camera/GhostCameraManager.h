@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class SUMMERDELIVERABLES_API AGhostCameraManager : public APlayerCameraManager
+class POLTERHEIST_API AGhostCameraManager : public APlayerCameraManager
 {
 	GENERATED_BODY()
 

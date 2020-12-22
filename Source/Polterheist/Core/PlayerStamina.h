@@ -7,7 +7,7 @@
 #include "PlayerStamina.generated.h"
 
 UCLASS()
-class SUMMERDELIVERABLES_API APlayerStamina : public AActor
+class POLTERHEIST_API APlayerStamina : public AActor
 {
 	GENERATED_BODY()
 

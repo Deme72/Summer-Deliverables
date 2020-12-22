@@ -3,12 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "Camera/CameraComponent.h"
-#include "InteractSystem/InteractableComponent.h"
-#include "InteractSystem/ParanoiaComponent.h"
 #include "GameFramework/Pawn.h"
-#include "InteractSystem/PossessableComponent.h"
 
 #include "PlayerPawn.generated.h"
 
@@ -16,7 +12,7 @@
  * Ghostly player pawn.
 **/
 UCLASS()
-class SUMMERDELIVERABLES_API APlayerPawn : public APawn
+class POLTERHEIST_API APlayerPawn : public APawn
 {
 	GENERATED_BODY()
 	// ==============================

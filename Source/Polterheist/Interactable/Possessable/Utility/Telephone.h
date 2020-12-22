@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class SUMMERDELIVERABLES_API UTelephone : public UUtilityPossessableComponent
+class POLTERHEIST_API UTelephone : public UUtilityPossessableComponent
 {
 	GENERATED_BODY()
 

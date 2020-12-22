@@ -4,7 +4,6 @@
 #include "PolterheistGameModeBase.h"
 #include "Polterheist/External/DefinedDebugHelpers.h"
 #include "Polterheist/Core/WaveManager.h"
-#include "Polterheist/Movement/PlayerGhostController.h"
 
 #include "UObject/ConstructorHelpers.h"
 

@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class SUMMERDELIVERABLES_API ALeverPawn : public APossessablePawn
+class POLTERHEIST_API ALeverPawn : public APossessablePawn
 {
 	GENERATED_BODY()
 public:
