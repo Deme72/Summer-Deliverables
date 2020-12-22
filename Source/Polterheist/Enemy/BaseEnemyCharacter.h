@@ -56,7 +56,7 @@ enum ScareDirection
 };
 
 UCLASS()
-class SUMMERDELIVERABLES_API ABaseEnemyCharacter : public ACharacter
+class POLTERHEIST_API ABaseEnemyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 	// ==============================

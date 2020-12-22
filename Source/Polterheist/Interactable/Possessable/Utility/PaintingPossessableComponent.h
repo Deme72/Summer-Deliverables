@@ -38,7 +38,7 @@ struct FPaintingTransitionPackage
 
 /// A possessable that is used for reconnaissance rather than to scare enemies
 UCLASS()
-class SUMMERDELIVERABLES_API UPaintingPossessableComponent : public UUtilityPossessableComponent
+class POLTERHEIST_API UPaintingPossessableComponent : public UUtilityPossessableComponent
 {
 	GENERATED_BODY()
 	// ==============================
