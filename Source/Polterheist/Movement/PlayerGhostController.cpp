@@ -9,7 +9,8 @@
 APlayerGhostController::APlayerGhostController() :APlayerController()
 {
     MaxStamina = 100.0f;
-    //static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/PlayerPawn_BP"));
+
+    // TODO: either expose this to be set in the editor OR update the directory path
     static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_Ghosty"));
     if (PlayerPawnBPClass.Class != NULL)
     {
