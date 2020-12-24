@@ -1,13 +1,13 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "PolterheistGameModeBase.h"
+#include "Polterheist/Core/PolterheistGameMode.h"
 #include "Polterheist/External/DefinedDebugHelpers.h"
 #include "Polterheist/Core/WaveManager.h"
 
 #include "UObject/ConstructorHelpers.h"
 
-APolterheistGameModeBase::APolterheistGameModeBase()
+APolterheistGameMode::APolterheistGameMode()
 {
 	// TODO: either expose this to be set in the editor OR update the directory path
 	// set default pawn class to our Blueprinted character
@@ -24,14 +24,14 @@ APolterheistGameModeBase::APolterheistGameModeBase()
 	//}
 }
 
-void APolterheistGameModeBase::BeginPlay()
+void APolterheistGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
 	//SCREENMSG("BeginPlay intialized gamemode as SummerDeliverablesGameMode.cpp");
 	///This timer handles when to call SpawnStamina()
 	FTimerHandle UnusedHandle;
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &APolterheistGameModeBase::SpawnStamina,
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &APolterheistGameMode::SpawnStamina,
                                     FMath::RandRange(SpawnTimerMin, SpawnTimerMax), true);
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveManager::StaticClass(), FoundActors);
@@ -43,7 +43,7 @@ void APolterheistGameModeBase::BeginPlay()
 	TreasureRemaining = FoundTreasure.Num();
 }
 
-void APolterheistGameModeBase::SpawnStamina()
+void APolterheistGameMode::SpawnStamina()
 {
 	float RandX = FMath::RandRange(SpawnXMin, SpawnXMax);
 	float RandY = FMath::RandRange(SpawnYMin, SpawnYMax);
@@ -61,7 +61,7 @@ void APolterheistGameModeBase::SpawnStamina()
 	}
 }
 
-void APolterheistGameModeBase::CheckWinCon(float value)
+void APolterheistGameMode::CheckWinCon(float value)
 {
 	EnemiesRemaining--;
 	TreasureRemaining -= value;

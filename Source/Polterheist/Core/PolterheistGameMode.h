@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "PolterheistGameModeBase.generated.h"
+#include "PolterheistGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class POLTERHEIST_API APolterheistGameModeBase : public AGameModeBase
+class POLTERHEIST_API APolterheistGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 	public:
-	APolterheistGameModeBase();
+	APolterheistGameMode();
 
 	virtual void BeginPlay() override;
 
