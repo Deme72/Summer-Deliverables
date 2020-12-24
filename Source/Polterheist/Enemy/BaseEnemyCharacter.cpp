@@ -262,11 +262,11 @@ void ABaseEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	if (IsValid(TreasureActor))
 	{
 		TreasureActor->Destroy();
-		Cast<APolterheistGameModeBase>(GetWorld()->GetAuthGameMode())->CheckWinCon(1);
+		Cast<APolterheistGameMode>(GetWorld()->GetAuthGameMode())->CheckWinCon(1);
 	}
 	else
 	{
-		Cast<APolterheistGameModeBase>(GetWorld()->GetAuthGameMode())->CheckWinCon();
+		Cast<APolterheistGameMode>(GetWorld()->GetAuthGameMode())->CheckWinCon();
 	}
 }
 
