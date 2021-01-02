@@ -11,7 +11,7 @@ APlayerGhostController::APlayerGhostController() :APlayerController()
     MaxStamina = 100.0f;
 
     // TODO: either expose this to be set in the editor OR update the directory path
-    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_Ghosty"));
+    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Polterheist/Character/Player/BP_Ghosty"));
     if (PlayerPawnBPClass.Class != NULL)
     {
         PawnClass = PlayerPawnBPClass.Class;

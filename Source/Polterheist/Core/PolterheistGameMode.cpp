@@ -11,7 +11,7 @@ APolterheistGameMode::APolterheistGameMode()
 {
 	// TODO: either expose this to be set in the editor OR update the directory path
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_Ghosty"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Polterheist/Character/Player/BP_Ghosty"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
