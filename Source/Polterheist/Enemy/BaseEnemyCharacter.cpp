@@ -14,6 +14,7 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	bStateDirtyFlag = true;
+	LastEState = EState::Searching;
 }
 
 void ABaseEnemyCharacter::SetLastScareDirection()
@@ -50,6 +51,8 @@ void ABaseEnemyCharacter::SetEState(EState NewEState)
 {
 	if (NewEState != CurrentEState)
 	{
+		LastEState = CurrentEState;
+		
 		//adjust the character movement speed to account for the different state
 		const float MovementSpeedMultiplier = GetStateSpeed(NewEState)/GetStateSpeed(CurrentEState);
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Old Movement SPeed: %f"),FindComponentByClass<UCharacterMovementComponent>()[0].MaxWalkSpeed));    

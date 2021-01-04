@@ -110,7 +110,10 @@ class POLTERHEIST_API ABaseEnemyCharacter : public ACharacter
 	
 	/// How much time the enemy has spent in this state
 	float CurrentEStateTime;
-
+	
+	/// The previous most state of this Enemy Character
+	EState LastEState;
+	
 	/// Time until Paranoia will begin to decay
 	float ParanoiaDecayTime;
 
@@ -339,6 +342,10 @@ class POLTERHEIST_API ABaseEnemyCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	FVector GetLastScareLocation() const { return LastScareLocation; }
 
+	/// Returns the previous most EState of the Enemy Character
+	UFUNCTION(BlueprintCallable, Category="Getters|States")
+    EState GetLastState() const { return LastEState; }
+	
 	/// Returns bStateDirtyFlag (i.e whether the current state of the enemy is new)
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	bool GetStateIsDirty() const { return bStateDirtyFlag; }
