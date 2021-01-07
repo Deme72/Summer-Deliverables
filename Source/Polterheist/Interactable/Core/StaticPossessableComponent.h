@@ -46,7 +46,7 @@ class POLTERHEIST_API UStaticPossessableComponent : public UPossesableComponent
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
 	private:
-	UStaticPossessableComponent();
+	
 	protected:
 	public:
 	// =============================
@@ -55,6 +55,7 @@ class POLTERHEIST_API UStaticPossessableComponent : public UPossesableComponent
 	private:
 	protected:
 	public:
+	UStaticPossessableComponent();
 	// ===================
 	// ===== METHODS =====
 	// ===================
