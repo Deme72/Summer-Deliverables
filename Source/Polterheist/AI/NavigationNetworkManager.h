@@ -40,7 +40,7 @@ public:
 
 	/// Gets the neighboring nodes of the given node
 	UFUNCTION(BlueprintCallable)
-	TArray<ANavigationNode*> GetNodeNeighbors(ANavigationNode* prevNode, ANavigationNode* targetNode, bool &isNew) const;
+	TArray<ANavigationNode*> GetNodeNeighbors(ANavigationNode* targetNode, ANavigationNode* prevNode, bool &isNew) const;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<ANavigationNode*> GetPoiNeighbors(ANavigationNode* targetNode, bool& hasPoi, ANavigationNode* prevPoi = nullptr) const;
