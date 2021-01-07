@@ -84,15 +84,15 @@ void APlayerGhostController::BeginPlay()
     Super::BeginPlay();
     
     CurrentStamina = MaxStamina;
-    //if(!HUDClass)
-    //    SCREENMSG("no hud :(");
-    /*PlayerHUD = CreateWidget(this, HUDClass);
-    if(PlayerHUD != nullptr)
+
+    if (HUDClass)
     {
-        SCREENMSG("HUD thingy");
-        PlayerHUD->AddToPlayerScreen();
-    }*/
-    //SCREENMSG("BeginPlay Initialized a PlayerGhostController");
+        PlayerHUD = CreateWidget(this, HUDClass);
+        if (PlayerHUD)
+        {
+            PlayerHUD->AddToPlayerScreen();
+        }
+    }
 }
 
 void APlayerGhostController::OnUnPossess()
