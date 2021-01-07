@@ -3,7 +3,7 @@
 
 #include "Polterheist/AI/NavigationNetworkManager.h"
 #include "DrawDebugHelpers.h"
-#include "NavigationNode.h"
+#include "Polterheist/AI/NavigationNode.h"
 
 // Sets default values
 ANavigationNetworkManager::ANavigationNetworkManager()
@@ -108,7 +108,7 @@ void ANavigationNetworkManager::Tick(float DeltaTime)
 	
 }
 
-TArray<ANavigationNode*> ANavigationNetworkManager::GetNodeNeighbors(ANavigationNode* targetNode, ANavigationNode* prevNode, bool& isNew) const
+TArray<ANavigationNode*> ANavigationNetworkManager::GetNodeNeighbors(ANavigationNode* prevNode, ANavigationNode* targetNode, bool& isNew) const
 {
 	TArray<ANavigationNode*> allNeighbors = targetNode->Neighbors;
 
