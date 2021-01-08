@@ -4,7 +4,8 @@
 
 #include "Polterheist/Interactable/Interactable.h"
 #include "Polterheist/Core/Core.h"
-#include "Blueprint/UserWidget.h"
+#include "Polterheist/External/DefinedDebugHelpers.h"
+#include "Polterheist/HUD/HUDWidget.h"
 
 APlayerGhostController::APlayerGhostController() :APlayerController()
 {
@@ -39,6 +40,13 @@ bool APlayerGhostController::SetStamina(float delta_stamina, bool b_is_relative)
             CurrentStamina = delta_stamina;
         }
     }
+
+    // Update the stamina widget
+    if (HUDOverlay)
+    {
+        HUDOverlay->UpdateStaminaBar(GetStaminaPercent_C());
+    }
+    
     if (CurrentStamina == 0.0f)
     {
         return true;
@@ -47,6 +55,11 @@ bool APlayerGhostController::SetStamina(float delta_stamina, bool b_is_relative)
 }
 
 float APlayerGhostController::GetStaminaPercent() const
+{
+    return CurrentStamina / MaxStamina;
+}
+
+float APlayerGhostController::GetStaminaPercent_C() const
 {
     return CurrentStamina / MaxStamina;
 }
@@ -76,6 +89,19 @@ APlayerPawn* APlayerGhostController::CreatePlayerPawn(FVector spawn_location)
 {
     FActorSpawnParameters params = *new FActorSpawnParameters();
     params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    // Spawn this player's HUD
+    if (HUDOverlayAsset)
+    {
+        HUDOverlay = Cast<UHUDWidget>(CreateWidget<UUserWidget>(this, HUDOverlayAsset));
+        if (HUDOverlay)
+        {
+            HUDOverlay->AddToViewport();
+            HUDOverlay->SetVisibility(ESlateVisibility::Visible);
+            V_LOG("PC Created HUD widget");
+        }
+    }
+
     return Cast<APlayerPawn>(GetWorld()->SpawnActor(PawnClass, &spawn_location, 0, params));
 }
 
@@ -84,15 +110,6 @@ void APlayerGhostController::BeginPlay()
     Super::BeginPlay();
     
     CurrentStamina = MaxStamina;
-
-    if (HUDClass)
-    {
-        PlayerHUD = CreateWidget(this, HUDClass);
-        if (PlayerHUD)
-        {
-            PlayerHUD->AddToPlayerScreen();
-        }
-    }
 }
 
 void APlayerGhostController::OnUnPossess()

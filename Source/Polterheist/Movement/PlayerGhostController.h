@@ -45,7 +45,7 @@ class POLTERHEIST_API APlayerGhostController : public APlayerController
 	/// The instance of the player HUD widget.
 	/// The empty uproperty is there so we can keep the ptr around and to make sure it's garbage collected properly.
 	UPROPERTY()
-	UUserWidget* PlayerHUD;
+	class UHUDWidget* HUDOverlay;
 
 	//struct FPlayerGhostStatistics PlayerStatistics;
 	
@@ -55,8 +55,8 @@ class POLTERHEIST_API APlayerGhostController : public APlayerController
 	class APossessablePawn* LastPossessedPawn;
 	
 	/// The class that will be used for the player's HUD
-	UPROPERTY(EditDefaultsOnly, Category="HUD and UI")
-	TSubclassOf<class UUserWidget> HUDClass;
+	UPROPERTY(EditDefaultsOnly, Category="HUD")
+	TSubclassOf<class UUserWidget> HUDOverlayAsset;
 	
 	/// The Player's max Stamina
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stamina", meta=(ClampMin=0.0))
@@ -92,6 +92,7 @@ class POLTERHEIST_API APlayerGhostController : public APlayerController
 	protected:
 	/// The BP pawn class to spawn
 	UClass * PawnClass;
+	
 	public:
 	/// Gets the player's current stamina
 	UFUNCTION(BlueprintCallable, Category="Getters")
@@ -107,6 +108,10 @@ class POLTERHEIST_API APlayerGhostController : public APlayerController
 	/// Gets the percentage [0...1] of player stamina.
 	UFUNCTION(BlueprintPure)
 	float GetStaminaPercent() const;
+
+	/// Gets the percentage [0...1] of player stamina.
+	/// TODO: rename me
+    float GetStaminaPercent_C() const;
 
 	/*
 	/// Returns a blueprint readable copy of the player statistics
