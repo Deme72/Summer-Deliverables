@@ -48,7 +48,7 @@ class POLTERHEIST_API UStaticPossessableComponent : public UPossesableComponent
 	private:
 	protected:
 	public:
-		UStaticPossessableComponent();
+	UStaticPossessableComponent();
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================

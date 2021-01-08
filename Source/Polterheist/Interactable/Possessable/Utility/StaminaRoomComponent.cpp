@@ -15,13 +15,6 @@ UStaminaRoomComponent::UStaminaRoomComponent()
     PrimaryComponentTick.bCanEverTick = true;
     //set the room to closed at start
     bOpen = false;
-    bUsing = false;
-    TimerTillActivate = 3.0f;
-}
-
-void UStaminaRoomComponent::BeginPlay()
-{
-    Super::BeginPlay();
     TInlineComponentArray<UActorComponent*> tempa;
     //get the room actor this component is attached to
     APossessablePawn* room = Cast<APossessablePawn>(GetOwner());
@@ -44,6 +37,13 @@ void UStaminaRoomComponent::BeginPlay()
             }
         }
     }
+    bUsing = false;
+    TimerTillActivate = 3.0f;
+}
+
+void UStaminaRoomComponent::BeginPlay()
+{
+    Super::BeginPlay();
     if (Curve)
     {
         //start and end functions for binding to timeline
