@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ControllerButton.h"
 #include "Blueprint/UserWidget.h"
 #include "HUDWidget.generated.h"
 
@@ -27,6 +28,9 @@ class POLTERHEIST_API UHUDWidget : public UUserWidget
 	/// Note: UMG will throw warnings if this component is not present.
 	UPROPERTY(meta=(BindWidget))
 	class UStaminaBar* StaminaBar;
+
+	UPROPERTY(EditDefaultsOnly, Category="Customization")
+	TMap<EControllerButton, class UTexture2D*> ButtonTextures;
 
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====

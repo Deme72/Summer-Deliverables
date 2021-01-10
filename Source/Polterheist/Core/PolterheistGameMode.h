@@ -13,7 +13,6 @@ UCLASS()
 class POLTERHEIST_API APolterheistGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-
 	public:
 	APolterheistGameMode();
 
