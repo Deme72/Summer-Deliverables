@@ -55,7 +55,7 @@ class POLTERHEIST_API APlayerGhostController : public APlayerController
 	class APossessablePawn* LastPossessedPawn;
 	
 	/// The class that will be used for the player's HUD
-	UPROPERTY(EditAnywhere, Category="HUD and UI")
+	UPROPERTY(EditDefaultsOnly, Category="HUD and UI")
 	TSubclassOf<class UUserWidget> HUDClass;
 	
 	/// The Player's max Stamina

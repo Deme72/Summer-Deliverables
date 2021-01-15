@@ -3,16 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PossessableComponent.h"
-#include "StaticPossessableComponent.generated.h"
+#include "Polterheist/Interactable/Core/StaticPossessableComponent.h"
+#include "GuidedMissleComponent.generated.h"
+
 
 /**
- * A Object oriented way of telling which type of prop we are possessing, this is for static props (props that don't move)
- * Functions in this class are a template for what a Static Possessable should override at minimum
- * TODO: add any functionality that is specific only to Static Possessables
-**/
+ * 
+ */
 UCLASS()
-class POLTERHEIST_API UStaticPossessableComponent : public UPossesableComponent
+class POLTERHEIST_API UGuidedMissleComponent : public UStaticPossessableComponent
 {
 	GENERATED_BODY()
 	
@@ -40,15 +39,25 @@ class POLTERHEIST_API UStaticPossessableComponent : public UPossesableComponent
 	// ===== ATTRIBUTES =====
 	// ======================
 	private:
+	// determine which part is being controlled when
+	bool isControling = false;
+	float power = 0.0;
+	float accuracy =0.0;
 	protected:
 	public:
+	//varriables to determine which mode the ball launcher is currently in powermode to gauge power same for accuracy
+	bool Powermode =true;
+	bool Accuracymode = false;
+	//variables to determine where on the bar you are
+	float bar = 0.0;
+	float barDir=1.0;
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
 	private:
 	protected:
 	public:
-	UStaticPossessableComponent();
+
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
@@ -61,7 +70,11 @@ class POLTERHEIST_API UStaticPossessableComponent : public UPossesableComponent
 	private:
 	protected:
 	public:
-		///Doesn't change anything, only here as a template
-		virtual void ScareButton_Implementation() override;
+	///Doesn't change anything, only here as a template
+	virtual void ScareButton_Implementation() override;
+	virtual void OnInteract_Implementation() override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	
+	
 };

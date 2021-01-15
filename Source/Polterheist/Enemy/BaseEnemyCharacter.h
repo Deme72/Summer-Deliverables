@@ -133,6 +133,10 @@ class POLTERHEIST_API ABaseEnemyCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design", meta=(ClampMin=0.0))
 	int ParanoiaMax;
 
+	////The amount of props that this enemy can steal
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design")
+	int PropCapacity;
+
 	/// The rate at which paranoia decays (paranoia per second)(*not per tick) | min=0.0
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design|Damage|Paranoia", meta=(ClampMin=0.0))
 	float ParanoiaDecay;
@@ -356,6 +360,9 @@ class POLTERHEIST_API ABaseEnemyCharacter : public ACharacter
 
 	UFUNCTION(BlueprintCallable, Category="Getters")
 	ScareDirection GetLastScareDirection() const { return LastScareDirection; }
+
+	UFUNCTION(BlueprintCallable, Category="Getters")
+	bool CanStealProp() const { return OtherStolenObjects.Num() < PropCapacity; }
 	
 	// ===================
 	// ===== METHODS =====
