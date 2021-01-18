@@ -2,6 +2,8 @@
 
 
 #include "Polterheist/Core/PolterheistGameMode.h"
+
+#include "AI/NavigationSystemBase.h"
 #include "Polterheist/External/DefinedDebugHelpers.h"
 #include "Polterheist/Core/WaveManager.h"
 
@@ -71,10 +73,14 @@ void APolterheistGameMode::CheckWinCon(float value)
 	{
 		//Lose
 		V_LOG("You Lose!");
+		FName newlevel="EndLevel";
+		UGameplayStatics::OpenLevel(this,newlevel,false,"");
 	}
 	else if( EnemiesRemaining <= 0)
 	{
 		//Win
 		V_LOG("You Win!");
+		FName newlevel="EndLevel";
+		UGameplayStatics::OpenLevel(this,newlevel,false,"");
 	}
 }
