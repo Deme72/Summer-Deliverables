@@ -1,0 +1,1 @@
+Contains cpp and h files for non possessables (interactables and paranoia)
