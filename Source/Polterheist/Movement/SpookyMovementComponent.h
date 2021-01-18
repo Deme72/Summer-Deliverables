@@ -6,14 +6,14 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
-#include "SpookyMovemenetComponent.generated.h"
+#include "SpookyMovementComponent.generated.h"
 
 /**
  * The base class for all movement components in this project
  * Name is a bit off but everything else is generic so it has to stand out
  */
 UCLASS()
-class POLTERHEIST_API USpookyMovemenetComponent : public UPawnMovementComponent
+class POLTERHEIST_API USpookyMovementComponent : public UPawnMovementComponent
 {
 	GENERATED_BODY()
 	// ==============================
@@ -41,9 +41,9 @@ class POLTERHEIST_API USpookyMovemenetComponent : public UPawnMovementComponent
 	// ======================
 	private:
 	protected:
-	///Is the prop on the ground
-	bool bOnGround;
-
+	///The forward normal of the last movement operation
+	FVector MovementForwardNormal;
+	
 	///The distance the prop is off of the ground
 	float GroundHeight;
 
@@ -52,6 +52,9 @@ class POLTERHEIST_API USpookyMovemenetComponent : public UPawnMovementComponent
 	
 	///Whether or not the last raycast data is old
 	bool bDirtyRaycast;
+	
+	///Is the prop on the ground
+	bool bOnGround;
 	public:
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
@@ -59,14 +62,14 @@ class POLTERHEIST_API USpookyMovemenetComponent : public UPawnMovementComponent
 	private:
 	protected:
 	public:
-	USpookyMovemenetComponent();
+	USpookyMovementComponent();
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
 	private:
 	protected:
 	public:
-	///Updates the data from the raycast
+	/// Updates the data from the raycast
 	UFUNCTION(BlueprintCallable, Category="Setter")
 	virtual bool UpdateRaycastData();
 	
@@ -75,13 +78,17 @@ class POLTERHEIST_API USpookyMovemenetComponent : public UPawnMovementComponent
     bool IsOnGround() const {return bOnGround;}
 
 	/// Gets the owner's static mesh
-	///UFUNCTION(BlueprintCallable, Category="Getter")
+	UFUNCTION(BlueprintCallable, Category="Getter")
     UStaticMeshComponent * GetOwnerMesh() const {return Cast<UStaticMeshComponent>(GetOwner()->GetComponentByClass(UStaticMeshComponent::StaticClass()));};
 
 	/// Returns the distance above the ground
 	UFUNCTION(BlueprintCallable, Category="Getter")
 	float GetDistFromGround() const {return GroundHeight;}
 
+	/// Returns the forward vector of the last movement
+	UFUNCTION(BlueprintCallable, Category="Getter")
+	FVector GetMovementForward(){return MovementForwardNormal;}
+	
 	/// Sets the mesh to be a certain distance from the ground
 	UFUNCTION(BlueprintCallable, Category="Setter")
 	void SetDistFromGround(float f){MoveOwner({0, 0, f-GroundHeight});};
@@ -97,5 +104,11 @@ class POLTERHEIST_API USpookyMovemenetComponent : public UPawnMovementComponent
 	protected:
 	public:
 	/// Moves the owner
-	void MoveOwner(FVector DeltaLoc, FHitResult * Hit = nullptr);
+	virtual FHitResult MoveOwner(FVector DeltaLoc);
+
+	/// Wrapper for TeleportTo unreal function, teleports to the location and sets appropriate flags
+	virtual bool TeleportOwner(FVector loc, FRotator rot);
+
+	/// Takes move input and applies calculations and deadzones to make it camera relative
+	FVector AllignInputToCamera(FVector in, FVector camForward, FVector camRight, float speed, float DeadZone = 0.2);
 };

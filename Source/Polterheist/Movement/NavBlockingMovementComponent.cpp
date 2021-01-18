@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "NavBlockingMovemenetComponent.h"
+#include "NavBlockingMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 
-UNavBlockingMovemenetComponent::UNavBlockingMovemenetComponent():USpookyMovemenetComponent()
+UNavBlockingMovementComponent::UNavBlockingMovementComponent():USpookyMovementComponent()
 {
 	NavBlocker = CreateDefaultSubobject<UCapsuleComponent>(TEXT("NavBlocker"));
 	NavBlocker->SetCapsuleSize(50, 200);
 	bWantsInitializeComponent = true;
 }
 
-void UNavBlockingMovemenetComponent::InitializeComponent()
+void UNavBlockingMovementComponent::InitializeComponent()
 {
 	NavBlocker->SetupAttachment(GetOwner()->GetRootComponent());
 	NavBlocker->SetRelativeLocation({0,0,NavBlocker->GetUnscaledCapsuleHalfHeight()});
@@ -20,7 +20,7 @@ void UNavBlockingMovemenetComponent::InitializeComponent()
 	NavBlocker->SetUsingAbsoluteLocation(true);
 }
 
-bool UNavBlockingMovemenetComponent::UpdateRaycastData()
+bool UNavBlockingMovementComponent::UpdateRaycastData()
 {
 	setRayWidth(NavBlocker->GetUnscaledCapsuleRadius()/2);
 	if(Super::UpdateRaycastData())

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Polterheist/Movement/SpookyMovemenetComponent.h"
-#include "NavBlockingMovemenetComponent.generated.h"
+#include "Polterheist/Movement/NavBlockingMovementComponent.h"
+#include "StaticMovementComponent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class POLTERHEIST_API UNavBlockingMovemenetComponent : public USpookyMovemenetComponent
+class POLTERHEIST_API UStaticMovementComponent : public UNavBlockingMovementComponent
 {
 	GENERATED_BODY()
 	// ==============================
@@ -38,40 +38,33 @@ class POLTERHEIST_API UNavBlockingMovemenetComponent : public USpookyMovemenetCo
 	// ======================
 	private:
 	protected:
-	///Is the prop above the capsule
-	bool bAboveCapsule;
 	public:
-	/// A capsule to block out any AI movement into this pawn.
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UCapsuleComponent * NavBlocker;
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
 	private:
 	protected:
 	public:
-	///Constructor, create the nav blocker and set up its params
-	UNavBlockingMovemenetComponent();
+	UStaticMovementComponent();
 
-	///Initialize the component
-	virtual void InitializeComponent() override;
+	/// updates the raycast
+	virtual void BeginPlay() override {UpdateRaycastData();};
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
 	private:
 	protected:
 	public:
-	/// Updates the raycast data and the nav blocker location
-	virtual bool UpdateRaycastData() override;
-
-	/// Returns true if the pawn is above the capsule bounds
-	UFUNCTION(BlueprintCallable, Category="Getter")
-    bool IsAboveCapsule() const {return bAboveCapsule;}
-
 	// ===================
 	// ===== METHODS =====
 	// ===================
 	private:
 	protected:
 	public:
+	/// This shouldn't be used for this component so it errors
+	virtual FHitResult MoveOwner(FVector DeltaLoc) override;
+
+	/// Wrapper for TeleportTo unreal function, teleports to the location and sets appropriate flags
+	/// Specification from this subclass adds raycastUpdates
+	virtual bool TeleportOwner(FVector loc, FRotator rot) override;
 };
