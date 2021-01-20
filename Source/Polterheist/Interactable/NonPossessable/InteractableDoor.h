@@ -30,6 +30,8 @@ private:
 	float CurveFloatValue;
 	///gets the current timeline value
 	float TimeLineValue;
+	///Tells us can the door be actiavtedd
+	bool bActivate;
 	///Doors current rotation
 	FRotator DoorRotation;
 	///Timeline usedd for creating smooth transition from closed to open andd vic versa
@@ -47,8 +49,9 @@ public:
 
 	UFUNCTION()
 	virtual void OnInteract_Implementation() override;
+
 	UFUNCTION()
-	virtual void EndInteract_Implementation() override;
+	void SetCanBeUsed();
 
 	///Time line curve for the door to use for smoothly opening andd closing it
 	UPROPERTY(EditAnywhere,Category="DoorMovement")

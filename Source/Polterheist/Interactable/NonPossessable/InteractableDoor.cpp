@@ -8,6 +8,7 @@ UInteractableDoor::UInteractableDoor()
     PrimaryComponentTick.bCanEverTick = true;
     Player = nullptr;
     bOpen = false;
+    bActivate = true;
 }
 
 void UInteractableDoor::BeginPlay()
@@ -22,7 +23,7 @@ void UInteractableDoor::BeginPlay()
         FOnTimelineEventStatic Timelinefinished;
 
         Timelinebegin.BindUFunction(this,FName("ControlDoor"));
-        Timelinefinished.BindUFunction(this,FName("EndInteract_Implementation"));
+        Timelinefinished.BindUFunction(this,FName("SetCanBeUsed"));
         MyTimeLine.AddInterpFloat(DoorCurve,Timelinebegin);
         MyTimeLine.SetTimelineFinishedFunc(Timelinefinished);
     }
@@ -41,14 +42,15 @@ void UInteractableDoor::ControlDoor()
     Door->SetRelativeRotation(Newrotation);
 }
 
-void UInteractableDoor::EndInteract_Implementation()
+void UInteractableDoor::SetCanBeUsed()
 {
-    
+    bActivate = true;
 }
+
 
 void UInteractableDoor::OnInteract_Implementation()
 {
-    if (bInUse == true)
+    if (bActivate == true)
     {
         bOpen=!bOpen;
         DoorRotation = Door->GetRelativeRotation();
@@ -62,6 +64,7 @@ void UInteractableDoor::OnInteract_Implementation()
         {
             MyTimeLine.Reverse();
         }
+        bActivate = false;
     }
 }
 
