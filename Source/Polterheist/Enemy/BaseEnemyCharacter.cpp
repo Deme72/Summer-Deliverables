@@ -166,27 +166,26 @@ void ABaseEnemyCharacter::DropTreasure()
 void ABaseEnemyCharacter::PickUpOther(AActor* target)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Stealing prop!"));
-	//target->SetHidden(true);
-	target->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(false);
-	target->FindComponentByClass<UStaticMeshComponent>()[0].SetVisibility(false);
-	target->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	target->SetActorEnableCollision(false);
+	FVector returnPosition = GetActorLocation();
+	target->TeleportTo(FVector(0,0,100000),target->GetActorRotation()); //SetActorLocation(FVector(0,0,100000),false,nullptr,ETeleportType::TeleportPhysics);
+	TeleportTo(returnPosition,GetActorRotation());
 	OtherStolenObjects.Add(target);
+	SetEState(EState::Stealing);
 }
 //rematerialize the object
 void ABaseEnemyCharacter::DropObjects()
 {
 	DropTreasure();
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Dropping props!"));
 	for (int x = 0; x < OtherStolenObjects.Num(); x++)
 	{
 		AActor* object = OtherStolenObjects[x];
-		//object->SetHidden(false);
-		object->FindComponentByClass<UStaticMeshComponent>()[0].SetSimulatePhysics(true);
-		object->FindComponentByClass<UStaticMeshComponent>()[0].SetVisibility(true);
-		object->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Dropping prop!"));
+		FVector returnPosition = GetActorLocation();
 		object->SetActorEnableCollision(true);
+		object->TeleportTo(returnPosition,object->GetActorRotation());  //SetActorLocation(returnPosition,false,nullptr,ETeleportType::TeleportPhysics);
 	}
+	OtherStolenObjects.Empty();
 }
 
 
@@ -270,6 +269,11 @@ void ABaseEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	else
 	{
 		Cast<APolterheistGameMode>(GetWorld()->GetAuthGameMode())->CheckWinCon();
+	}
+	for (int x = 0; x < OtherStolenObjects.Num(); x++)
+	{
+		AActor* object = OtherStolenObjects[x];
+		object->Destroy();
 	}
 }
 

@@ -45,9 +45,9 @@ class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
 	private:
-	UDynamicPossessableComponent();
 	protected:
 	public:
+	UDynamicPossessableComponent();
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
