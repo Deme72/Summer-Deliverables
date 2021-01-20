@@ -8,7 +8,6 @@ UInteractableDoor::UInteractableDoor()
     PrimaryComponentTick.bCanEverTick = true;
     Player = nullptr;
     bOpen = false;
-    bCanUse = true;
 }
 
 void UInteractableDoor::BeginPlay()
@@ -19,11 +18,12 @@ void UInteractableDoor::BeginPlay()
     Door = Cast<USceneComponent>(GetOwner()->GetRootComponent());
     if (DoorCurve)
     {
-        FOnTimelineFloat TimeLineBeginFunc;
+        FOnTimelineFloat Timelinebegin;
         FOnTimelineEventStatic Timelinefinished;
-        TimeLineBeginFunc.BindUFunction(this,FName("TimeLineControl"));
-        Timelinefinished.BindUFunction(this,FName("CanBeActivated"));
-        MyTimeLine.AddInterpFloat(DoorCurve,TimeLineBeginFunc);
+
+        Timelinebegin.BindUFunction(this,FName("ControlDoor"));
+        Timelinefinished.BindUFunction(this,FName("EndInteract_Implementation"));
+        MyTimeLine.AddInterpFloat(DoorCurve,Timelinebegin);
         MyTimeLine.SetTimelineFinishedFunc(Timelinefinished);
     }
 }
@@ -33,7 +33,7 @@ void UInteractableDoor::TickComponent(float DeltaTime, ELevelTick TickType, FAct
     MyTimeLine.TickTimeline(DeltaTime);
 }
 
-void UInteractableDoor::TimeLineControl()
+void UInteractableDoor::ControlDoor()
 {
     TimeLineValue = MyTimeLine.GetPlaybackPosition();
     CurveFloatValue = RotateValue*DoorCurve->GetFloatValue(TimeLineValue);
@@ -46,17 +46,13 @@ void UInteractableDoor::EndInteract_Implementation()
     
 }
 
-void UInteractableDoor::CanBeActivated()
-{
-    bCanUse = true;
-}
-
 void UInteractableDoor::OnInteract_Implementation()
 {
-    if (bCanUse)
+    if (bInUse == true)
     {
         bOpen=!bOpen;
         DoorRotation = Door->GetRelativeRotation();
+        GEngine->AddOnScreenDebugMessage(-1,15.0f,FColor::Cyan,TEXT("Interacted with"));
         if (bOpen)
         {
             RotateValue = -1.0f;
@@ -66,7 +62,6 @@ void UInteractableDoor::OnInteract_Implementation()
         {
             MyTimeLine.Reverse();
         }
-        bCanUse = false;
     }
 }
 

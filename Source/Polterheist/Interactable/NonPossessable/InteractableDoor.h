@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/BoxComponent.h"
 #include "Polterheist/Interactable/Core/InteractableComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Polterheist/Core/PlayerPawn.h"
@@ -25,8 +24,6 @@ private:
 	USceneComponent* Door;
 	///Tellsus if the door is open or closed
 	bool bOpen;
-	///can we use or not use the door
-	bool bCanUse;
 	///Tells door which way to rotate (set to 1.0 or -1.0)
 	float RotateValue;
 	///value of for where the Doorcurve is at right now
@@ -37,14 +34,9 @@ private:
 	FRotator DoorRotation;
 	///Timeline usedd for creating smooth transition from closed to open andd vic versa
 	FTimeline MyTimeLine;
-	///the interactbounds
-	UBoxComponent* InteractBox;
 	///Controls the rotation of the door
 	UFUNCTION()
 	void ControlDoor();
-	///called after the door has finishedd rotating
-	UFUNCTION()
-	void DoorCanUse();
 	///Gets the player that is trying to interact with the door
 	APlayerPawn* Player;
 public:
