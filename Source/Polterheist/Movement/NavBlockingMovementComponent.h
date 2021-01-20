@@ -3,16 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PossessableComponent.h"
-#include "DynamicPossessableComponent.generated.h"
+#include "Polterheist/Movement/SpookyMovementComponent.h"
+#include "NavBlockingMovementComponent.generated.h"
 
 /**
- * A Object oriented way of telling which type of prop we are possessing, this is for dynamic props (props that move)
- * Functions in this class are a template for what a Dynamic Possessable should override at minimum
- * TODO: add any functionality that is specific only to Dynamic Possessables
+ * 
  */
 UCLASS()
-class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
+class POLTERHEIST_API UNavBlockingMovementComponent : public USpookyMovementComponent
 {
 	GENERATED_BODY()
 	// ==============================
@@ -40,32 +38,40 @@ class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
 	// ======================
 	private:
 	protected:
+	///Is the prop above the capsule
+	bool bAboveCapsule;
 	public:
+	/// A capsule to block out any AI movement into this pawn.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UCapsuleComponent * NavBlocker;
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
 	// ======================================
 	private:
 	protected:
 	public:
-	UDynamicPossessableComponent();
+	///Constructor, create the nav blocker and set up its params
+	UNavBlockingMovementComponent();
+
+	///Initialize the component
+	virtual void InitializeComponent() override;
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
 	private:
 	protected:
 	public:
+	/// Updates the raycast data and the nav blocker location
+	virtual bool UpdateRaycastData() override;
+
+	/// Returns true if the pawn is above the capsule bounds
+	UFUNCTION(BlueprintCallable, Category="Getter")
+    bool IsAboveCapsule() const {return bAboveCapsule;}
+
 	// ===================
 	// ===== METHODS =====
 	// ===================
 	private:
 	protected:
 	public:
-		///Override of move to basic movement functionality
-		virtual void MoveRightAxis_Implementation(float Axis) override;
-	
-		///Override of move to basic movement functionality
-		virtual void MoveForwardAxis_Implementation(float Axis) override;
-	
-		///Doesn't change anything, only here as a template
-		virtual void ScareButton_Implementation() override;
 };
