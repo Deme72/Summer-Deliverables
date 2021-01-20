@@ -56,4 +56,6 @@ public:
 	///Time line curve for the door to use for smoothly opening andd closing it
 	UPROPERTY(EditAnywhere,Category="DoorMovement")
 	UCurveFloat* DoorCurve;
+	/*UPROPERTY(EditAnywhere,Category="DoorMovement")
+    TSubclassOf<UCurveFloat> DoorCurveType;*/
 };
