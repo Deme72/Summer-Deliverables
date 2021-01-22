@@ -3,18 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PossessableComponent.h"
-#include "DynamicPossessableComponent.generated.h"
+#include "Polterheist/Movement/NavBlockingMovementComponent.h"
+#include "PhysicsMovementComponent.generated.h"
 
 /**
- * A Object oriented way of telling which type of prop we are possessing, this is for dynamic props (props that move)
- * Functions in this class are a template for what a Dynamic Possessable should override at minimum
- * TODO: add any functionality that is specific only to Dynamic Possessables
+ * 
  */
 UCLASS()
-class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
+class POLTERHEIST_API UPhysicsMovementComponent : public UNavBlockingMovementComponent
 {
 	GENERATED_BODY()
+	
 	// ==============================
 	// ===== DEFINES_/_TYPEDEFS =====
 	// ==============================
@@ -40,6 +39,7 @@ class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
 	// ======================
 	private:
 	protected:
+	float UpdateCounter;
 	public:
 	// ======================================
 	// ===== CONSTRUCTORS_/_DESTRUCTORS =====
@@ -47,7 +47,10 @@ class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
 	private:
 	protected:
 	public:
-	UDynamicPossessableComponent();
+	UPhysicsMovementComponent();
+	
+	/// updates the raycast
+	virtual void BeginPlay() override;
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
@@ -60,12 +63,16 @@ class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
 	private:
 	protected:
 	public:
-		///Override of move to basic movement functionality
-		virtual void MoveRightAxis_Implementation(float Axis) override;
-	
-		///Override of move to basic movement functionality
-		virtual void MoveForwardAxis_Implementation(float Axis) override;
-	
-		///Doesn't change anything, only here as a template
-		virtual void ScareButton_Implementation() override;
+	/// Moves the owner
+	/// Specification from this subclass adds raycastUpdates
+	virtual FHitResult MoveOwner(FVector DeltaLoc) override;
+
+	/// Wrapper for TeleportTo unreal function, teleports to the location and sets appropriate flags
+	/// Specification from this subclass adds raycastUpdates
+	virtual bool TeleportOwner(FVector loc, FRotator rot) override;
+
+	/// Tick for the component
+	/// If possessed updates the ray casts once per tick
+	/// Otherwise updates once per second
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };

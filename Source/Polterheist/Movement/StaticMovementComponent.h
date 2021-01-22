@@ -3,16 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PossessableComponent.h"
-#include "DynamicPossessableComponent.generated.h"
+#include "Polterheist/Movement/NavBlockingMovementComponent.h"
+#include "StaticMovementComponent.generated.h"
 
 /**
- * A Object oriented way of telling which type of prop we are possessing, this is for dynamic props (props that move)
- * Functions in this class are a template for what a Dynamic Possessable should override at minimum
- * TODO: add any functionality that is specific only to Dynamic Possessables
+ * 
  */
 UCLASS()
-class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
+class POLTERHEIST_API UStaticMovementComponent : public UNavBlockingMovementComponent
 {
 	GENERATED_BODY()
 	// ==============================
@@ -47,7 +45,10 @@ class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
 	private:
 	protected:
 	public:
-	UDynamicPossessableComponent();
+	UStaticMovementComponent();
+
+	/// updates the raycast
+	virtual void BeginPlay() override {UpdateRaycastData();};
 	// =============================
 	// ===== GETTERS_/_SETTERS =====
 	// =============================
@@ -60,12 +61,10 @@ class POLTERHEIST_API UDynamicPossessableComponent : public UPossesableComponent
 	private:
 	protected:
 	public:
-		///Override of move to basic movement functionality
-		virtual void MoveRightAxis_Implementation(float Axis) override;
-	
-		///Override of move to basic movement functionality
-		virtual void MoveForwardAxis_Implementation(float Axis) override;
-	
-		///Doesn't change anything, only here as a template
-		virtual void ScareButton_Implementation() override;
+	/// This shouldn't be used for this component so it errors
+	virtual FHitResult MoveOwner(FVector DeltaLoc) override;
+
+	/// Wrapper for TeleportTo unreal function, teleports to the location and sets appropriate flags
+	/// Specification from this subclass adds raycastUpdates
+	virtual bool TeleportOwner(FVector loc, FRotator rot) override;
 };
